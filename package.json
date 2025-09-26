@@ -1,0 +1,55 @@
+{
+  "name": "playwright-framework-suite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A comprehensive Playwright TypeScript framework with CLI scaffolding tool",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "clean": "npm run clean --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "format": "npm run format --workspaces",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish",
+    "dev:framework": "npm run build --workspace=packages/playwright-framework",
+    "dev:cli": "npm run dev --workspace=packages/create-playwright-project"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetanelH2/playwright-framework-suite.git"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "testing",
+    "e2e",
+    "framework",
+    "cli",
+    "scaffolding"
+  ],
+  "author": "Netanel Harush",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
+  },
+  "homepage": "https://github.com/NetanelH2/playwright-framework-suite#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
