@@ -57,9 +57,7 @@ import {test, expect} from '@netanelh2/playwright-framework/fixtures'
 import {LoginPage} from './pages/LoginPage'
 
 test.describe('Login Flow', () => {
-  test('should login successfully', async ({page}) => {
-    const loginPage = new LoginPage(page)
-
+  test('should login successfully', async ({loginPage}) => {
     await loginPage.navigateTo()
     await loginPage.validateLoaded()
     await loginPage.login('testuser', 'password123')
@@ -162,7 +160,7 @@ const baseUrl = getEnvCredentials('BASE_URL')
 ### Array Utilities
 
 ```typescript
-import {findItemByProperty}from '@netanelh2/playwright-framework'
+import {findItemByProperty} from '@netanelh2/playwright-framework'
 
 const user = findItemByProperty(users, 'email', 'test@example.com')
 ```

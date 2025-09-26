@@ -1,0 +1,28 @@
+# This workflow will automatically merge PRs titled "chore: release packages" when all checks pass
+# Requires repo permissions for workflow and pull_request write access
+
+name: Automerge Release PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled, ready_for_review]
+    branches:
+      - main
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Check PR title and enable automerge if release
+        run: |
+          if [ "${{ github.event.pull_request.title }}" = "chore: release packages" ]; then
+            gh pr merge ${{ github.event.pull_request.number }} --squash --auto --repo ${{ github.repository }}
+          else
+            echo "Not a release PR, skipping automerge."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
