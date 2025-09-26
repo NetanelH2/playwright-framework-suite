@@ -6,6 +6,10 @@ on:
     paths:
       - 'packages/**'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   auto-changeset:
     runs-on: ubuntu-latest
