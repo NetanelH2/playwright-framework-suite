@@ -7,7 +7,8 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 - 🎭 **Built on Playwright**: Leverages the power of Playwright for reliable E2E testing
 - 🏗️ **Page Object Model**: Well-structured page objects extending BasePage for consistency
 - 🎯 **Smart Locators**: Flexible locator system supporting both CSS selectors and role-based locators
-- 🔧 **Utilities**: Helper functions for environment variables, array operations, and more
+- 🔧 **Test Fixtures**: Pre-configured fixtures for consistent browser context and page management
+- 🛠️ **Utilities**: Helper functions for environment variables, array operations, and more
 - 📦 **TypeScript**: Full TypeScript support with comprehensive type definitions
 - 🚀 **ESM Ready**: Modern ES modules with proper exports
 
@@ -22,12 +23,12 @@ npm install @netanelh2/playwright-framework @playwright/test typescript
 ### 1. Create a Page Object
 
 ```typescript
-import { BasePage, StringOrRoleLocatorType } from '@netanelh2/playwright-framework'
+import {BasePage, StringOrRoleLocatorType} from '@netanelh2/playwright-framework'
 
 const LOGIN_LOCATORS = {
-  usernameInput: { role: 'textbox', name: 'Username' },
-  passwordInput: { role: 'textbox', name: 'Password' },
-  submitButton: { role: 'button', name: 'Sign In' },
+  usernameInput: {role: 'textbox', name: 'Username'},
+  passwordInput: {role: 'textbox', name: 'Password'},
+  submitButton: {role: 'button', name: 'Sign In'},
 } as const
 
 export class LoginPage extends BasePage {
@@ -50,19 +51,60 @@ export class LoginPage extends BasePage {
 ### 2. Write Tests
 
 ```typescript
-import { test, expect } from '@playwright/test'
-import { LoginPage } from './pages/LoginPage'
+import {test, expect} from '@netanelh2/playwright-framework/fixtures'
+import {LoginPage} from './pages/LoginPage'
 
 test.describe('Login Flow', () => {
-  test('should login successfully', async ({ page }) => {
+  test('should login successfully', async ({page}) => {
     const loginPage = new LoginPage(page)
-    
+
     await loginPage.navigateTo()
     await loginPage.validateLoaded()
     await loginPage.login('testuser', 'password123')
-    
+
     // Add your assertions here
   })
+})
+```
+
+## Fixtures
+
+The framework provides pre-configured test fixtures that manage browser context and page lifecycle automatically:
+
+```typescript
+import {test, expect} from '@netanelh2/playwright-framework/fixtures'
+
+test('example test', async ({page}) => {
+  // Page is automatically created and cleaned up
+  await page.goto('https://example.com')
+  await expect(page).toHaveTitle(/Example/)
+})
+```
+
+### Custom Fixtures
+
+You can extend the base fixtures to add your own page objects:
+
+```typescript
+import {test as baseTest} from '@netanelh2/playwright-framework/fixtures'
+import {LoginPage, DashboardPage} from './pages'
+
+export const test = baseTest.extend({
+  loginPage: async ({page}, use) => {
+    await use(new LoginPage(page))
+  },
+  dashboardPage: async ({page}, use) => {
+    await use(new DashboardPage(page))
+  },
+})
+
+export {expect} from '@netanelh2/playwright-framework/fixtures'
+
+// Usage in tests
+test('login flow', async ({loginPage, dashboardPage}) => {
+  await loginPage.navigateTo()
+  await loginPage.login('user', 'pass')
+  await dashboardPage.validateLoaded()
 })
 ```
 
@@ -92,29 +134,33 @@ Utility class for flexible locator handling:
 ## Locator Types
 
 ### String Locators
+
 ```typescript
 const locator = '#submit-button'
 const locator = 'text=Submit'
 ```
 
 ### Role-based Locators
+
 ```typescript
-const locator = { role: 'button', name: 'Submit' }
-const locator = { parent: '.form', role: 'textbox', name: 'Username' }
+const locator = {role: 'button', name: 'Submit'}
+const locator = {parent: '.form', role: 'textbox', name: 'Username'}
 ```
 
 ## Utilities
 
 ### Environment Variables
+
 ```typescript
-import { getEnvCredentials } from '@netanelh2/playwright-framework'
+import {getEnvCredentials} from '@netanelh2/playwright-framework'
 
 const baseUrl = getEnvCredentials('BASE_URL')
 ```
 
 ### Array Utilities
+
 ```typescript
-import { findItemByProperty } from '@netanelh2/playwright-framework'
+import {findItemByProperty} from '@netanelh2/playwright-framework'
 
 const user = findItemByProperty(users, 'email', 'test@example.com')
 ```
@@ -125,7 +171,7 @@ The framework works with standard Playwright configuration. Here's a recommended
 
 ```typescript
 // playwright.config.ts
-import { defineConfig, devices } from '@playwright/test'
+import {defineConfig, devices} from '@playwright/test'
 
 export default defineConfig({
   testDir: './src/tests',
@@ -134,16 +180,16 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 4 : undefined,
-  reporter: [['html', { open: 'never' }]],
+  reporter: [['html', {open: 'never'}]],
   use: {
     trace: 'on-first-retry',
-    screenshot: { mode: 'only-on-failure', fullPage: true },
+    screenshot: {mode: 'only-on-failure', fullPage: true},
     video: 'retain-on-failure',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    {name: 'chromium', use: {...devices['Desktop Chrome']}},
+    {name: 'firefox', use: {...devices['Desktop Firefox']}},
+    {name: 'webkit', use: {...devices['Desktop Safari']}},
   ],
 })
 ```
@@ -156,16 +202,30 @@ export default defineConfig({
 4. **Environment Variables**: Use `getEnvCredentials()` for configuration
 5. **Page Validation**: Always validate page load in page objects
 
-## TypeScript Support
+## Available Imports
 
-Full TypeScript support with comprehensive type definitions:
+The framework provides multiple import paths for different use cases:
 
 ```typescript
-import type { 
-  StringOrRoleLocatorType, 
-  RoleLocator, 
-  AriaRole 
-} from '@netanelh2/playwright-framework'
+// Main framework exports (classes, utilities, types)
+import {BasePage, LocatorUtils, getEnvCredentials} from '@netanelh2/playwright-framework'
+
+// Test fixtures (recommended for test files)
+import {test, expect} from '@netanelh2/playwright-framework/fixtures'
+
+// Core classes only
+import {BasePage} from '@netanelh2/playwright-framework/core'
+
+// Utilities only
+import {getEnvCredentials, findItemByProperty} from '@netanelh2/playwright-framework/helpers'
+
+// Types only
+import type {
+  StringOrRoleLocatorType,
+  RoleLocator,
+  AriaRole,
+  PageFixtures,
+} from '@netanelh2/playwright-framework/types'
 ```
 
 ## Creating New Projects
