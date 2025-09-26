@@ -1,5 +1,13 @@
 # @netanelh2/create-playwright-project
 
+## 2.1.1
+
+### Patch Changes
+
+- 27ed823: Merge pull request #2 from NetanelH2/changeset-release/main
+- 6fc4562: Update template tsconfig.json for modern project setup
+- 7c5d996: Sync local tsconfig changes with enhanced configuration
+
 ## 2.1.0
 
 ### Minor Changes

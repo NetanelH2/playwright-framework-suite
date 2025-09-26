@@ -1,5 +1,12 @@
 ha# @netanelh2/playwright-framework
 
+## 2.1.1
+
+### Patch Changes
+
+- a9e470c: docs: add AGENTS.md reference for advanced agent/contributor usage
+- 27ed823: Merge pull request #2 from NetanelH2/changeset-release/main
+
 ## 2.1.0
 
 ### Minor Changes
