@@ -2,6 +2,8 @@
 
 A robust Playwright TypeScript testing framework with Page Object Model, smart locators, and utilities for scalable E2E testing.
 
+> **See also:** [AI Coding Agent Guide (AGENTS.md)](../../AGENTS.md) for advanced usage, conventions, and project structure tips.
+
 ## Features
 
 - 🎭 **Built on Playwright**: Leverages the power of Playwright for reliable E2E testing
@@ -160,7 +162,7 @@ const baseUrl = getEnvCredentials('BASE_URL')
 ### Array Utilities
 
 ```typescript
-import {findItemByProperty} from '@netanelh2/playwright-framework'
+import {findItemByProperty}from '@netanelh2/playwright-framework'
 
 const user = findItemByProperty(users, 'email', 'test@example.com')
 ```
