@@ -4,9 +4,11 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "lib": ["ES2022"],
+    "types": ["node"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "composite": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,12 +19,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "templates"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "templates"]
 }
