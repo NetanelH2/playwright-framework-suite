@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.2.3
+
+### Patch Changes
+
+- 713eff1: Merge pull request #9 from NetanelH2/changeset-release/main
+
 ## 2.2.2
 
 ### Patch Changes
