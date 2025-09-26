@@ -9,6 +9,7 @@ export type AriaRole =
   | 'option'
   | 'heading'
   | 'img'
+  | 'alert'
 
 export interface RoleLocator {
   parent?: string

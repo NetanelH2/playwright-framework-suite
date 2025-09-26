@@ -1,11 +1,11 @@
 {
-  "bracketSameLine": false,
-  "bracketSpacing": true,
-  "jsxSingleQuote": false,
-  "semi": true,
-  "singleQuote": false,
+  "bracketSameLine": true,
+  "bracketSpacing": false,
+  "jsxSingleQuote": true,
+  "semi": false,
+  "singleQuote": true,
   "tabWidth": 2,
-  "trailingComma": "es5",
+  "trailingComma": "all",
   "overrides": [
     {
       "files": "*.json",

@@ -1,5 +1,6 @@
-import { BasePage } from '@netanelh2/playwright-framework'
-import { EXAMPLE_PAGE_LOCATORS as L } from '@/locators'
+import {test} from '@/fixtures'
+import {EXAMPLE_PAGE_LOCATORS as L} from '@/locators'
+import {BasePage} from '@netanelh2/playwright-framework'
 
 export class ExamplePage extends BasePage {
   /**
@@ -22,8 +23,8 @@ export class ExamplePage extends BasePage {
    * @param linkName - The navigation link to click
    */
   async clickNavigation(linkName: 'home' | 'about' | 'contact'): Promise<void> {
-    await this.test.step(`Click ${linkName} navigation link`, async () => {
-      await this.clickElement(L.navigation[linkName])
+    await test.step(`Click ${linkName} navigation link`, async () => {
+      await this.clickOnElement(L.navigation[linkName])
     })
   }
 
@@ -33,9 +34,12 @@ export class ExamplePage extends BasePage {
    * @param message - Message to enter
    */
   async fillContactForm(name: string, message: string): Promise<void> {
-    await this.test.step('Fill contact form', async () => {
-      await this.fillField(L.contactForm.nameField, name)
-      await this.fillField(L.contactForm.messageField, message)
+    await test.step('Fill contact form', async () => {
+      const nameLocator = this.extractLocator(L.contactForm.nameField)
+      const messageLocator = this.extractLocator(L.contactForm.messageField)
+
+      await nameLocator.fill(name)
+      await messageLocator.fill(message)
     })
   }
 
@@ -43,8 +47,8 @@ export class ExamplePage extends BasePage {
    * Submit the contact form
    */
   async submitContactForm(): Promise<void> {
-    await this.test.step('Submit contact form', async () => {
-      await this.clickElement(L.contactForm.sendButton)
+    await test.step('Submit contact form', async () => {
+      await this.clickOnElement(L.contactForm.sendButton)
     })
   }
 
@@ -53,7 +57,7 @@ export class ExamplePage extends BasePage {
    */
   async validateFormSubmitted(): Promise<void> {
     // Example validation - adapt to your application's success indicators
-    await this.validateVisibility({ role: 'alert', name: 'Message sent successfully' })
+    await this.validateVisibility('[role="alert"]')
   }
 
   /**
@@ -62,6 +66,47 @@ export class ExamplePage extends BasePage {
    * @returns Promise with the text content
    */
   async getElementText(locator: typeof L.heading): Promise<string> {
-    return await this.getTextContent(locator)
+    const extractedLocator = this.extractLocator(locator)
+    return (await extractedLocator.textContent()) || ''
+  }
+
+  /**
+   * Fill email input field
+   * @param email - Email to enter
+   */
+  async fillEmailInput(email: string): Promise<void> {
+    await test.step('Fill email input', async () => {
+      const emailLocator = this.extractLocator(L.emailInput)
+      await emailLocator.fill(email)
+    })
+  }
+
+  /**
+   * Click the submit button
+   */
+  async clickSubmitButton(): Promise<void> {
+    await test.step('Click submit button', async () => {
+      await this.clickOnElement(L.submitButton)
+    })
+  }
+
+  /**
+   * Fill the login form username field
+   * @param username - Username to enter
+   */
+  async fillLoginUsername(username: string): Promise<void> {
+    await test.step('Fill login username', async () => {
+      const usernameLocator = this.extractLocator(L.loginForm)
+      await usernameLocator.fill(username)
+    })
+  }
+
+  /**
+   * Interact with custom element (using string locator)
+   */
+  async clickCustomElement(): Promise<void> {
+    await test.step('Click custom element', async () => {
+      await this.clickOnElement(L.customElement)
+    })
   }
 }
