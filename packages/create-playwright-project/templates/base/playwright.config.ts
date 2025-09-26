@@ -1,55 +1,63 @@
-import { defineConfig } from '@playwright/test'
-import { getEnvCredentials } from '@netanelh2/playwright-framework'
-
-const TEST_TAGS = getEnvCredentials('TEST_TAGS')
-const CI = !!getEnvCredentials('CI')
-
-// Apply tag filtering if TEST_TAGS is set
-const grepOptions = TEST_TAGS
-  ? {
-      grep: new RegExp(TEST_TAGS.replace(/[@,]/g, '|').replace(/\|+/g, '|')),
-    }
-  : {}
-
-// Enable retries only in CI and only when running tagged tests
-const retries = CI && TEST_TAGS ? 2 : 0
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: './src/tests',
+  testDir: "./src/tests",
+  timeout: 60 * 1000, // 60 seconds
   fullyParallel: true,
-  forbidOnly: CI,
-  retries,
-  workers: CI ? 1 : undefined,
+  forbidOnly: !!process.env.CI,
+  /* Retry on CI only - with specific retries for sanity and regression tests */
+  retries: ((): number => {
+    if (!process.env.CI) return 0;
+
+    // Check if running sanity or regression tests specifically
+    const testTags = process.env.TEST_TAGS;
+    if (
+      testTags &&
+      (testTags.includes("@sanity") || testTags.includes("@regression"))
+    ) {
+      return 2; // 2 retries for sanity/regression tests
+    } else {
+      return 0; // No retries for other CI tests
+    }
+  })(),
+  workers: process.env.CI ? 4 : undefined,
+  grep: process.env.TEST_TAGS ? new RegExp(process.env.TEST_TAGS) : undefined,
   reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results/results.json' }],
-    ...(CI ? [['github'] as [string]] : []),
+    [
+      "html",
+      {
+        open: "never",
+        outputFolder: "playwright-report",
+      },
+    ],
+    ["list"],
   ],
   use: {
-    baseURL: getEnvCredentials('BASE_URL'),
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    trace: "on",
+    screenshot: {
+      mode: "only-on-failure",
+      fullPage: true,
+    },
+    video: "retain-on-failure",
   },
   projects: [
     {
-      name: 'chromium',
-      use: { 
-        ...require('@playwright/test').devices['Desktop Chrome'],
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
       },
     },
     {
-      name: 'firefox',
-      use: { 
-        ...require('@playwright/test').devices['Desktop Firefox'],
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
       },
     },
     {
-      name: 'webkit',
-      use: { 
-        ...require('@playwright/test').devices['Desktop Safari'],
+      name: "webkit",
+      use: {
+        ...devices["Desktop Safari"],
       },
     },
   ],
-  ...grepOptions,
-})
+});
