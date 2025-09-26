@@ -1,0 +1,42 @@
+{
+  "name": "my-playwright-project",
+  "version": "1.0.0",
+  "description": "Playwright TypeScript test project",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:chrome": "playwright test --project=chromium",
+    "test:sanity": "TEST_TAGS='@sanity' playwright test",
+    "test:regression": "TEST_TAGS='@regression' playwright test",
+    "report": "playwright show-report",
+    "quality-check": "npm run lint:check && npm run format:check && npm run type-check",
+    "lint:check": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format:check": "prettier --check \"src/**/*.{js,ts}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,ts}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@netanelh2/playwright-framework": "^1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.57.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "typescript",
+    "e2e"
+  ],
+  "license": "MIT"
+}
