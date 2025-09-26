@@ -1,59 +1,24 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
     "target": "ES2022",
-    "lib": ["ES2022"],
-
-    /* Modules */
     "module": "ESNext",
     "moduleResolution": "node",
-    "baseUrl": ".",
-    "resolveJsonModule": true,
-
-    /* Interop Constraints */
-    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2022"],
+    "strict": true,
     "esModuleInterop": true,
-
-    /* Emit */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": ".",
     "removeComments": false,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "importsNotUsedAsValues": "remove",
-    "preserveValueImports": false,
-
-    /* Type Checking */
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowUnreachableCode": false,
-
-    /* Completeness */
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Decorators */
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["packages/*/src/**/*"],
-  "exclude": [
-    "node_modules",
-    "**/dist/**",
-    "**/node_modules/**",
-    "test-results",
-    "playwright-report"
-  ],
+  "exclude": ["node_modules", "**/dist/**", "**/node_modules/**"],
   "references": [
     {"path": "./packages/playwright-framework"},
     {"path": "./packages/create-playwright-project"}
