@@ -1,5 +1,11 @@
 ha# @netanelh2/playwright-framework
 
+## 2.1.2
+
+### Patch Changes
+
+- 48901dd: Merge pull request #3 from NetanelH2/changeset-release/main
+
 ## 2.1.1
 
 ### Patch Changes
