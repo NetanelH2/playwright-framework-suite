@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.2.0
+
+### Minor Changes
+
+- ac212a8: feat: update ExamplePage.ts to properly align with locator structure
+
 ## 2.1.2
 
 ### Patch Changes
