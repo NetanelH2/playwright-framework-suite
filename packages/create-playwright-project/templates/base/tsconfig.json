@@ -1,29 +1,54 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["es2022"],
+    /* Language and Environment */
+    "target": "esnext",
+    "lib": ["ESNext"],
+    "moduleDetection": "auto",
+
+    /* Modules */
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+
+    /* Interop Constraints */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    /* Emit */
+    "noEmit": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+
+    /* Type Checking */
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+
+    /* Completeness */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
+  /* File Specification */
   "include": [
     "src/**/*",
-    "playwright.config.ts"
+    "playwright.config.ts",
+    ".prettierrc.ts",
+    "eslint.config.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "test-results",
-    "playwright-report"
-  ]
+  "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
 }
