@@ -1,4 +1,4 @@
-import type { BrowserContext, Page } from "@playwright/test";
+import type {BrowserContext, Page} from '@playwright/test'
 
 /**
  * Base page fixtures interface that provides browser context and page instances.
@@ -25,10 +25,10 @@ export interface PageFixtures {
   /**
    * Browser context instance with automatic cleanup
    */
-  context: BrowserContext;
+  context: BrowserContext
 
   /**
    * Page instance within the context
    */
-  page: Page;
+  page: Page
 }

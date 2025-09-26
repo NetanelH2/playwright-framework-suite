@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
 import chalk from "chalk";
-import inquirer from "inquirer";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, cpSync } from "fs";
 import { execSync } from "child_process";
+import { Command } from "commander";
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import inquirer from "inquirer";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,7 +23,7 @@ const program = new Command();
 program
   .name("@netanelh2/create-playwright-project")
   .description("Create a new Playwright TypeScript project with the framework")
-  .version("1.0.0");
+  .version("2.0.0");
 
 program
   .argument("[project-name]", "name of the project")
@@ -33,7 +33,7 @@ program
   .action(async (projectName: string | undefined, options) => {
     console.log(chalk.blue.bold("🎭 Create Playwright Project"));
     console.log(
-      chalk.gray("Scaffolding a new Playwright TypeScript project...\n"),
+      chalk.gray("Scaffolding a new Playwright TypeScript project...\n")
     );
 
     const config = await getProjectConfig(projectName, options);
@@ -42,7 +42,7 @@ program
 
 async function getProjectConfig(
   projectName: string | undefined,
-  options: any,
+  options: any
 ): Promise<ProjectConfig> {
   if (options.yes && projectName) {
     return {
@@ -151,8 +151,8 @@ async function createProject(config: ProjectConfig): Promise<void> {
     } catch (error) {
       console.log(
         chalk.yellow(
-          "⚠️  Git initialization failed, but project was created successfully",
-        ),
+          "⚠️  Git initialization failed, but project was created successfully"
+        )
       );
     }
   }
@@ -170,8 +170,8 @@ async function createProject(config: ProjectConfig): Promise<void> {
     } catch (error) {
       console.log(
         chalk.yellow(
-          '⚠️  Dependency installation failed. Run "npm install" manually.',
-        ),
+          '⚠️  Dependency installation failed. Run "npm install" manually.'
+        )
       );
     }
   }

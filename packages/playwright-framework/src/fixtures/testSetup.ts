@@ -1,5 +1,5 @@
-import { test as base } from "@playwright/test";
-import type { PageFixtures } from "../types/fixtureTypes.js";
+import {test as base} from '@playwright/test'
+import type {PageFixtures} from '../types/fixtureTypes.js'
 
 /**
  * Base test fixtures that provide consistent browser context and page management.
@@ -22,15 +22,15 @@ import type { PageFixtures } from "../types/fixtureTypes.js";
  * ```
  */
 export const test = base.extend<PageFixtures>({
-  context: async ({ browser }, use) => {
-    const context = await browser.newContext();
-    await use(context);
-    await context.close();
+  context: async ({browser}, use) => {
+    const context = await browser.newContext()
+    await use(context)
+    await context.close()
   },
-  page: async ({ context }, use) => {
-    const page = await context.newPage();
-    await use(page);
+  page: async ({context}, use) => {
+    const page = await context.newPage()
+    await use(page)
   },
-});
+})
 
-export { expect } from "@playwright/test";
+export {expect} from '@playwright/test'
