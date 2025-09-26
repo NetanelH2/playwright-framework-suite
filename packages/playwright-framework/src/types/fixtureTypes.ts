@@ -1,16 +1,16 @@
-import type { BrowserContext, Page } from '@playwright/test'
+import type { BrowserContext, Page } from "@playwright/test";
 
 /**
  * Base page fixtures interface that provides browser context and page instances.
  * This interface can be extended by users to add their specific page objects.
- * 
+ *
  * @example
  * ```typescript
  * interface CustomPageFixtures extends PageFixtures {
  *   mainPage: MainPage
  *   loginPage: LoginPage
  * }
- * 
+ *
  * export const test = baseTest.extend<CustomPageFixtures>({
  *   mainPage: async ({page}, use) => {
  *     await use(new MainPage(page))
@@ -25,10 +25,10 @@ export interface PageFixtures {
   /**
    * Browser context instance with automatic cleanup
    */
-  context: BrowserContext
-  
+  context: BrowserContext;
+
   /**
    * Page instance within the context
    */
-  page: Page
+  page: Page;
 }
