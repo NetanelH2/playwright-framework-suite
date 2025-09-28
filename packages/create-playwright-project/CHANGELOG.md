@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.1
+
+### Patch Changes
+
+- 75669bd: fix: update version numbers for create-playwright-project and playwright-framework packages
+
 ## 2.3.0
 
 ### Minor Changes
