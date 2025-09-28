@@ -36,14 +36,18 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
+      - name: Create Release Pull Request
+        id: create_pr
         uses: changesets/action@v1
         with:
-          publish: npm run release
           version: npm run version-packages
           commit: 'chore: release packages'
           title: 'chore: release packages'
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        if: ${{ steps.create_pr.outputs.published }}
+        run: npm run release
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
