@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.2.7
+
+### Patch Changes
+
+- 7fa1396: chore: release @netanelh2/create-playwright-project@2.2.5
+
 ## 2.2.6
 
 ### Patch Changes
