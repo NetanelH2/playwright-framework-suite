@@ -16,10 +16,10 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - name: Check PR title and enable automerge if release
+      - name: Check PR title and merge if release
         run: |
           if [ "${{ github.event.pull_request.title }}" = "chore: release packages" ]; then
-            gh pr merge ${{ github.event.pull_request.number }} --squash --auto --repo ${{ github.repository }}
+            gh pr merge ${{ github.event.pull_request.number }} --squash --repo ${{ github.repository }}
           else
             echo "Not a release PR, skipping automerge."
           fi
