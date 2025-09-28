@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.4
+
+### Patch Changes
+
+- a1e2691: fix: ensure .gitignore is included in generated projects
+
 ## 2.3.3
 
 ### Patch Changes
