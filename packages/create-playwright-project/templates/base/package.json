@@ -20,7 +20,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@netanelh2/playwright-framework": "^1.0.0"
+    "@netanelh2/playwright-framework": "^2.2.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
