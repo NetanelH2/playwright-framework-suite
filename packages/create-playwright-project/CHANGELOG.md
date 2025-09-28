@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.2.6
+
+### Patch Changes
+
+- d0030d9: fix: add missing newline at end of package.json
+
 ## 2.2.5
 
 ### Patch Changes
