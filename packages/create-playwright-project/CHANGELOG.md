@@ -1,16 +1,25 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.2
+
+### Patch Changes
+
+- **FIXED**: .gitignore file now properly included in generated projects
+- Renamed .gitignore to \_gitignore in template to avoid npm exclusion during publishing
+- Updated CLI to automatically rename \_gitignore back to .gitignore when creating projects
+- This resolves the issue where generated projects were missing .gitignore files
+
 ## 2.3.1
 
 ### Patch Changes
 
 <<<<<<< HEAD
-- 75669bd: fix: update version numbers for create-playwright-project and playwright-framework packages
-=======
+
+- # 75669bd: fix: update version numbers for create-playwright-project and playwright-framework packages
 - Move @netanelh2/playwright-framework to devDependencies in generated projects (testing frameworks should be dev dependencies)
 - Update framework version to 2.2.5 in template
 - Updated README documentation to reflect devDependency installation patterns
->>>>>>> 56db864 (feat: update installation instructions to use devDependencies and increment package versions)
+  > > > > > > > 56db864 (feat: update installation instructions to use devDependencies and increment package versions)
 
 ## 2.3.0
 

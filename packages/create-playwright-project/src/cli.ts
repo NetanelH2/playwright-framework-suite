@@ -10,6 +10,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  unlinkSync,
   writeFileSync,
 } from 'fs'
 import inquirer from 'inquirer'
@@ -73,7 +74,7 @@ const program = new Command()
 program
   .name('@netanelh2/create-playwright-project')
   .description('Create a new Playwright TypeScript project with the framework')
-  .version('2.3.1')
+  .version('2.3.2')
 
 program
   .argument('[project-name]', 'name of the project')
@@ -211,6 +212,16 @@ async function createProject(
     cpSync(join(templatesPath, 'with-examples'), projectPath, {
       recursive: true,
     })
+  }
+
+  // Rename _gitignore to .gitignore (needed because npm excludes .gitignore files from publishing)
+  const gitignoreTemplatePath = join(projectPath, '_gitignore')
+  const gitignorePath = join(projectPath, '.gitignore')
+  if (existsSync(gitignoreTemplatePath)) {
+    const gitignoreContent = readFileSync(gitignoreTemplatePath, 'utf-8')
+    writeFileSync(gitignorePath, gitignoreContent)
+    // Remove the template file
+    unlinkSync(gitignoreTemplatePath)
   }
 
   // Update package.json
