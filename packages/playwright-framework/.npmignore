@@ -1,0 +1,52 @@
+# Source files - we only want to publish the compiled dist/
+src/
+
+# Development files
+tsconfig.json
+tsconfig.tsbuildinfo
+.eslintrc.json
+.prettierrc.json
+.prettierignore
+
+# Dependencies
+node_modules/
+
+# Development outputs
+coverage/
+*.log
+*.tsbuildinfo
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Git files
+.git/
+.gitignore
+
+# NPM files
+.npmrc
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Note: dist/ is NOT ignored - we want it in the published package
+# Note: README.md, CHANGELOG.md, package.json are automatically included

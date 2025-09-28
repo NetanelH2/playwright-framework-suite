@@ -4,7 +4,13 @@
 
 ### Patch Changes
 
+<<<<<<< HEAD
 - 75669bd: fix: update version numbers for create-playwright-project and playwright-framework packages
+=======
+- Move @netanelh2/playwright-framework to devDependencies in generated projects (testing frameworks should be dev dependencies)
+- Update framework version to 2.2.5 in template
+- Updated README documentation to reflect devDependency installation patterns
+>>>>>>> 56db864 (feat: update installation instructions to use devDependencies and increment package versions)
 
 ## 2.3.0
 

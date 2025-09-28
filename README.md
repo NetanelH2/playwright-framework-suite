@@ -30,7 +30,7 @@ create-playwright-project my-test-project
 ### Using the Framework Directly
 
 ```bash
-npm install @netanelh2/playwright-framework @playwright/test
+npm install --save-dev @netanelh2/playwright-framework @playwright/test
 ```
 
 ## ✨ Key Features

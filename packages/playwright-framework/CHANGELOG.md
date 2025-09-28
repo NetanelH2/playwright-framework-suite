@@ -1,4 +1,12 @@
-ha# @netanelh2/playwright-framework
+# @netanelh2/playwright-framework
+
+## 2.2.5
+
+### Patch Changes
+
+- Fixed packaging issue where dist/ folder was not included in published package
+- Added .npmignore file to properly control published files
+- Ensures compiled TypeScript files are available to consumers
 
 ## 2.2.4
 

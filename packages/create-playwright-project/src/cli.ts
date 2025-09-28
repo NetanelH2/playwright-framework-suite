@@ -73,7 +73,7 @@ const program = new Command()
 program
   .name('@netanelh2/create-playwright-project')
   .description('Create a new Playwright TypeScript project with the framework')
-  .version('2.3.0')
+  .version('2.3.1')
 
 program
   .argument('[project-name]', 'name of the project')

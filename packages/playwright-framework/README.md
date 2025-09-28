@@ -17,7 +17,7 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 ## Installation
 
 ```bash
-npm install @netanelh2/playwright-framework @playwright/test typescript
+npm install --save-dev @netanelh2/playwright-framework @playwright/test typescript
 ```
 
 ## Quick Start

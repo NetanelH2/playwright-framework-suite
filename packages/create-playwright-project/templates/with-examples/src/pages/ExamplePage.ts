@@ -1,11 +1,11 @@
 import {test} from '@/fixtures'
 import {EXAMPLE_PAGE_LOCATORS as L} from '@/locators'
-import {BasePage} from '@netanelh2/playwright-framework'
+import {BasePage, type Page} from '@netanelh2/playwright-framework'
 
 export class ExamplePage extends BasePage {
-  /**
-   * Navigate to the example page
-   */
+  constructor(page: Page) {
+    super(page)
+  }
   async navigateTo(): Promise<void> {
     await this.gotoURL('https://example.com')
   }
