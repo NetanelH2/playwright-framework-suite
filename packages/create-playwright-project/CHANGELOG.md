@@ -1,5 +1,23 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.0
+
+### Minor Changes
+
+- Enhanced existing directory handling with smart detection and user prompts
+- Added `--force` flag to allow scaffolding into existing directories without prompts
+- Improved safety checks to identify "safe" directories (containing only `.git`, `README.md`, etc.)
+- Better error messages showing directory contents when scaffolding is blocked
+- Updated documentation with examples for existing directory scenarios
+
+### Features
+
+- **Smart Directory Detection**: Automatically detects if existing directories are safe to scaffold into
+- **Interactive Prompts**: Ask users to confirm when scaffolding into existing "safe" directories  
+- **Force Mode**: Use `--force` flag to bypass all existing directory checks
+- **Better Error Messages**: Show directory contents and provide clear guidance when scaffolding is blocked
+- **Comprehensive Documentation**: Updated README with examples for all existing directory scenarios
+
 ## 2.2.11
 
 ### Patch Changes

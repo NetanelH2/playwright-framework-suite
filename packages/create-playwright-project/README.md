@@ -49,6 +49,7 @@ npx @netanelh2/create-playwright-project my-project --yes
 - `-y, --yes` - Skip prompts and use default settings
 - `--no-install` - Skip automatic dependency installation
 - `--no-git` - Skip git repository initialization
+- `-f, --force` - Force scaffolding into existing directory without prompts
 
 ## Examples
 
@@ -62,9 +63,43 @@ npx @netanelh2/create-playwright-project my-tests --no-install
 # Create without git initialization
 npx @netanelh2/create-playwright-project my-tests --no-git
 
+# Force scaffolding into existing directory
+npx @netanelh2/create-playwright-project existing-folder --force
+
 # Create with custom configuration (interactive)
 npx @netanelh2/create-playwright-project my-tests
 ```
+
+## Existing Directories
+
+The CLI handles existing directories intelligently:
+
+### Safe Directories
+If the target directory exists but only contains "safe" files (like `.git`, `README.md`, `LICENSE`, etc.), you'll be prompted to confirm scaffolding into it:
+
+```bash
+npx @netanelh2/create-playwright-project existing-project
+# Directory existing-project exists but appears safe to scaffold into. Continue? (y/N)
+```
+
+### Non-Safe Directories  
+If the directory contains other files, the CLI will show an error and suggest using `--force`:
+
+```bash
+npx @netanelh2/create-playwright-project existing-project
+# ❌ Directory existing-project already exists!
+# Contents: package.json, src, node_modules
+# Use --force to scaffold into this directory anyway, or choose a different name.
+```
+
+### Force Mode
+Use `--force` to scaffold into any existing directory without prompts:
+
+```bash
+npx @netanelh2/create-playwright-project existing-project --force
+```
+
+**⚠️ Warning:** Force mode will overwrite existing files with the same names as template files.
 
 ## What Gets Created
 
