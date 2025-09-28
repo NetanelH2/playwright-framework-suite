@@ -10,7 +10,8 @@
   "files": [
     "dist/**/*",
     "templates/**/*",
-    "README.md"
+    "README.md",
+    "postinstall.js"
   ],
   "scripts": {
     "build": "tsc",
@@ -21,7 +22,8 @@
     "lint": "eslint src --ext .ts --max-warnings 0",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
-    "test": "echo 'CLI package - no tests'"
+    "test": "echo 'CLI package - no tests'",
+    "postinstall": "node postinstall.js"
   },
   "keywords": [
     "playwright",

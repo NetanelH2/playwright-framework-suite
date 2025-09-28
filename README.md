@@ -6,10 +6,12 @@ A modern, TypeScript-first testing framework for Playwright with enterprise-grad
 
 This monorepo contains two complementary packages:
 
-### [@netanelh2/playwright-framework](./packages/playwright-framework) 
+### [@netanelh2/playwright-framework](./packages/playwright-framework)
+
 **Core testing framework** - Provides base classes, utilities, and type-safe patterns for building maintainable test suites.
 
 ### [@netanelh2/create-playwright-project](./packages/create-playwright-project)
+
 **Project scaffolding CLI** - Interactive tool to create new Playwright projects with best practices built-in.
 
 ## 🚀 Quick Start
@@ -17,14 +19,12 @@ This monorepo contains two complementary packages:
 ### Creating a New Project
 
 ```bash
-# Using npm
-npm create @netanelh2/playwright-project my-test-project
-
-# Using npx
+# Recommended: Using npx (no installation needed)
 npx @netanelh2/create-playwright-project my-test-project
 
-# Using yarn
-yarn create @netanelh2/playwright-project my-test-project
+# Alternative: Install globally first
+npm install -g @netanelh2/create-playwright-project
+create-playwright-project my-test-project
 ```
 
 ### Using the Framework Directly
@@ -82,10 +82,12 @@ npm install @netanelh2/playwright-framework @playwright/test
 ## 🛠️ Development
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm 9+
 
 ### Setup
+
 ```bash
 git clone https://github.com/NetanelH2/playwright-framework-suite.git
 cd playwright-framework-suite
@@ -94,9 +96,10 @@ npm run build
 ```
 
 ### Available Scripts
+
 ```bash
 npm run build          # Build both packages
-npm run build:framework # Build framework only  
+npm run build:framework # Build framework only
 npm run build:cli      # Build CLI only
 npm test              # Run all tests
 npm run lint          # Run ESLint
@@ -107,9 +110,10 @@ npm run clean         # Clean build artifacts
 ## 🏗️ Example Usage
 
 ### Basic Page Object
+
 ```typescript
-import { BasePage } from '@netanelh2/playwright-framework'
-import { LOGIN_PAGE_LOCATORS as L } from '@/locators'
+import {BasePage} from '@netanelh2/playwright-framework'
+import {LOGIN_PAGE_LOCATORS as L} from '@/locators'
 
 export class LoginPage extends BasePage {
   async login(username: string, password: string): Promise<void> {
@@ -123,11 +127,12 @@ export class LoginPage extends BasePage {
 ```
 
 ### Test with Fixtures
+
 ```typescript
-import { test } from '@/fixtures'
+import {test} from '@/fixtures'
 
 test.describe('Authentication @sanity', () => {
-  test('should login successfully', async ({ loginPage, dashboardPage }) => {
+  test('should login successfully', async ({loginPage, dashboardPage}) => {
     await loginPage.navigateTo()
     await loginPage.login('user@example.com', 'password123')
     await dashboardPage.validateUserLoggedIn()
@@ -144,6 +149,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for version history and release notes.
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
 
 ### Quick Contribution Steps:
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -157,7 +163,7 @@ MIT License - see [LICENSE](./LICENSE) for details.
 ## 🙋‍♂️ Support
 
 - 🐛 [Report issues](https://github.com/NetanelH2/playwright-framework-suite/issues)
-- 💬 [Discussions](https://github.com/NetanelH2/playwright-framework-suite/discussions)  
+- 💬 [Discussions](https://github.com/NetanelH2/playwright-framework-suite/discussions)
 - 📖 [Documentation](https://netanelh2.github.io/playwright-framework-suite/)
 
 ---

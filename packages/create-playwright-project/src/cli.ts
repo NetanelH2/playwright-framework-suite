@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 import chalk from 'chalk'
 import {execSync} from 'child_process'
@@ -18,12 +19,18 @@ interface ProjectConfig {
   installDependencies: boolean
 }
 
+interface CliOptions {
+  yes?: boolean
+  noInstall?: boolean
+  noGit?: boolean
+}
+
 const program = new Command()
 
 program
   .name('@netanelh2/create-playwright-project')
   .description('Create a new Playwright TypeScript project with the framework')
-  .version('2.0.0')
+  .version('2.2.4')
 
 program
   .argument('[project-name]', 'name of the project')
@@ -42,7 +49,7 @@ program
 
 async function getProjectConfig(
   projectName: string | undefined,
-  options: any,
+  options: CliOptions,
 ): Promise<ProjectConfig> {
   if (options.yes && projectName) {
     return {
