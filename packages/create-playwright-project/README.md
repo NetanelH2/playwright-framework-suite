@@ -75,6 +75,7 @@ npx @netanelh2/create-playwright-project my-tests
 The CLI handles existing directories intelligently:
 
 ### Safe Directories
+
 If the target directory exists but only contains "safe" files (like `.git`, `README.md`, `LICENSE`, etc.), you'll be prompted to confirm scaffolding into it:
 
 ```bash
@@ -82,7 +83,8 @@ npx @netanelh2/create-playwright-project existing-project
 # Directory existing-project exists but appears safe to scaffold into. Continue? (y/N)
 ```
 
-### Non-Safe Directories  
+### Non-Safe Directories
+
 If the directory contains other files, the CLI will show an error and suggest using `--force`:
 
 ```bash
@@ -93,6 +95,7 @@ npx @netanelh2/create-playwright-project existing-project
 ```
 
 ### Force Mode
+
 Use `--force` to scaffold into any existing directory without prompts:
 
 ```bash

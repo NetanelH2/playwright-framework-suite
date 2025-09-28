@@ -4,7 +4,14 @@
 import chalk from 'chalk'
 import {execSync} from 'child_process'
 import {Command} from 'commander'
-import {cpSync, existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync} from 'fs'
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'fs'
 import inquirer from 'inquirer'
 import {dirname, join} from 'path'
 import {fileURLToPath} from 'url'
@@ -15,25 +22,25 @@ const __dirname = dirname(__filename)
 // Files that are safe to overwrite or coexist with
 const SAFE_FILES = new Set([
   '.git',
-  '.gitignore', 
+  '.gitignore',
   'README.md',
   'README.txt',
   'LICENSE',
   'LICENSE.md',
   'LICENSE.txt',
   '.DS_Store',
-  'Thumbs.db'
+  'Thumbs.db',
 ])
 
 function isDirSafeToScaffold(dirPath: string): boolean {
   if (!existsSync(dirPath)) {
     return true
   }
-  
+
   try {
     const files = readdirSync(dirPath)
     // Directory is safe if it's empty or only contains safe files
-    return files.every(file => SAFE_FILES.has(file))
+    return files.every((file) => SAFE_FILES.has(file))
   } catch {
     return false
   }
@@ -142,7 +149,10 @@ async function getProjectConfig(
   }
 }
 
-async function createProject(config: ProjectConfig, force: boolean = false): Promise<void> {
+async function createProject(
+  config: ProjectConfig,
+  force: boolean = false,
+): Promise<void> {
   const {projectName, useGit, includeSampleTests, installDependencies} = config
   const projectPath = join(process.cwd(), projectName)
 
@@ -150,14 +160,18 @@ async function createProject(config: ProjectConfig, force: boolean = false): Pro
   if (existsSync(projectPath)) {
     const isDirectorySafe = isDirSafeToScaffold(projectPath)
     const dirContents = getDirContents(projectPath)
-    
+
     if (!force && !isDirectorySafe) {
       console.log(chalk.red(`❌ Directory ${projectName} already exists!`))
       console.log(chalk.yellow('Contents:'), dirContents.join(', '))
-      console.log(chalk.gray('Use --force to scaffold into this directory anyway, or choose a different name.'))
+      console.log(
+        chalk.gray(
+          'Use --force to scaffold into this directory anyway, or choose a different name.',
+        ),
+      )
       process.exit(1)
     }
-    
+
     if (!force && isDirectorySafe) {
       const {shouldProceed} = await inquirer.prompt([
         {
@@ -167,13 +181,13 @@ async function createProject(config: ProjectConfig, force: boolean = false): Pro
           default: false,
         },
       ])
-      
+
       if (!shouldProceed) {
         console.log(chalk.yellow('Operation cancelled.'))
         process.exit(0)
       }
     }
-    
+
     if (force || isDirectorySafe) {
       console.log(chalk.yellow(`📁 Using existing directory: ${projectName}`))
     }
@@ -181,8 +195,6 @@ async function createProject(config: ProjectConfig, force: boolean = false): Pro
     console.log(chalk.yellow(`📁 Creating project directory: ${projectName}`))
     mkdirSync(projectPath, {recursive: true})
   }
-
-
 
   // Copy template files
   const templatesPath = join(__dirname, '..', 'templates')

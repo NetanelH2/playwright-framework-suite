@@ -13,7 +13,7 @@
 ### Features
 
 - **Smart Directory Detection**: Automatically detects if existing directories are safe to scaffold into
-- **Interactive Prompts**: Ask users to confirm when scaffolding into existing "safe" directories  
+- **Interactive Prompts**: Ask users to confirm when scaffolding into existing "safe" directories
 - **Force Mode**: Use `--force` flag to bypass all existing directory checks
 - **Better Error Messages**: Show directory contents and provide clear guidance when scaffolding is blocked
 - **Comprehensive Documentation**: Updated README with examples for all existing directory scenarios
