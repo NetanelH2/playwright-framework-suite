@@ -1,5 +1,12 @@
 # @netanelh2/create-playwright-project
 
+## 2.2.5
+
+### Patch Changes
+
+- b7d8ac1: remove: unused postinstall.ts file
+- f1d2dee: fix: update framework version in template from ^1.0.0 to ^2.2.4
+
 ## 2.2.4
 
 ### Patch Changes
