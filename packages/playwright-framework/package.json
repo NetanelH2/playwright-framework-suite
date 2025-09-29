@@ -1,6 +1,6 @@
 {
   "name": "@netanelh2/playwright-framework",
-  "version": "2.2.8",
+  "version": "2.2.12",
   "description": "A robust Playwright TypeScript framework with Page Object Model, smart locators, and utilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,7 +33,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc src/index.ts --outDir dist --declaration --declarationMap --sourceMap --moduleResolution bundler --module ESNext --target ES2022 --strict --esModuleInterop --skipLibCheck --forceConsistentCasingInFileNames --removeComments false --resolveJsonModule --allowSyntheticDefaultImports",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",

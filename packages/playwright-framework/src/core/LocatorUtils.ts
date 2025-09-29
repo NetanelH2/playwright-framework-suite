@@ -1,4 +1,4 @@
-import type {StringOrRoleLocatorType} from '../types/locatorTypes.js'
+import type {StringOrRoleLocatorType} from '../types/locatorTypes'
 import type {Locator, Page} from '@playwright/test'
 
 export class LocatorUtils {
