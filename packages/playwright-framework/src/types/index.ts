@@ -1,2 +1,2 @@
-export * from './locatorTypes.js'
-export * from './fixtureTypes.js'
+export * from './locatorTypes'
+export * from './fixtureTypes'

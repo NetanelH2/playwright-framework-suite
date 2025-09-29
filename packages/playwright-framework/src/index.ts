@@ -1,14 +1,14 @@
 // Core classes
-export * from './core/index.js'
+export * from './core/index'
 
 // Types
-export * from './types/index.js'
+export * from './types/index'
 
 // Helpers
-export * from './helpers/index.js'
+export * from './helpers/index'
 
 // Fixtures (also available as separate import)
-export * from './fixtures/index.js'
+export * from './fixtures/index'
 
 // Re-export common Playwright types for convenience
 export type { 

@@ -20,7 +20,7 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@netanelh2/playwright-framework": "^2.2.5",
+    "@netanelh2/playwright-framework": "^2.2.7",
     "@playwright/test": "^1.40.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

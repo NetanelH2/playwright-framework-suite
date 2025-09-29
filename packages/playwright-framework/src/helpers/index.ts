@@ -1,2 +1,2 @@
-export * from './envUtils.js'
-export * from './arrayUtils.js'
+export * from './envUtils'
+export * from './arrayUtils'
