@@ -1,5 +1,5 @@
 import {test as base} from '@playwright/test'
-import type {PageFixtures} from '../types/fixtureTypes'
+import type {PageFixtures} from '../types/fixtureTypes.js'
 
 /**
  * Base test fixtures that provide consistent browser context and page management.

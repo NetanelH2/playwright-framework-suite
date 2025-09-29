@@ -11,4 +11,4 @@
  * })
  * ```
  */
-export {expect, test} from './testSetup'
+export {expect, test} from './testSetup.js'

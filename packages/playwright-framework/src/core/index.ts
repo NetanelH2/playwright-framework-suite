@@ -1,2 +1,2 @@
-export * from './BasePage'
-export * from './LocatorUtils'
+export * from './BasePage.js'
+export * from './LocatorUtils.js'

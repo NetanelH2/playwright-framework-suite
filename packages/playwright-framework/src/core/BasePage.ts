@@ -1,6 +1,6 @@
 import {expect, type Locator, type Page} from '@playwright/test'
-import type {StringOrRoleLocatorType} from '../types/locatorTypes'
-import {LocatorUtils} from './LocatorUtils'
+import type {StringOrRoleLocatorType} from '../types/locatorTypes.js'
+import {LocatorUtils} from './LocatorUtils.js'
 
 export class BasePage extends LocatorUtils {
   constructor(page: Page) {

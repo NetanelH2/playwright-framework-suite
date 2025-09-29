@@ -1,5 +1,5 @@
 import type {Locator, Page} from '@playwright/test'
-import type {StringOrRoleLocatorType} from '../types/locatorTypes'
+import type {StringOrRoleLocatorType} from '../types/locatorTypes.js'
 
 export class LocatorUtils {
   protected page: Page
