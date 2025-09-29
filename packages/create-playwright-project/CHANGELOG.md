@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.6
+
+### Patch Changes
+
+- f552840: Automated release: feat: update installation instructions to use devDependencies and increment package versions
+
 ## 2.3.4
 
 ### Patch Changes
