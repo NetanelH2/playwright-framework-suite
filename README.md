@@ -42,7 +42,9 @@ npm install --save-dev @netanelh2/playwright-framework @playwright/test
 - **⚙️ Environment Management** - Secure credential handling via `.env` files
 - **📋 Smart Locator Resolution** - Automatic fallback from role → label → text selectors
 - **🔄 Built-in Retry Logic** - Configurable retries with CI-aware settings
-- **📊 Quality Gates** - ESLint + Prettier + TypeScript validation pipeline
+- **📊 Quality Gates** - ESLint 9.x + Prettier 3.x + TypeScript 5.x validation pipeline
+- **🚀 Modern ES Modules** - Full ESM support with proper import/export handling
+- **⚡ Project References** - Optimized TypeScript compilation with incremental builds
 
 ## 🏛️ Architecture Overview
 
@@ -98,14 +100,23 @@ npm run build
 ### Available Scripts
 
 ```bash
-npm run build          # Build both packages
-npm run build:framework # Build framework only
-npm run build:cli      # Build CLI only
+npm run build          # Build both packages (ES modules)
+npm run build:framework # Build framework package only
+npm run build:cli      # Build CLI package only
 npm test              # Run all tests
-npm run lint          # Run ESLint
-npm run type-check    # TypeScript compilation check
+npm run lint          # Run ESLint 9.x with flat config
+npm run type-check    # TypeScript 5.x compilation check
 npm run clean         # Clean build artifacts
 ```
+
+### Modern Tooling Stack
+
+This monorepo uses cutting-edge tooling for optimal developer experience:
+
+- **ESLint 9.x** with flat configuration (`eslint.config.ts`)
+- **Prettier 3.x** with TypeScript configuration (`.prettierrc.ts`)
+- **TypeScript 5.x** with project references for incremental builds
+- **ES Modules** throughout with proper `.js` extensions in imports
 
 ## 🏗️ Example Usage
 

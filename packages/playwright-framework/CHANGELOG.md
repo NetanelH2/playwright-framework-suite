@@ -1,5 +1,19 @@
 # @netanelh2/playwright-framework
 
+## 2.2.17
+
+### Minor Changes
+
+- **ES Modules Migration**: Complete migration to modern ES modules with proper `.js` extensions in imports/exports
+- **TypeScript Project References**: Added `"composite": true` for optimized incremental builds
+- **Build System**: Updated build process for full ES module compatibility
+
+### Patch Changes
+
+- Updated all internal imports to use `.js` extensions for ESM compatibility
+- Enhanced TypeScript configuration with project references support
+- Improved build output for better consumer experience
+
 ## 2.2.13
 
 ### Patch Changes

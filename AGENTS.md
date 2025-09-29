@@ -2,6 +2,15 @@
 
 Purpose: Make agents instantly productive in this Playwright + TypeScript test framework by codifying how this repo is structured, how to run it, and how to extend it safely.
 
+## Modern Tooling Stack
+
+This framework uses cutting-edge tooling for optimal developer experience:
+
+- **ESLint 9.x** with flat configuration (`eslint.config.ts`)
+- **Prettier 3.x** with TypeScript configuration (`.prettierrc.ts`)
+- **TypeScript 5.x** with project references for incremental builds
+- **ES Modules** throughout with proper `.js` extensions in imports
+
 ## Project Shape (big picture)
 
 - Test stack: Playwright + TypeScript using a 3-layer model.
@@ -26,10 +35,11 @@ Purpose: Make agents instantly productive in this Playwright + TypeScript test f
 - Tests: place under `src/tests/**`, name with `.spec.ts`. Import the custom `test` from `@/fixtures` (not from `@playwright/test`).
 - Steps: group meaningful actions with `test.step(...)` inside page methods where helpful.
 - Tags: classify suites with `@sanity` or `@regression` in describe titles to enable targeted runs (see commands below).
-- Lint/format: ESLint + Prettier are enforced; Prettier violations fail CI. Follow rules in `eslint.config.ts` (tests have relaxed rules).
+- Lint/format: ESLint 9.x with flat config + Prettier 3.x with TypeScript config are enforced; Prettier violations fail CI. Follow rules in `eslint.config.ts` (tests have relaxed rules).
 - Locator resolution (from code):
   - For string locators: `page.locator(...) → page.getByLabel(...) → page.getByText(...)`.
   - For role locators: `page.getByRole(role, {name})`, with optional `parent` via `page.locator(parent).getByRole(...)`.
+- ES Modules: Use `.js` extensions in relative imports (e.g., `import { BasePage } from './BasePage.js'`).
 
 ## Typical Addition (minimal example)
 
@@ -97,4 +107,6 @@ Reference Files
 - `src/data/urls.ts` — environment-aware URLs
 - `src/types/locatorTypes.ts` — locator typing contract
 - `playwright.config.ts` — test dir, reporters, retries, tags
+- `eslint.config.ts` — modern ESLint 9.x flat configuration
+- `.prettierrc.ts` — TypeScript Prettier 3.x configuration
 - `package.json` — scripts for test/quality

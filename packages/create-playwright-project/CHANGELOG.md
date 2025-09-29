@@ -1,5 +1,29 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.15
+
+### Major Changes
+
+- **Modern Tooling Migration**: Complete migration from legacy ESLint/Prettier configs to modern flat configurations
+- **ESLint 9.x**: Upgraded to ESLint 9.x with flat config (`eslint.config.ts`)
+- **Prettier 3.x**: Added TypeScript-based Prettier configuration (`.prettierrc.ts`)
+- **TypeScript Enhancements**: Updated to TypeScript 5.x with `"moduleResolution": "bundler"`
+- **Project References**: Added `"composite": true` for optimized TypeScript compilation
+
+### Minor Changes
+
+- **Template Updates**: Updated generated project templates with modern tooling and scripts
+- **Dependencies**: Upgraded all dev dependencies to latest compatible versions
+- **Scripts**: Added comprehensive npm scripts (`check`, `lint:check`, `format:check`, `fix`)
+- **Configuration Files**: All modern config files now included in generated projects
+
+### Features
+
+- **Modern Code Quality**: ESLint 9.x flat config with TypeScript and Playwright rules
+- **Advanced Prettier**: TypeScript-based configuration with project-specific overrides
+- **Comprehensive Scripts**: Full suite of quality assurance and development scripts
+- **ES Module Ready**: Generated projects configured for modern ES modules
+
 ## 2.3.13
 
 ### Patch Changes

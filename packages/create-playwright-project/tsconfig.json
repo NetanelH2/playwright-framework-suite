@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["ES2022"],
     "types": ["node"],
     "outDir": "./dist",
@@ -20,5 +20,11 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "templates"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "templates",
+    ".prettierrc.ts",
+    "eslint.config.ts"
+  ]
 }

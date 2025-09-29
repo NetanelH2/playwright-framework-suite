@@ -12,29 +12,27 @@
     "test:sanity": "TEST_TAGS='@sanity' playwright test",
     "test:regression": "TEST_TAGS='@regression' playwright test",
     "report": "playwright show-report",
-    "quality-check": "npm run lint:check && npm run format:check && npm run type-check",
-    "lint:check": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "format:check": "prettier --check \"src/**/*.{js,ts}\"",
-    "format:fix": "prettier --write \"src/**/*.{js,ts}\"",
+    "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
+    "format:check": "prettier --check src/**/*.ts",
+    "check": "npm run lint:check && npm run format:check && npx tsc",
+    "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@netanelh2/playwright-framework": "latest",
     "@playwright/test": "latest",
     "@types/node": "latest",
-    "@typescript-eslint/eslint-plugin": "latest",
-    "@typescript-eslint/parser": "latest",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
     "dotenv": "latest",
-    "eslint": "latest",
-    "prettier": "latest",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-playwright": "^2.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jiti": "^2.4.2",
+    "prettier": "^3.4.2",
     "typescript": "latest"
   },
-  "keywords": [
-    "playwright",
-    "testing",
-    "typescript",
-    "e2e"
-  ],
+  "keywords": ["playwright", "testing", "typescript", "e2e"],
   "license": "MIT"
 }

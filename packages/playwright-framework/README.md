@@ -12,13 +12,16 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 - 🔧 **Test Fixtures**: Pre-configured fixtures for consistent browser context and page management
 - 🛠️ **Utilities**: Helper functions for environment variables, array operations, and more
 - 📦 **TypeScript**: Full TypeScript support with comprehensive type definitions
-- 🚀 **ESM Ready**: Modern ES modules with proper exports
+- 🚀 **Modern ES Modules**: Full ESM support with proper `.js` extensions in imports/exports
+- ⚡ **Project References**: Optimized compilation with TypeScript project references
 
 ## Installation
 
 ```bash
 npm install --save-dev @netanelh2/playwright-framework @playwright/test typescript
 ```
+
+> **Note**: This package uses modern ES modules. Ensure your project has `"type": "module"` in `package.json` and uses `.js` extensions in relative imports.
 
 ## Quick Start
 

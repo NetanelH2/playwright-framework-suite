@@ -10,18 +10,23 @@
   "files": [
     "dist/**/*",
     "templates/**/*",
+    ".prettierrc.ts",
+    ".prettierignore",
+    "eslint.config.ts",
     "README.md"
   ],
   "scripts": {
     "build": "tsc --project . && chmod +x dist/cli.js",
     "build:watch": "tsc --watch",
-    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "clean": "rm -rf dist tsconfig*.tsbuildinfo",
     "prepublishOnly": "npm run clean && npm run build",
     "dev": "npm run build && node dist/cli.js",
-    "lint": "eslint src --ext .ts --max-warnings 0",
+    "lint": "eslint src --max-warnings 0",
+    "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
-    "test": "echo 'CLI package - no tests'"
+    "check": "npm run lint:check && npm run format:check && npx tsc",
+    "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored"
   },
   "keywords": [
     "playwright",
@@ -53,12 +58,14 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-playwright": "^2.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jiti": "^2.4.2",
+    "prettier": "^3.4.2",
     "typescript": "^5.0.0"
   },
   "engines": {
