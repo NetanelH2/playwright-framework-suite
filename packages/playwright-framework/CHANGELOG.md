@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.2.13
+
+### Patch Changes
+
+- 4705b22: fix: restore missing exports in core, helpers, and types modules
+
 ## 2.2.8
 
 ### Patch Changes
