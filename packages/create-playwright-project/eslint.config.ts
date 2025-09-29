@@ -1,15 +1,19 @@
-import eslint from '@eslint/js';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettierConfig from 'eslint-config-prettier';
-import playwright from 'eslint-plugin-playwright';
-import prettierPlugin from 'eslint-plugin-prettier';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import eslint from '@eslint/js'
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
+import prettierConfig from 'eslint-config-prettier'
+import playwright from 'eslint-plugin-playwright'
+import prettierPlugin from 'eslint-plugin-prettier'
+import {dirname} from 'path'
+import {fileURLToPath} from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default [
+  // Global ignores
+  {
+    ignores: ['.prettierrc.ts'],
+  },
   // Config for template files without project checking - placed FIRST for highest precedence
   {
     files: ['templates/**/*.ts'],
@@ -43,13 +47,14 @@ export default [
   {
     ...eslint.configs.recommended,
     files: ['**/*.{js,ts}'],
+    ignores: ['.prettierrc.ts'],
   },
   // Prettier config - properly import as default
   prettierConfig,
   // Config for non-template TypeScript files with project checking
   {
     files: ['**/*.ts'],
-    ignores: ['templates/**'],
+    ignores: ['templates/**', '.prettierrc.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -110,4 +115,4 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
-];
+]
