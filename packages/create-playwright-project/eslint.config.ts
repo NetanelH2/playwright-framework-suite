@@ -63,6 +63,26 @@ export default [
     },
   },
   {
+    files: ['eslint.config.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        // Don't use project-based parsing for the config file itself
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      // Relaxed rules for config file
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
     files: ['**/*.spec.ts', '**/*.test.ts'],
     rules: {
       // Test files can have console.log for debugging
@@ -92,7 +112,6 @@ export default [
       'coverage/',
       'playwright-report/',
       'test-results/',
-      '!eslint.config.ts', // Include this config file
     ],
   },
 ];
