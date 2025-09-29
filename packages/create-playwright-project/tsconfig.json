@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "lib": ["ES2022"],
     "types": ["node"],
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "strict": true,
     "composite": true,
     "esModuleInterop": true,
@@ -22,6 +22,6 @@
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true
   },
-  "include": ["src/**/*", "eslint.config.ts", ".prettierrc.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "templates", ".prettierrc.ts"]
 }
