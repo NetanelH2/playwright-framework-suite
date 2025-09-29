@@ -1,1 +1,1 @@
-export { ExamplePage } from './ExamplePage'
+export {LoginPage} from './LoginPage'

@@ -1,5 +1,5 @@
-import type {ExamplePage} from '@/pages'
+import type {LoginPage} from '@/pages'
 
 export interface TestFixtures {
-  examplePage: ExamplePage
+  loginPage: LoginPage
 }
