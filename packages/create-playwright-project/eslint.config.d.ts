@@ -1,5 +1,4 @@
 import tsParser from '@typescript-eslint/parser';
-import * as playwright from 'eslint-plugin-playwright';
 declare const _default: ({
     rules: Record<string, 0 | "off">;
 } | {
@@ -21,19 +20,19 @@ declare const _default: ({
     };
     plugins: {
         '@typescript-eslint': {
-            default: {
-                configs: Record<string, import("@typescript-eslint/utils/ts-eslint").ClassicConfig.Config>;
-                meta: import("@typescript-eslint/utils/ts-eslint").FlatConfig.PluginMeta;
-                rules: typeof import("@typescript-eslint/eslint-plugin/use-at-your-own-risk/rules");
-            };
             configs: Record<string, import("@typescript-eslint/utils/ts-eslint").ClassicConfig.Config>;
             meta: import("@typescript-eslint/utils/ts-eslint").FlatConfig.PluginMeta;
             rules: typeof import("@typescript-eslint/eslint-plugin/use-at-your-own-risk/rules");
         };
-        playwright: typeof playwright;
-        prettier: {
-            default: ESLint.Plugin;
+        playwright: {
+            configs: {
+                "flat/recommended": Linter.Config;
+                "playwright-test": Linter.Config;
+                recommended: Linter.Config;
+            };
+            rules: Record<string, Rule.RuleModule>;
         };
+        prettier: ESLint.Plugin;
     };
     rules: {
         'no-undef': string;

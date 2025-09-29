@@ -19,7 +19,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true
   },
   "include": ["src/**/*", "eslint.config.ts"],

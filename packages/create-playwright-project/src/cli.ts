@@ -199,20 +199,30 @@ async function createProject(
   }
 
   // Copy template files
-  const templatesPath = join(__dirname, '..', 'templates');
+  const templatesPath = join(__dirname, '..', '..', 'templates');
 
   console.log(chalk.yellow('📋 Copying template files...'));
 
-  // Copy base template
-  if (existsSync(join(templatesPath, 'base'))) {
-    cpSync(join(templatesPath, 'base'), projectPath, { recursive: true });
+  // Copy base template contents
+  const basePath = join(templatesPath, 'base');
+  if (existsSync(basePath)) {
+    for (const item of readdirSync(basePath)) {
+      const srcPath = join(basePath, item);
+      const destPath = join(projectPath, item);
+      cpSync(srcPath, destPath, { recursive: true, force: true });
+    }
   }
 
-  if (includeSampleTests && existsSync(join(templatesPath, 'with-examples'))) {
-    console.log(chalk.yellow('📝 Adding sample tests...'));
-    cpSync(join(templatesPath, 'with-examples'), projectPath, {
-      recursive: true,
-    });
+  if (includeSampleTests) {
+    const examplesPath = join(templatesPath, 'with-examples');
+    if (existsSync(examplesPath)) {
+      console.log(chalk.yellow('📝 Adding sample tests...'));
+      for (const item of readdirSync(examplesPath)) {
+        const srcPath = join(examplesPath, item);
+        const destPath = join(projectPath, item);
+        cpSync(srcPath, destPath, { recursive: true, force: true });
+      }
+    }
   }
 
   // Rename _gitignore to .gitignore (needed because npm excludes .gitignore files from publishing)

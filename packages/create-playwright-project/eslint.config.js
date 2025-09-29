@@ -1,13 +1,13 @@
-import { configs } from '@eslint/js';
-import * as tseslint from '@typescript-eslint/eslint-plugin';
+import eslint from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
-import * as playwright from 'eslint-plugin-playwright';
-import * as prettierPlugin from 'eslint-plugin-prettier';
+import playwright from 'eslint-plugin-playwright';
+import prettierPlugin from 'eslint-plugin-prettier';
 export default [
     // Fix for ESLint JS recommended config
     {
-        ...configs.recommended,
+        ...eslint.configs.recommended,
         files: ['**/*.{js,ts}'],
     },
     // Prettier config - properly import as default
