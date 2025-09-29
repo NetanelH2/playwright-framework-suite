@@ -8,7 +8,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "composite": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,10 +16,7 @@
     "sourceMap": true,
     "removeComments": false,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
