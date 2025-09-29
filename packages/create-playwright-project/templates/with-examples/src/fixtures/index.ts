@@ -1,1 +1,1 @@
-export { test, expect } from './testSetup.js'
+export { test, expect } from './testSetup'

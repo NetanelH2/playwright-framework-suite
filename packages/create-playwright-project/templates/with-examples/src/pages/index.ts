@@ -1,1 +1,1 @@
-export { ExamplePage } from './ExamplePage.js'
+export { ExamplePage } from './ExamplePage'

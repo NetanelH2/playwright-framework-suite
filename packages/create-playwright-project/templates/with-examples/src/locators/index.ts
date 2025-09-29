@@ -1,1 +1,1 @@
-export * from './example/Example_Page.js'
+export * from './example/Example_Page'
