@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.2.8
+
+### Patch Changes
+
+- f552840: Automated release: feat: update installation instructions to use devDependencies and increment package versions
+
 ## 2.2.6
 
 ### Patch Changes
