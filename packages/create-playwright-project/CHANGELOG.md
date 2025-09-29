@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.3
+
+### Patch Changes
+
+- fix: exclude .prettierrc.ts from ESLint linting and remove from tsconfig include to resolve parsing errors
+
 ## 2.3.15
 
 ### Major Changes

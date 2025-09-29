@@ -92,6 +92,7 @@ export default [
       'coverage/',
       'playwright-report/',
       'test-results/',
+      '.prettierrc.ts',
       '!eslint.config.ts', // Include this config file
     ],
   },
