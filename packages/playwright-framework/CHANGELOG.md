@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.4.0
+
+### Minor Changes
+
+- 34bc75b: feat: Modern tooling migration and ES modules support
+
 ## 2.3.0
 
 ### Minor Changes
