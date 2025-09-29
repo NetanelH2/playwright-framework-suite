@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.3.0
+
+### Minor Changes
+
+- 50d3d7a: feat: update package version and adjust import paths to include file extensions
+
 ## 2.2.17
 
 ### Minor Changes
