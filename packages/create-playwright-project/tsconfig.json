@@ -5,8 +5,9 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022"],
     "types": ["node"],
+    "noEmit": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "composite": true,
     "esModuleInterop": true,
@@ -17,14 +18,12 @@
     "sourceMap": true,
     "removeComments": false,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "templates",
-    ".prettierrc.ts",
-    "eslint.config.ts"
-  ]
+  "include": ["src/**/*", "eslint.config.ts", ".prettierrc.ts"],
+  "exclude": ["node_modules", "dist", "templates", ".prettierrc.ts"]
 }
