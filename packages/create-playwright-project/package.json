@@ -2,10 +2,10 @@
   "name": "@netanelh2/create-playwright-project",
   "version": "2.4.4",
   "description": "CLI tool to scaffold new Playwright projects with @netanelh2/playwright-framework",
-  "main": "dist/cli.js",
+  "main": "dist/src/cli.js",
   "type": "module",
   "bin": {
-    "create-playwright-project": "./dist/cli.js"
+    "create-playwright-project": "./dist/src/cli.js"
   },
   "files": [
     "dist/**/*",
@@ -16,7 +16,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc --project . && chmod +x dist/cli.js",
+    "build": "tsc --project . && chmod +x dist/src/cli.js",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist tsconfig*.tsbuildinfo",
     "prepublishOnly": "npm run clean && npm run build",
