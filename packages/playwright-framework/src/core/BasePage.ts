@@ -1,5 +1,5 @@
-import type {StringOrRoleLocatorType} from '../types/locatorTypes'
 import {expect, type Locator, type Page} from '@playwright/test'
+import type {StringOrRoleLocatorType} from '../types/locatorTypes'
 import {LocatorUtils} from './LocatorUtils'
 
 export class BasePage extends LocatorUtils {
@@ -11,7 +11,7 @@ export class BasePage extends LocatorUtils {
   protected async validateText(
     locator: StringOrRoleLocatorType,
     text: string,
-  ): Promise<void> | never {
+  ): Promise<void> {
     const extractedLocator = this.extractLocator(locator)
     const locatorTypes: (() => Promise<void>)[] = [
       (): Promise<void> => expect(extractedLocator).toHaveText(text),

@@ -1,6 +1,6 @@
-import dotenv from 'dotenv'
+import {config} from 'dotenv'
 
-dotenv.config({quiet: true})
+config({quiet: true})
 
 export const getEnvCredentials = (credentials: string): string => {
   if (!process.env[credentials]) {
