@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.11
+
+### Patch Changes
+
+- 5218674: fix: remove .js extensions from template imports in create-playwright-project
+
 ## 2.3.10
 
 ### Patch Changes
