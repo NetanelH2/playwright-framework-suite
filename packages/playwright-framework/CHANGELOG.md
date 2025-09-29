@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.4.4
+
+### Patch Changes
+
+- 058821f: Merge branch 'main' of github.com:NetanelH2/playwright-framework-suite
+
 ## 2.4.3
 
 ### Patch Changes
