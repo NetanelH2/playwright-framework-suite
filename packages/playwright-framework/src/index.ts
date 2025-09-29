@@ -11,11 +11,11 @@ export * from './helpers/index'
 export * from './fixtures/index'
 
 // Re-export common Playwright types for convenience
-export type { 
-  Page, 
-  Locator, 
-  BrowserContext, 
-  Browser, 
+export type {
+  Browser,
+  BrowserContext,
+  Locator,
+  Page,
   PlaywrightTestConfig,
-  TestInfo 
+  TestInfo,
 } from '@playwright/test'

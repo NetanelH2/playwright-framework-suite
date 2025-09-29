@@ -11,4 +11,4 @@
  * })
  * ```
  */
-export {test, expect} from './testSetup'
+export {expect, test} from './testSetup'

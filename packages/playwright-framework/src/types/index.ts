@@ -1,2 +1,2 @@
-export * from './locatorTypes'
 export * from './fixtureTypes'
+export * from './locatorTypes'

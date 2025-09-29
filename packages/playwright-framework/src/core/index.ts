@@ -1,2 +1,2 @@
-export * from './LocatorUtils'
 export * from './BasePage'
+export * from './LocatorUtils'

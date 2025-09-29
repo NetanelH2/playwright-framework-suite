@@ -1,2 +1,2 @@
-export * from './envUtils'
 export * from './arrayUtils'
+export * from './envUtils'
