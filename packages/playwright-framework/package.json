@@ -66,21 +66,21 @@
   },
   "homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/playwright-framework#readme",
   "peerDependencies": {
-    "@playwright/test": "^1.40.0",
-    "typescript": "^5.0.0"
+    "@playwright/test": "*",
+    "typescript": "*"
   },
   "dependencies": {
-    "dotenv": "^16.3.0"
+    "dotenv": "*"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.1.2",
-    "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.0.0",
-    "typescript": "^5.0.0"
+    "@types/node": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-prettier": "*",
+    "prettier": "*",
+    "typescript": "*"
   },
   "engines": {
     "node": ">=18.0.0"
