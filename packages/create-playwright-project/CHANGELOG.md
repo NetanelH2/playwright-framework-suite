@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.3.10
+
+### Patch Changes
+
+- d8e22d1: fix: remove unnecessary file extensions from exports in example templates
+
 ## 2.3.6
 
 ### Patch Changes
