@@ -16,7 +16,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc --project . && chmod +x dist/src/cli.js",
+    "build": "tsc --project . && chmod +x dist/src/cli.js && cp dist/eslint.config.js .",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist tsconfig*.tsbuildinfo",
     "prepublishOnly": "npm run clean && npm run build",

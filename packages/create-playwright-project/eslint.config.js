@@ -4,7 +4,39 @@ import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import playwright from 'eslint-plugin-playwright';
 import prettierPlugin from 'eslint-plugin-prettier';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 export default [
+    // Config for template files without project checking - placed FIRST for highest precedence
+    {
+        files: ['templates/**/*.ts'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                ecmaVersion: 2022,
+                sourceType: 'module',
+                // No project checking for templates
+            },
+        },
+        plugins: {
+            '@typescript-eslint': tseslint,
+            playwright,
+            prettier: prettierPlugin,
+        },
+        rules: {
+            // Relaxed rules for templates
+            'no-undef': 'off',
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'warn',
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            'no-console': 'off',
+            'playwright/expect-expect': 'off',
+            // Test rule to see if this config is applied
+            'no-debugger': 'off',
+        },
+    },
     // Fix for ESLint JS recommended config
     {
         ...eslint.configs.recommended,
@@ -12,15 +44,17 @@ export default [
     },
     // Prettier config - properly import as default
     prettierConfig,
+    // Config for non-template TypeScript files with project checking
     {
         files: ['**/*.ts'],
+        ignores: ['templates/**'],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
                 ecmaVersion: 2022,
                 sourceType: 'module',
                 project: './tsconfig.json',
-                tsconfigRootDir: import.meta.dirname, // Use absolute path
+                tsconfigRootDir: __dirname,
             },
         },
         plugins: {
@@ -68,27 +102,6 @@ export default [
             // Allow unused vars in tests (sometimes needed for destructuring)
             '@typescript-eslint/no-unused-vars': 'warn',
         },
-    },
-    {
-        files: ['**/pages/**/*.ts'],
-        rules: {
-            // Page objects might have conditionals for dynamic content
-            'playwright/no-conditional-in-test': 'off',
-            // Page objects might have await expressions that seem unnecessary
-            'playwright/no-useless-await': 'warn',
-        },
-    },
-    {
-        ignores: [
-            'node_modules/',
-            'dist/',
-            'build/',
-            'coverage/',
-            'playwright-report/',
-            'test-results/',
-            '.prettierrc.ts',
-            '!eslint.config.ts', // Include this config file
-        ],
     },
 ];
 //# sourceMappingURL=eslint.config.js.map
