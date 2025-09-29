@@ -19,19 +19,19 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@netanelh2/playwright-framework": "latest",
-    "@playwright/test": "latest",
-    "@types/node": "latest",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
-    "dotenv": "latest",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-playwright": "^2.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "jiti": "^2.4.2",
-    "prettier": "^3.4.2",
-    "typescript": "latest"
+    "@netanelh2/playwright-framework": "*",
+    "@playwright/test": "*",
+    "@types/node": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "dotenv": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-playwright": "*",
+    "eslint-plugin-prettier": "*",
+    "jiti": "*",
+    "prettier": "*",
+    "typescript": "*"
   },
   "keywords": ["playwright", "testing", "typescript", "e2e"],
   "license": "MIT"
