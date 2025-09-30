@@ -1,0 +1,321 @@
+name: Cleanup Old Artifacts
+
+on:
+  # Run cleanup every 24 hours
+  schedule:
+    - cron: '0 2 * * *'
+
+  # Manual trigger for immediate cleanup
+  workflow_dispatch:
+    inputs:
+      days_to_keep:
+        description: 'Number of days to keep artifacts'
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '7'
+      dry_run:
+        description: 'Dry run - only show what would be deleted'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+# Required permissions for artifact management
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  artifacts-cleanup:
+    name: Cleanup Artifacts with Retention Policies
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - name: Cleanup artifacts with retention policies
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const daysToKeep = parseInt('${{ github.event.inputs.days_to_keep || '30' }}');
+            const maxArtifactsPerWorkflow = parseInt('${{ github.event.inputs.max_artifacts_per_workflow || '5' }}');
+            const dryRun = '${{ github.event.inputs.dry_run || 'false' }}' === 'true';
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+
+            console.log(`🧹 Starting artifact cleanup with retention policies:`);
+            console.log(`   📅 Age retention: ${daysToKeep} days (before ${cutoffDate.toISOString()})`);
+            console.log(`   📦 Count retention: Latest ${maxArtifactsPerWorkflow} artifacts per workflow type`);
+            console.log(`   🔍 Dry run mode: ${dryRun}`);
+            console.log('');
+
+            try {
+              // Get all artifacts with pagination
+              let allArtifacts = [];
+              let page = 1;
+              let hasMore = true;
+
+              while (hasMore) {
+                const response = await github.rest.actions.listArtifactsForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  per_page: 100,
+                  page: page
+                });
+                
+                allArtifacts = allArtifacts.concat(response.data.artifacts);
+                hasMore = response.data.artifacts.length === 100;
+                page++;
+              }
+
+              console.log(`📊 Found ${allArtifacts.length} total artifacts`);
+
+              // Group artifacts by workflow type
+              const workflowGroups = {};
+              allArtifacts.forEach(artifact => {
+                // Extract workflow type from artifact name
+                let workflowType = 'other';
+                if (artifact.name.includes('sanity')) workflowType = 'sanity';
+                else if (artifact.name.includes('regression')) workflowType = 'regression';
+                else if (artifact.name.includes('quality') || artifact.name.includes('test-results')) workflowType = 'quality';
+                
+                if (!workflowGroups[workflowType]) {
+                  workflowGroups[workflowType] = [];
+                }
+                workflowGroups[workflowType].push(artifact);
+              });
+
+              console.log(`📂 Workflow groups found: ${Object.keys(workflowGroups).join(', ')}`);
+
+              let totalDeleted = 0;
+              let totalSize = 0;
+              const deletionResults = {
+                agePolicy: { count: 0, size: 0 },
+                countPolicy: { count: 0, size: 0 },
+                errors: []
+              };
+
+              // Process each workflow group
+              for (const [workflowType, artifacts] of Object.entries(workflowGroups)) {
+                console.log(`\n🔍 Processing ${workflowType} artifacts (${artifacts.length} found):`);
+                
+                // Sort by creation date (newest first)
+                artifacts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                // Apply age-based retention
+                const expiredArtifacts = artifacts.filter(artifact => {
+                  const artifactDate = new Date(artifact.created_at);
+                  return artifactDate < cutoffDate;
+                });
+
+                // Apply count-based retention (keep only latest N)
+                const excessArtifacts = artifacts.slice(maxArtifactsPerWorkflow);
+
+                // Combine policies (union of expired and excess)
+                const artifactsToDelete = [...new Set([...expiredArtifacts, ...excessArtifacts])];
+
+                console.log(`   📅 Expired (>${daysToKeep} days): ${expiredArtifacts.length}`);
+                console.log(`   📦 Excess (>latest ${maxArtifactsPerWorkflow}): ${excessArtifacts.length}`);
+                console.log(`   🗑️ Total to ${dryRun ? 'delete' : 'be deleted'}: ${artifactsToDelete.length}`);
+
+                // Delete artifacts
+                for (const artifact of artifactsToDelete) {
+                  const sizeMB = (artifact.size_in_bytes / 1024 / 1024).toFixed(2);
+                  const isExpired = expiredArtifacts.includes(artifact);
+                  const isExcess = excessArtifacts.includes(artifact);
+                  const reason = isExpired && isExcess ? 'age+count' : isExpired ? 'age' : 'count';
+                  
+                  totalSize += artifact.size_in_bytes;
+                  
+                  if (dryRun) {
+                    console.log(`   🗑️  Would delete: ${artifact.name} (${sizeMB} MB) [${reason}] - ${artifact.created_at}`);
+                  } else {
+                    try {
+                      await github.rest.actions.deleteArtifact({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        artifact_id: artifact.id
+                      });
+                      console.log(`   ✅ Deleted: ${artifact.name} (${sizeMB} MB) [${reason}] - ${artifact.created_at}`);
+                      
+                      if (isExpired) deletionResults.agePolicy.count++;
+                      if (isExcess) deletionResults.countPolicy.count++;
+                      
+                    } catch (error) {
+                      const errorMsg = `Failed to delete ${artifact.name}: ${error.message}`;
+                      console.log(`   ❌ ${errorMsg}`);
+                      deletionResults.errors.push(errorMsg);
+                    }
+                  }
+                  totalDeleted++;
+                }
+              }
+
+              const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2);
+              const totalSizeGB = (totalSize / 1024 / 1024 / 1024).toFixed(2);
+
+              // Final summary
+              console.log(`\n📊 Cleanup Summary ${dryRun ? '(DRY RUN)' : ''}:`);
+              console.log(`   📦 Total artifacts processed: ${totalDeleted}`);
+              console.log(`   💾 Storage freed: ${totalSizeMB} MB (${totalSizeGB} GB)`);
+              console.log(`   📅 Deleted by age policy: ${deletionResults.agePolicy.count}`);
+              console.log(`   📦 Deleted by count policy: ${deletionResults.countPolicy.count}`);
+              console.log(`   ❌ Deletion errors: ${deletionResults.errors.length}`);
+
+              if (deletionResults.errors.length > 0) {
+                console.log(`\n❌ Errors encountered:`);
+                deletionResults.errors.forEach(error => console.log(`   - ${error}`));
+              }
+
+              // Enhanced step summary
+              const summaryLines = [
+                `🧹 Artifact Cleanup ${dryRun ? '(DRY RUN)' : 'Complete'}`,
+                '',
+                `## Retention Policies Applied`,
+                `📅 **Age Policy**: Delete artifacts older than ${daysToKeep} days`,
+                `📦 **Count Policy**: Keep only latest ${maxArtifactsPerWorkflow} artifacts per workflow`,
+                '',
+                `## Results`,
+                `🗑️ **Artifacts ${dryRun ? 'would be ' : ''}processed**: ${totalDeleted}`,
+                `💾 **Storage ${dryRun ? 'would be ' : ''}freed**: ${totalSizeMB} MB (${totalSizeGB} GB)`,
+                `📅 **Age-based deletions**: ${deletionResults.agePolicy.count}`,
+                `📦 **Count-based deletions**: ${deletionResults.countPolicy.count}`,
+                `❌ **Errors**: ${deletionResults.errors.length}`,
+                '',
+                `⏰ **Completed at**: ${new Date().toISOString()}`
+              ];
+
+              require('fs').appendFileSync(process.env.GITHUB_STEP_SUMMARY, summaryLines.join('\n'));
+
+              // Fail workflow if there were critical errors
+              if (deletionResults.errors.length > totalDeleted * 0.5) {
+                throw new Error(`Too many deletion errors (${deletionResults.errors.length}/${totalDeleted}). Check GitHub token permissions.`);
+              }
+
+            } catch (error) {
+              console.error(`❌ Critical error during cleanup: ${error.message}`);
+              console.error(`   This may indicate storage quota issues or permissions problems.`);
+              
+              // Add error to summary
+              const errorSummary = [
+                '',
+                '## ⚠️ Cleanup Failed',
+                `**Error**: ${error.message}`,
+                `**Time**: ${new Date().toISOString()}`,
+                '',
+                '**Possible causes:**',
+                '- GitHub storage quota exceeded',
+                '- Insufficient token permissions',
+                '- API rate limiting',
+                '- Network connectivity issues'
+              ];
+              
+              require('fs').appendFileSync(process.env.GITHUB_STEP_SUMMARY, errorSummary.join('\n'));
+              throw error;
+            }
+
+  storage-report:
+    name: Generate Storage Report
+    runs-on: ubuntu-latest
+    needs: artifacts-cleanup
+    if: always()
+    timeout-minutes: 10
+    steps:
+      - name: Report storage status and recommendations
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              // Get current artifacts after cleanup
+              let allArtifacts = [];
+              let page = 1;
+              let hasMore = true;
+
+              while (hasMore) {
+                const response = await github.rest.actions.listArtifactsForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  per_page: 100,
+                  page: page
+                });
+                
+                allArtifacts = allArtifacts.concat(response.data.artifacts);
+                hasMore = response.data.artifacts.length === 100;
+                page++;
+              }
+
+              console.log(`\n📦 Post-cleanup artifact status:`);
+              console.log(`   Total artifacts remaining: ${allArtifacts.length}`);
+
+              // Group by workflow type
+              const workflowGroups = {};
+              let totalRemainingSize = 0;
+
+              allArtifacts.forEach(artifact => {
+                let workflowType = 'other';
+                if (artifact.name.includes('sanity')) workflowType = 'sanity';
+                else if (artifact.name.includes('regression')) workflowType = 'regression';
+                else if (artifact.name.includes('quality') || artifact.name.includes('test-results')) workflowType = 'quality';
+                
+                if (!workflowGroups[workflowType]) {
+                  workflowGroups[workflowType] = { count: 0, size: 0 };
+                }
+                workflowGroups[workflowType].count++;
+                workflowGroups[workflowType].size += artifact.size_in_bytes;
+                totalRemainingSize += artifact.size_in_bytes;
+              });
+
+              // Report by workflow type
+              console.log(`\n📊 Artifacts by workflow type:`);
+              for (const [type, data] of Object.entries(workflowGroups)) {
+                const sizeMB = (data.size / 1024 / 1024).toFixed(2);
+                console.log(`   ${type}: ${data.count} artifacts (${sizeMB} MB)`);
+              }
+
+              const totalRemainingSizeMB = (totalRemainingSize / 1024 / 1024).toFixed(2);
+              const totalRemainingSizeGB = (totalRemainingSize / 1024 / 1024 / 1024).toFixed(2);
+              
+              console.log(`\n💾 Total remaining storage: ${totalRemainingSizeMB} MB (${totalRemainingSizeGB} GB)`);
+
+              // Storage recommendations
+              console.log(`\n💡 Storage recommendations:`);
+              
+              if (totalRemainingSize > 900 * 1024 * 1024) { // > 900 MB
+                console.log(`   ⚠️  HIGH USAGE: ${totalRemainingSizeGB} GB (approaching GitHub's 1 GB limit)`);
+                console.log(`   🔧 Consider running cleanup with shorter retention (7-14 days)`);
+                console.log(`   📦 Or reduce max artifacts per workflow to 3`);
+              } else if (totalRemainingSize > 500 * 1024 * 1024) { // > 500 MB
+                console.log(`   ⚡ MODERATE USAGE: ${totalRemainingSizeMB} MB`);
+                console.log(`   👍 Current retention policies appear appropriate`);
+              } else {
+                console.log(`   ✅ OPTIMAL USAGE: ${totalRemainingSizeMB} MB`);
+                console.log(`   🎯 Storage is well within limits`);
+              }
+
+              // Check for concerning patterns
+              const sanityCount = workflowGroups.sanity?.count || 0;
+              const regressionCount = workflowGroups.regression?.count || 0;
+              
+              if (sanityCount > 20) {
+                console.log(`   ⚠️  High sanity artifact count (${sanityCount}). Consider reducing retention.`);
+              }
+              
+              if (regressionCount > 10) {
+                console.log(`   ⚠️  High regression artifact count (${regressionCount}). Consider reducing retention.`);
+              }
+
+              console.log(`\n🕐 Next scheduled cleanup: Tomorrow at 01:00 UTC`);
+              console.log(`⚡ Manual cleanup: Available anytime via GitHub Actions`);
+
+            } catch (error) {
+              console.error(`❌ Error generating storage report: ${error.message}`);
+              // Don't fail the workflow for reporting errors
+            }

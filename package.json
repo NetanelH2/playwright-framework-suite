@@ -16,7 +16,8 @@
     "version-packages": "changeset version",
     "release": "changeset publish",
     "dev:framework": "npm run build --workspace=packages/playwright-framework",
-    "dev:cli": "npm run dev --workspace=packages/create-playwright-project"
+    "dev:cli": "npm run dev --workspace=packages/create-playwright-project",
+    "dev:workflows": "npm run dev --workspace=packages/create-workflows-package"
   },
   "repository": {
     "type": "git",

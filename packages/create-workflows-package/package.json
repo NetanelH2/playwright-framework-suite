@@ -1,0 +1,66 @@
+{
+  "name": "@netanelh2/create-workflows-package",
+  "version": "1.0.0",
+  "description": "CLI tool to scaffold GitHub Actions workflows and code quality setup with Husky",
+  "main": "dist/src/cli.js",
+  "type": "module",
+  "bin": {
+    "create-workflows-package": "./dist/src/cli.js"
+  },
+  "files": ["dist/**/*", "templates/**/*", "README.md"],
+  "scripts": {
+    "build": "tsc --project . && chmod +x dist/src/cli.js",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist tsconfig*.tsbuildinfo",
+    "prepublishOnly": "npm run clean && npm run build",
+    "dev": "npm run build && node dist/cli.js",
+    "lint": "eslint src --max-warnings 0",
+    "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "check": "npm run lint:check && npm run format:check && npx tsc",
+    "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored"
+  },
+  "keywords": [
+    "github-actions",
+    "workflows",
+    "husky",
+    "code-quality",
+    "cli",
+    "scaffolding",
+    "linting",
+    "formatting"
+  ],
+  "author": "Netanel Harush",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetanelH2/playwright-framework-suite.git",
+    "directory": "packages/create-workflows-package"
+  },
+  "bugs": {
+    "url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
+  },
+  "homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/create-workflows-package#readme",
+  "dependencies": {
+    "chalk": "*",
+    "commander": "*",
+    "inquirer": "*"
+  },
+  "devDependencies": {
+    "@types/inquirer": "*",
+    "@types/node": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-playwright": "*",
+    "eslint-plugin-prettier": "*",
+    "jiti": "*",
+    "prettier": "*",
+    "typescript": "*"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,85 @@
+name: Code Quality Check
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  checkout:
+    name: Checkout Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+  setup:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    needs: checkout
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+  quality-check:
+    name: Run Quality Check
+    runs-on: ubuntu-latest
+    needs: setup
+    continue-on-error: true
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quality check
+        run: npm run check
+
+  upload-results:
+    name: Upload Test Results
+    runs-on: ubuntu-latest
+    needs: quality-check
+    if: failure()
+    timeout-minutes: 5
+    steps:
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 2
+
+  summary:
+    name: Add Results Summary
+    runs-on: ubuntu-latest
+    needs: [quality-check, upload-results]
+    if: always()
+    timeout-minutes: 5
+    steps:
+      - name: Add results to summary
+        run: |
+          echo "✅ Code Quality Check Completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🛡️ Quality Gates: Linting, Formatting, TypeScript Compilation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⏰ Check completed at: $(date)" >> $GITHUB_STEP_SUMMARY
