@@ -10,7 +10,7 @@
   "files": [
     "dist/**/*",
     "templates/**/*",
-    ".prettierrc.ts",
+    ".prettierrc.cjs",
     ".prettierignore",
     "eslint.config.ts",
     "README.md"
