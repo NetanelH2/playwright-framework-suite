@@ -298,6 +298,11 @@ async function setupWorkflows(
       '7. Ensure your package.json has the correct test scripts (npm run test:sanity, npm run test:regression, npm run check)',
     ),
   )
+  console.log(
+    chalk.gray(
+      '8. Optional: Add a .github/CODEOWNERS file to define code ownership for your repository',
+    ),
+  )
 
   console.log(chalk.white('\nNext steps:'))
   if (!config.installDependencies) {

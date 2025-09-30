@@ -117,6 +117,10 @@ After running the CLI, follow these steps to enable GitHub Actions:
    - Get the webhook URL and add it as `SLACK_WEBHOOK_URL` secret
    - Ensure the Slack channel has proper permissions
 
+7. **Optional: Code Ownership**:
+   - Add a `.github/CODEOWNERS` file to define code ownership rules for your repository
+   - This enables automatic reviewer assignment for pull requests
+
 ## Scripts Added to package.json
 
 ```json
