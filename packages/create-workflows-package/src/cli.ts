@@ -107,7 +107,9 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
       when: (answers: any) => answers.createCodeowners,
       validate: (input: string): string | boolean => {
         if (!input.trim()) return 'GitHub username is required'
-        if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(input)) {
+        if (
+          !/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(input)
+        ) {
           return 'Please enter a valid GitHub username'
         }
         return true
