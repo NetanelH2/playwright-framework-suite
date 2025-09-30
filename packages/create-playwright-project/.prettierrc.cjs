@@ -1,8 +1,7 @@
 const config = {
   // Basic formatting
-  semi: false,
+  semi: true,
   singleQuote: true,
-  jsxSingleQuote: true,
   quoteProps: 'as-needed',
 
   // Indentation and spacing
@@ -11,9 +10,9 @@ const config = {
   printWidth: 80,
 
   // Arrays and objects
-  trailingComma: 'all',
-  bracketSpacing: false,
-  bracketSameLine: true,
+  trailingComma: 'es5',
+  bracketSpacing: true,
+  bracketSameLine: false,
 
   // Functions
   arrowParens: 'avoid',
