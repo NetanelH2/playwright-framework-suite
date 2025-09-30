@@ -21,7 +21,7 @@
     "clean": "rm -rf dist tsconfig*.tsbuildinfo",
     "prepublishOnly": "npm run clean && npm run build",
     "dev": "npm run build && node dist/cli.js",
-    "lint": "eslint src --max-warnings 0",
+    "lint": "eslint src/**/*.ts --max-warnings 0",
     "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",

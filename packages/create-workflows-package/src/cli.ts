@@ -50,7 +50,7 @@ program
     )
 
     const config = await getWorkflowConfig(options)
-    await setupWorkflows(config, options.noInstall || false)
+    await setupWorkflows(config)
   })
 
 async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
@@ -104,7 +104,8 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
       type: 'input',
       name: 'githubUsername',
       message: 'Your GitHub username for CODEOWNERS:',
-      when: (answers: any) => answers.createCodeowners,
+      when: (answers: unknown) =>
+        (answers as Record<string, unknown>).createCodeowners as boolean,
       validate: (input: string): string | boolean => {
         if (!input.trim()) return 'GitHub username is required'
         if (
@@ -141,10 +142,7 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
   }
 }
 
-async function setupWorkflows(
-  config: WorkflowConfig,
-  noInstall: boolean,
-): Promise<void> {
+async function setupWorkflows(config: WorkflowConfig): Promise<void> {
   const templatesPath = join(__dirname, '..', '..', 'templates')
 
   // Copy .github workflows

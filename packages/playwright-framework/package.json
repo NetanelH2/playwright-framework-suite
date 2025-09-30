@@ -37,7 +37,7 @@
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "lint": "eslint src --ext .ts --max-warnings 0",
+    "lint": "eslint src/**/*.ts --max-warnings 0",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
     "test": "echo 'Framework package - tests run in consumer projects'"

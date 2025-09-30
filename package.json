@@ -17,7 +17,13 @@
     "release": "changeset publish",
     "dev:framework": "npm run build --workspace=packages/playwright-framework",
     "dev:cli": "npm run dev --workspace=packages/create-playwright-project",
-    "dev:workflows": "npm run dev --workspace=packages/create-workflows-package"
+    "dev:workflows": "npm run dev --workspace=packages/create-workflows-package",
+    "pre-commit": "lint-staged",
+    "prepare": "husky",
+    "lint:check": "npm run lint --workspaces",
+    "format:check": "npm run format --workspaces",
+    "check": "npm run lint --workspaces && npm run format --workspaces && npm run build --workspaces",
+    "fix": "npm run format --workspaces && npm run lint --workspaces"
   },
   "repository": {
     "type": "git",
@@ -47,7 +53,18 @@
     "eslint-config-prettier": "*",
     "eslint-plugin-prettier": "*",
     "prettier": "*",
-    "typescript": "*"
+    "typescript": "*",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5"
+  },
+  "lint-staged": {
+    "**/src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18.0.0",
