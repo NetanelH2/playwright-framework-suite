@@ -58,8 +58,16 @@
     "lint-staged": "^16.1.5"
   },
   "lint-staged": {
-    "**/src/**/*.ts": [
-      "eslint --fix",
+    "packages/create-playwright-project/src/**/*.ts": [
+      "cd packages/create-playwright-project && eslint --fix",
+      "prettier --write"
+    ],
+    "packages/create-workflows-package/src/**/*.ts": [
+      "cd packages/create-workflows-package && eslint --fix",
+      "prettier --write"
+    ],
+    "packages/playwright-framework/src/**/*.ts": [
+      "cd packages/playwright-framework && eslint --fix",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml}": [
