@@ -1,6 +1,4 @@
-import type {Config} from 'prettier'
-
-const config: Config = {
+const config = {
   // Basic formatting
   semi: false,
   singleQuote: true,

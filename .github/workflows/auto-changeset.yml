@@ -73,7 +73,6 @@ jobs:
           EOF
 
           echo "Created changeset for packages: $PACKAGES_CHANGED with bump type: $BUMP_TYPE"
-
       - name: Commit changeset
         run: |
           git config --local user.email "action@github.com"
