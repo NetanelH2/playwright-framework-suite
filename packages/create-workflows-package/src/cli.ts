@@ -272,17 +272,32 @@ async function setupWorkflows(
   )
   console.log(
     chalk.gray(
-      '4. For Slack notifications, add SLACK_WEBHOOK_URL to repository secrets',
+      '4. For report deployment, go to Settings > Pages and set Source to "GitHub Actions"',
     ),
   )
-
+  console.log(
+    chalk.gray(
+      '5. Add required repository secrets (Settings > Secrets and variables > Actions):',
+    ),
+  )
+  console.log(
+    chalk.gray('   - BASE_URL: Your application URL (e.g., https://your-app.com)'),
+  )
   if (config.includeSlackNotifications) {
     console.log(
-      chalk.gray(
-        '5. For nightly regression, ensure you have appropriate secrets set',
-      ),
+      chalk.gray('   - SLACK_WEBHOOK_URL: For Slack notifications'),
     )
   }
+  console.log(
+    chalk.gray(
+      '6. For branch protection (recommended): Go to Settings > Branches and require "Code Quality Check"',
+    ),
+  )
+  console.log(
+    chalk.gray(
+      '7. Ensure your package.json has the correct test scripts (npm run test:sanity, npm run test:regression, npm run check)',
+    ),
+  )
 
   console.log(chalk.white('\nNext steps:'))
   if (!config.installDependencies) {

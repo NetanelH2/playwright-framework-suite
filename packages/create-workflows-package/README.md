@@ -84,13 +84,37 @@ After running the CLI, follow these steps to enable GitHub Actions:
    - Navigate to Settings > Actions > General
    - Under "Workflow permissions", select "Read and write permissions"
 
-2. **Required Secrets** (if using Slack notifications):
-   - Go to Settings > Secrets and variables > Actions
-   - Add `SLACK_WEBHOOK_URL` with your Slack webhook URL
+2. **GitHub Pages Setup** (for report deployment):
+   - Go to Settings > Pages
+   - Set Source to "GitHub Actions"
+   - This enables automatic publishing of test reports
 
-3. **Branch Protection** (recommended):
+3. **Required Secrets** (Settings > Secrets and variables > Actions):
+   - **`BASE_URL`**: Your application URL (e.g., `https://your-app.com`) - required for tests
+   - **`SLACK_WEBHOOK_URL`**: Slack webhook URL for notifications (optional, only if Slack notifications enabled)
+
+4. **Branch Protection** (recommended):
    - Go to Settings > Branches
-   - Add rules for `main` branch requiring status checks
+   - Add rules for your main branch (main/master/develop)
+   - Require status checks from "Code Quality Check" workflow
+   - This ensures code quality before merging
+
+5. **Package.json Scripts**:
+   Ensure your `package.json` has these scripts (automatically added by CLI):
+   ```json
+   {
+     "scripts": {
+       "test:sanity": "playwright test --grep '@sanity'",
+       "test:regression": "playwright test --grep '@regression'",
+       "check": "npm run lint:check && npm run format:check && npx tsc"
+     }
+   }
+   ```
+
+6. **Slack Setup** (if notifications enabled):
+   - Create a Slack app with incoming webhooks
+   - Get the webhook URL and add it as `SLACK_WEBHOOK_URL` secret
+   - Ensure the Slack channel has proper permissions
 
 ## Scripts Added to package.json
 
