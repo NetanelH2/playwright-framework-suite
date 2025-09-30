@@ -281,12 +281,12 @@ async function setupWorkflows(
     ),
   )
   console.log(
-    chalk.gray('   - BASE_URL: Your application URL (e.g., https://your-app.com)'),
+    chalk.gray(
+      '   - BASE_URL: Your application URL (e.g., https://your-app.com)',
+    ),
   )
   if (config.includeSlackNotifications) {
-    console.log(
-      chalk.gray('   - SLACK_WEBHOOK_URL: For Slack notifications'),
-    )
+    console.log(chalk.gray('   - SLACK_WEBHOOK_URL: For Slack notifications'))
   }
   console.log(
     chalk.gray(

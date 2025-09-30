@@ -101,6 +101,7 @@ After running the CLI, follow these steps to enable GitHub Actions:
 
 5. **Package.json Scripts**:
    Ensure your `package.json` has these scripts (automatically added by CLI):
+
    ```json
    {
      "scripts": {
