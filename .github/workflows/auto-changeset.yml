@@ -84,8 +84,24 @@ jobs:
             echo "No changeset to commit"
           else
             git commit -m "chore: add changeset for latest changes"
-            git push
+            git push origin HEAD:refs/heads/changeset-auto-${{ github.run_id }}
           fi
+
+      - name: Create Pull Request
+        if: success()
+        run: |
+          if git diff --quiet HEAD~1 HEAD -- .changeset/; then
+            echo "No changeset created, skipping PR"
+          else
+            gh pr create \
+              --title "🤖 Auto-generated changeset for package changes" \
+              --body "This PR contains automatically generated changesets for recent package modifications." \
+              --head "changeset-auto-${{ github.run_id }}" \
+              --base "main" \
+              --label "automated,changeset"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   upload-results:
     name: Upload Test Results
