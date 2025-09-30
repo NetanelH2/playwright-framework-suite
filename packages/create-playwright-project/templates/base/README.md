@@ -5,12 +5,14 @@ A modern Playwright testing framework built with TypeScript and the [@netanelh2/
 ## Quick Start
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    npx playwright install
    ```
 
 2. **Configure environment:**
+
    ```bash
    cp .env.example .env
    # Edit .env with your application URL and settings
@@ -47,25 +49,25 @@ src/
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm test` | Run all tests |
-| `npm run test:chrome` | Run tests in Chromium only |
-| `npm run test:sanity` | Run tests tagged with `@sanity` |
-| `npm run test:regression` | Run tests tagged with `@regression` |
-| `npm run test:debug` | Run tests in debug mode |
-| `npm run test:ui` | Launch Playwright UI mode |
-| `npm run report` | View test results |
-| `npm run quality-check` | Run linting, formatting, and type checking |
-| `npm run format:fix` | Auto-fix code formatting |
+| Script                    | Description                                |
+| ------------------------- | ------------------------------------------ |
+| `npm test`                | Run all tests                              |
+| `npm run test:chrome`     | Run tests in Chromium only                 |
+| `npm run test:sanity`     | Run tests tagged with `@sanity`            |
+| `npm run test:regression` | Run tests tagged with `@regression`        |
+| `npm run test:debug`      | Run tests in debug mode                    |
+| `npm run test:ui`         | Launch Playwright UI mode                  |
+| `npm run report`          | View test results                          |
+| `npm run quality-check`   | Run linting, formatting, and type checking |
+| `npm run format:fix`      | Auto-fix code formatting                   |
 
 ## Writing Tests
 
 ```typescript
-import { test } from '@/fixtures'
+import {test} from '@/fixtures'
 
 test.describe('Example Feature @sanity', () => {
-  test('should perform basic action', async ({ mainPage }) => {
+  test('should perform basic action', async ({mainPage}) => {
     await mainPage.navigateTo()
     await mainPage.validatePageLoaded()
   })

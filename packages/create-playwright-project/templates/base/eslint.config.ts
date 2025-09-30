@@ -1,9 +1,9 @@
-import { configs } from '@eslint/js';
-import * as tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettierConfig from 'eslint-config-prettier';
-import * as playwright from 'eslint-plugin-playwright';
-import * as prettierPlugin from 'eslint-plugin-prettier';
+import {configs} from '@eslint/js'
+import * as tseslint from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
+import prettierConfig from 'eslint-config-prettier'
+import * as playwright from 'eslint-plugin-playwright'
+import * as prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
   // Fix for ESLint JS recommended config
@@ -94,4 +94,4 @@ export default [
       '!eslint.config.ts', // Include this config file
     ],
   },
-];
+]
