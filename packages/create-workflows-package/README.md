@@ -118,8 +118,8 @@ After running the CLI, follow these steps to enable GitHub Actions:
    - Ensure the Slack channel has proper permissions
 
 7. **Optional: Code Ownership**:
-   - Add a `.github/CODEOWNERS` file to define code ownership rules for your repository
-   - This enables automatic reviewer assignment for pull requests
+   - The CLI will ask if you want to create a CODEOWNERS file
+   - If yes, provide your GitHub username to set up automatic code ownership
 
 ## Scripts Added to package.json
 

@@ -22,6 +22,8 @@ interface WorkflowConfig {
   includeNightlyRegression: boolean
   includeHusky: boolean
   installDependencies: boolean
+  createCodeowners: boolean
+  githubUsername?: string
 }
 
 interface CliOptions {
@@ -63,6 +65,7 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
       includeNightlyRegression: true,
       includeHusky: true,
       installDependencies: !options.noInstall,
+      createCodeowners: false,
     }
   }
 
@@ -93,6 +96,25 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
     },
     {
       type: 'confirm',
+      name: 'createCodeowners',
+      message: 'Create a CODEOWNERS file for code ownership?',
+      default: false,
+    },
+    {
+      type: 'input',
+      name: 'githubUsername',
+      message: 'Your GitHub username for CODEOWNERS:',
+      when: (answers: any) => answers.createCodeowners,
+      validate: (input: string): string | boolean => {
+        if (!input.trim()) return 'GitHub username is required'
+        if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(input)) {
+          return 'Please enter a valid GitHub username'
+        }
+        return true
+      },
+    },
+    {
+      type: 'confirm',
       name: 'installDependencies',
       message: 'Install required dependencies?',
       default: true,
@@ -112,6 +134,8 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
     installDependencies: options.noInstall
       ? false
       : (answers.installDependencies ?? true),
+    createCodeowners: answers.createCodeowners,
+    githubUsername: answers.githubUsername,
   }
 }
 
@@ -188,6 +212,29 @@ async function setupWorkflows(
     if (existsSync(huskyPath)) {
       cpSync(huskyPath, '.husky', {recursive: true, force: true})
     }
+  }
+
+  // Create CODEOWNERS file
+  if (config.createCodeowners && config.githubUsername) {
+    console.log(chalk.yellow('👥 Creating CODEOWNERS file...'))
+    const codeownersPath = '.github/CODEOWNERS'
+    const codeownersContent = `# Global code ownership
+
+# This file defines code owners for the repository
+
+# Code owners are automatically requested for review when someone opens a pull request that modifies code that they own
+
+# Make @${config.githubUsername} the owner of all files in the repository
+
+* @${config.githubUsername}
+`
+    // Ensure .github directory exists
+    const githubDir = '.github'
+    if (!existsSync(githubDir)) {
+      execSync(`mkdir -p ${githubDir}`)
+    }
+
+    writeFileSync(codeownersPath, codeownersContent)
   }
 
   // Update package.json
@@ -296,11 +343,6 @@ async function setupWorkflows(
   console.log(
     chalk.gray(
       '7. Ensure your package.json has the correct test scripts (npm run test:sanity, npm run test:regression, npm run check)',
-    ),
-  )
-  console.log(
-    chalk.gray(
-      '8. Optional: Add a .github/CODEOWNERS file to define code ownership for your repository',
     ),
   )
 
