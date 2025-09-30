@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "erasableSyntaxOnly": true
   },
-  "include": ["src/**/*", "eslint.config.ts", ".prettierrc.ts"],
+  "include": ["src/**/*", "eslint.config.js", ".prettierrc.js"],
   "exclude": ["node_modules", "dist", "templates"]
 }
