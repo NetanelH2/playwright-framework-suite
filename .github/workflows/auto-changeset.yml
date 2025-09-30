@@ -65,6 +65,8 @@ jobs:
               echo "\"@netanelh2/playwright-framework\": $BUMP_TYPE"
             elif [[ "$pkg" == "create-playwright-project" ]]; then
               echo "\"@netanelh2/create-playwright-project\": $BUMP_TYPE"
+            elif [[ "$pkg" == "create-workflows-package" ]]; then
+              echo "\"@netanelh2/create-workflows-package\": $BUMP_TYPE"
             fi
           done)
           ---
