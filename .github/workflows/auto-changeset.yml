@@ -1,5 +1,12 @@
 name: Auto Generate Changesets
 
+# This workflow automatically creates changesets when packages are modified
+#
+# IMPORTANT: To enable PR creation, you must either:
+# 1. Enable "Allow GitHub Actions to create and approve pull requests" in:
+#    Settings → Actions → General → Workflow permissions
+# 2. Create a Personal Access Token (PAT) with 'repo' scope and add it as a secret named 'PAT_TOKEN'
+
 on:
   push:
     branches: [main]
@@ -16,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -78,6 +85,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           commit-message: "chore: add changeset for latest changes"
           title: "🤖 Auto-generated changeset for package changes"
           body: "This PR contains automatically generated changesets for recent package modifications."
