@@ -1,28 +1,63 @@
-# This workflow will automatically merge PRs titled "chore: release packages" when all checks pass
-# Requires repo permissions for workflow and pull_request write access
+# This workflow will automatically merge release and changeset PRs when all checks pass
+# Triggers on check suite completion to ensure status checks have passed
 
 name: Automerge Release PRs
 
 on:
-  pull_request:
-    types: [opened, synchronize, labeled, unlabeled, ready_for_review]
-    branches:
-      - main
+  check_suite:
+    types: [completed]
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
+    if: github.event.check_suite.conclusion == 'success'
     permissions:
       pull-requests: write
       contents: write
     steps:
-      - name: Check PR title and merge if release
+      - name: Get associated pull requests
+        id: get-prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${context.payload.check_suite.head_branch}`,
+              state: 'open'
+            });
+
+            if (prs.length === 0) {
+              console.log('No open PRs found for this branch');
+              return;
+            }
+
+            const pr = prs[0];
+            const title = pr.title;
+
+            console.log(`Found PR #${pr.number}: "${title}"`);
+
+            // Check if it's an automated PR (release or changeset)
+            const isReleasePR = title === 'chore: release packages';
+            const isChangesetPR = title.includes('Auto-generated changeset');
+
+            if (isReleasePR || isChangesetPR) {
+              console.log('✅ This is an automated PR that can be auto-merged');
+              core.setOutput('should_merge', 'true');
+              core.setOutput('pr_number', pr.number);
+              core.setOutput('pr_title', title);
+            } else {
+              console.log('ℹ️ This is not an automated PR, skipping auto-merge');
+              core.setOutput('should_merge', 'false');
+            }
+
+      - name: Auto-merge PR
+        if: steps.get-prs.outputs.should_merge == 'true'
         run: |
-          if [ "${{ github.event.pull_request.title }}" = "chore: release packages" ]; then
-            gh pr merge ${{ github.event.pull_request.number }} --squash --repo ${{ github.repository }}
-          else
-            echo "Not a release PR, skipping automerge."
-          fi
+          echo "🔄 Auto-merging PR #${{ steps.get-prs.outputs.pr_number }}: ${{ steps.get-prs.outputs.pr_title }}"
+
+          gh pr merge ${{ steps.get-prs.outputs.pr_number }} --squash --repo ${{ github.repository }}
+
+          echo "✅ Successfully auto-merged PR #${{ steps.get-prs.outputs.pr_number }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
