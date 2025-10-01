@@ -75,32 +75,15 @@ jobs:
           EOF
 
           echo "Created changeset for packages: $PACKAGES_CHANGED with bump type: $BUMP_TYPE"
-      - name: Commit changeset
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .changeset/
-          if git diff --staged --quiet; then
-            echo "No changeset to commit"
-          else
-            git commit -m "chore: add changeset for latest changes"
-            git push origin HEAD:refs/heads/changeset-auto-${{ github.run_id }}
-          fi
-
       - name: Create Pull Request
-        if: success()
-        run: |
-          if git diff --quiet HEAD~1 HEAD -- .changeset/; then
-            echo "No changeset created, skipping PR"
-          else
-            gh pr create \
-              --title "🤖 Auto-generated changeset for package changes" \
-              --body "This PR contains automatically generated changesets for recent package modifications." \
-              --head "changeset-auto-${{ github.run_id }}" \
-              --base "main"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: add changeset for latest changes"
+          title: "🤖 Auto-generated changeset for package changes"
+          body: "This PR contains automatically generated changesets for recent package modifications."
+          branch: changeset-auto-${{ github.run_id }}
+          base: main
+          delete-branch: true
 
   upload-results:
     name: Upload Test Results
