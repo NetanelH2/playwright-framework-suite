@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+- 00d3f11: feat(workflows): improve GitHub Actions workflows with enhanced error handling
+
+### Patch Changes
+
+- b0e9b67: fix(workflows): remove continue-on-error from code-quality workflows
+
 All notable changes to `@netanelh2/create-workflows-package` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
