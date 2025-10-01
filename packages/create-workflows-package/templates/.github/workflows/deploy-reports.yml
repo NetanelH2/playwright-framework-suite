@@ -74,11 +74,38 @@ jobs:
           echo "workflow_dir=$(echo "$WORKFLOW_NAME" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
           echo "manual_dispatch=${{ github.event_name == 'workflow_dispatch' }}" >> $GITHUB_OUTPUT
 
+      - name: Debug artifact information
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Workflow name: $WORKFLOW_NAME"
+          echo "Run number: $RUN_NUMBER"
+          echo "Artifact name: $ARTIFACT_NAME"
+          echo "Run ID: ${{ github.event.workflow_run.id || github.run_id }}"
+
+      - name: List available artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = ${{ github.event.workflow_run.id || github.run_id }};
+            try {
+              const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: runId,
+              });
+              console.log('Available artifacts:');
+              artifacts.data.artifacts.forEach(artifact => {
+                console.log(`- ${artifact.name} (${artifact.size_in_bytes} bytes, expires: ${artifact.expires_at})`);
+              });
+            } catch (error) {
+              console.log('Error listing artifacts:', error.message);
+            }
+
       - name: Download artifacts
         id: download
         uses: dawidd6/action-download-artifact@v11
         with:
-          name: ${{ needs.prepare_artifacts.outputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ./reports-temp/
           github_token: ${{ secrets.GITHUB_TOKEN }}
           run_id: ${{ github.event.workflow_run.id || github.run_id }}
@@ -136,15 +163,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: prepare_artifacts
+    if: needs.prepare_artifacts.result == 'success'
     timeout-minutes: 10
     outputs:
       deployment_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download processed reports
+        id: download-reports
         uses: actions/download-artifact@v4
         with:
           name: processed-reports-${{ github.run_number }}
           path: ./
+        continue-on-error: true
+
+      - name: Create fallback page if download failed
+        if: steps.download-reports.outcome == 'failure'
+        run: |
+          echo "<html><body><h1>Deployment Failed</h1><p>Could not download processed reports artifact. This may be due to:</p><ul><li>The prepare_artifacts job failed</li><li>Artifact storage quota exceeded</li><li>Artifact expired</li></ul><p>Please check the workflow logs for more details.</p></body></html>" > ./index.html
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v4
