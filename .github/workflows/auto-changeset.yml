@@ -97,8 +97,7 @@ jobs:
               --title "🤖 Auto-generated changeset for package changes" \
               --body "This PR contains automatically generated changesets for recent package modifications." \
               --head "changeset-auto-${{ github.run_id }}" \
-              --base "main" \
-              --label "automated,changeset"
+              --base "main"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
