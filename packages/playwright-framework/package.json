@@ -1,7 +1,7 @@
 {
   "name": "@netanelh2/playwright-framework",
   "version": "2.4.5",
-  "description": "A robust Playwright TypeScript framework with Page Object Model, smart locators, and utilities",
+  "description": "A robust Playwright TypeScript testing framework with Page Object Model and smart locators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",

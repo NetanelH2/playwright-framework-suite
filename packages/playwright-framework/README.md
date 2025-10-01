@@ -246,5 +246,3 @@ Contributions are welcome! Please visit the [main repository](https://github.com
 ## License
 
 MIT - see [LICENSE](https://github.com/NetanelH2/playwright-framework-suite/blob/main/LICENSE) for details.
-
-# Test workflow fix
