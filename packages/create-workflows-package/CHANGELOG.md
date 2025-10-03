@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.2.5
+
+### Patch Changes
+
+- 3077a6c: chore: release packages (#53)
+
+## 1.2.4
+
+### Patch Changes
+
+- c73ffa3: chore: release packages (#51)
+
+## 1.2.3
+
+### Patch Changes
+
+- bfb4972: chore: release packages (#49)
+
+## 1.2.2
+
+### Patch Changes
+
+- 3730b42: chore: release packages (#47)
+
+## 1.2.1
+
+### Patch Changes
+
+- bf11412: chore: release packages (#45)
+
 ## 1.2.0
 
 ### Minor Changes
