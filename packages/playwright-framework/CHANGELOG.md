@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.4.23
+
+### Patch Changes
+
+- chore: version packages
+
 ## 2.4.22
 
 ### Patch Changes
