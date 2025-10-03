@@ -31,6 +31,68 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Create changesets for modified packages
+        run: |
+          # Check if there are existing changesets
+          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
+
+          if [ "$CHANGESET_COUNT" -gt "0" ]; then
+            echo "✅ Found $CHANGESET_COUNT existing changeset(s), skipping auto-generation"
+            exit 0
+          fi
+
+          echo "No changesets found, checking for package changes..."
+
+          # Get changed packages from the current commit
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || git show --name-only --pretty=format: HEAD)
+          PACKAGES=$(echo "$CHANGED_FILES" | grep "^packages/" | cut -d'/' -f2 | sort -u | tr '\n' ' ')
+
+          if [[ -z "$PACKAGES" ]]; then
+            echo "No package changes detected"
+            exit 0
+          fi
+
+          echo "Changed packages: $PACKAGES"
+
+          # Determine version bump from commit message
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          if [[ $COMMIT_MSG =~ ^feat.*!:|BREAKING ]]; then
+            BUMP="major"
+          elif [[ $COMMIT_MSG =~ ^feat ]]; then
+            BUMP="minor"
+          else
+            BUMP="patch"
+          fi
+
+          echo "Version bump: $BUMP"
+
+          # Create changeset
+          CHANGESET_ID="auto-$(date +%s)"
+          CHANGESET_FILE=".changeset/${CHANGESET_ID}.md"
+
+          cat > "$CHANGESET_FILE" << EOF
+          ---
+          $(for pkg in $PACKAGES; do
+            case "$pkg" in
+              playwright-framework)
+                echo "\"@netanelh2/playwright-framework\": $BUMP"
+                ;;
+              create-playwright-project)
+                echo "\"@netanelh2/create-playwright-project\": $BUMP"
+                ;;
+              create-workflows-package)
+                echo "\"@netanelh2/create-workflows-package\": $BUMP"
+                ;;
+            esac
+          done)
+          ---
+
+          $(echo "$COMMIT_MSG" | head -n1)
+          EOF
+
+          echo "✅ Created changeset: $CHANGESET_FILE"
+          cat "$CHANGESET_FILE"
+
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
