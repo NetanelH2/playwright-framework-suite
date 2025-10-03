@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.54
+
+### Patch Changes
+
+- [`7bdc205`](https://github.com/NetanelH2/playwright-framework-suite/commit/7bdc205317a495abf60363c2a37d64de72fa986d) Thanks [@github-actions[bot]](https://github.com/github-actions%5Bbot%5D)! - test: bump all package versions to test CI publishing workflow
+
 ## 2.4.52
 
 ### Patch Changes
