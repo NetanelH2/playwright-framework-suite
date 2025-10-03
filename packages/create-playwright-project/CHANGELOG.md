@@ -1,5 +1,13 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.55
+
+### Patch Changes
+
+- [`bebbe5e`](https://github.com/NetanelH2/playwright-framework-suite/commit/bebbe5e47cfa45584033cd978a641873f8cb1ab5) Thanks [@github-actions[bot]](https://github.com/github-actions%5Bbot%5D)! - chore: version packages
+
+- [`9aeb04e`](https://github.com/NetanelH2/playwright-framework-suite/commit/9aeb04e83e028dfb6287893f34a7f9d3df2fb0ea) Thanks [@github-actions[bot]](https://github.com/github-actions%5Bbot%5D)! - docs: add JSDoc headers to package entry points
+
 ## 2.4.54
 
 ### Patch Changes
