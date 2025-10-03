@@ -123,6 +123,8 @@ jobs:
           else
             echo "No version changes detected"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         run: |
