@@ -5,7 +5,7 @@ name: Auto-merge with GitHub Native
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, reopened, ready_for_review, closed]
   workflow_run:
     workflows: ["Code Quality Check"]
     types: [completed]
@@ -49,6 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
       github.event.pull_request.draft == false &&
       github.event.pull_request.state == 'open' &&
       github.event.pull_request.user.login == 'NetanelH2'
@@ -64,6 +65,29 @@ jobs:
             const pr = context.payload.pull_request;
             console.log(`🎯 Processing PR #${pr.number}: "${pr.title}"`);
             console.log(`👤 Author: ${pr.user.login}`);
+
+            // Check if already approved by this workflow
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const alreadyApproved = reviews.some(review => 
+              review.user.login === 'github-actions[bot]' && 
+              review.state === 'APPROVED'
+            );
+
+            // Check if auto-merge is already enabled
+            if (pr.auto_merge) {
+              console.log('✅ Auto-merge already enabled - skipping to prevent loop');
+              return;
+            }
+
+            if (alreadyApproved) {
+              console.log('✅ Already approved by workflow - skipping duplicate approval');
+              return;
+            }
 
             try {
               // Auto-approve the PR
@@ -236,5 +260,65 @@ jobs:
                           'Please merge manually or check branch protection settings.'
                   });
                 }
+              }
+            }
+
+  delete-merged-branch:
+    name: Delete Merged Branch
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: write
+    steps:
+      - name: Delete branch after merge
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const branchName = pr.head.ref;
+
+            console.log(`🎯 PR #${pr.number} was merged: "${pr.title}"`);
+            console.log(`🗑️  Deleting branch: ${branchName}`);
+
+            // Don't delete main, master, develop, or release branches
+            const protectedBranches = ['main', 'master', 'develop', 'development', 'staging', 'production'];
+            const isProtected = protectedBranches.includes(branchName) || branchName.startsWith('release/');
+
+            if (isProtected) {
+              console.log(`⚠️ Branch ${branchName} is protected - skipping deletion`);
+              return;
+            }
+
+            try {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `heads/${branchName}`
+              });
+              
+              console.log(`✅ Successfully deleted branch: ${branchName}`);
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: `🗑️ Branch \`${branchName}\` has been automatically deleted after merge.`
+              });
+              
+            } catch (error) {
+              console.log(`❌ Failed to delete branch: ${error.message}`);
+              
+              // Only comment if deletion failed for a reason other than "not found"
+              if (!error.message.includes('Reference does not exist')) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body: `⚠️ Could not auto-delete branch \`${branchName}\`: ${error.message}`
+                });
               }
             }
