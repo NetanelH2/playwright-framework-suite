@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.6
+
+### Patch Changes
+
+- [#56](https://github.com/NetanelH2/playwright-framework-suite/pull/56) [`6559cb8`](https://github.com/NetanelH2/playwright-framework-suite/commit/6559cb8e5eb2e62e7994dbbe7acd7d3d17a4b62b) Thanks [@NetanelH2](https://github.com/NetanelH2)! - chore: release packages (#55)
+
 ## 1.2.5
 
 ### Patch Changes
