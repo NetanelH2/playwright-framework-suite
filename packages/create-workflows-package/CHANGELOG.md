@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.4
+
+### Patch Changes
+
+- c73ffa3: chore: release packages (#51)
+
 ## 1.2.3
 
 ### Patch Changes
