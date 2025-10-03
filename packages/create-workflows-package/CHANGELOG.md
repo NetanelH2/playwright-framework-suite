@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.7
+
+### Patch Changes
+
+- docs: enhance package README files with feature lists
+
 ## 1.2.6
 
 ### Patch Changes
