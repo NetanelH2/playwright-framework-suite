@@ -76,9 +76,9 @@ npm install --save-dev @netanelh2/playwright-framework @playwright/test
 
 ## 📚 Documentation
 
+- **[Agent Guide](./AGENTS.md)** - AI coding agent development guide
 - [Framework Core Documentation](./packages/playwright-framework/README.md)
 - [CLI Tool Documentation](./packages/create-playwright-project/README.md)
-- [Development Contributing Guide](./CONTRIBUTING.md)
 - [API Reference](https://netanelh2.github.io/playwright-framework-suite/)
 
 ## 🛠️ Development
@@ -123,16 +123,16 @@ This monorepo uses cutting-edge tooling for optimal developer experience:
 ### Basic Page Object
 
 ```typescript
-import {BasePage} from '@netanelh2/playwright-framework'
-import {LOGIN_PAGE_LOCATORS as L} from '@/locators'
+import { BasePage } from "@netanelh2/playwright-framework";
+import { LOGIN_PAGE_LOCATORS as L } from "@/locators";
 
 export class LoginPage extends BasePage {
   async login(username: string, password: string): Promise<void> {
-    await this.test.step('User login flow', async () => {
-      await this.fillField(L.usernameField, username)
-      await this.fillField(L.passwordField, password)
-      await this.clickElement(L.loginButton)
-    })
+    await this.test.step("User login flow", async () => {
+      await this.fillField(L.usernameField, username);
+      await this.fillField(L.passwordField, password);
+      await this.clickElement(L.loginButton);
+    });
   }
 }
 ```
@@ -140,15 +140,15 @@ export class LoginPage extends BasePage {
 ### Test with Fixtures
 
 ```typescript
-import {test} from '@/fixtures'
+import { test } from "@/fixtures";
 
-test.describe('Authentication @sanity', () => {
-  test('should login successfully', async ({loginPage, dashboardPage}) => {
-    await loginPage.navigateTo()
-    await loginPage.login('user@example.com', 'password123')
-    await dashboardPage.validateUserLoggedIn()
-  })
-})
+test.describe("Authentication @sanity", () => {
+  test("should login successfully", async ({ loginPage, dashboardPage }) => {
+    await loginPage.navigateTo();
+    await loginPage.login("user@example.com", "password123");
+    await dashboardPage.validateUserLoggedIn();
+  });
+});
 ```
 
 ## 🚀 Release Notes
@@ -157,15 +157,23 @@ See [CHANGELOG.md](./CHANGELOG.md) for version history and release notes.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
+We welcome contributions! Please see our [Workflow Guide](./WORKFLOW.md) for the complete development process.
 
 ### Quick Contribution Steps:
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run `npm run lint && npm test`
-5. Submit a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/my-feature`
+3. **Make your changes** and add a changeset: `npm run changeset`
+4. **Run quality checks**: `npm run check`
+5. **Commit**: `git commit -m "feat: add my feature"`
+6. **Push**: `git push origin feature/my-feature`
+7. **Submit a Pull Request** using the provided template
+
+For detailed workflow information, see:
+
+- **[WORKFLOW.md](./WORKFLOW.md)** - Complete workflow documentation
+- **[SETUP.md](./SETUP.md)** - Setup instructions
+- **[.github/pull_request_template.md](./.github/pull_request_template.md)** - PR guidelines
 
 ## 📄 License
 

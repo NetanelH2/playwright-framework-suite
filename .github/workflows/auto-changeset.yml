@@ -1,12 +1,5 @@
 name: Auto Generate Changesets
 
-# This workflow automatically creates changesets when packages are modified
-#
-# IMPORTANT: To enable PR creation, you must either:
-# 1. Enable "Allow GitHub Actions to create and approve pull requests" in:
-#    Settings → Actions → General → Workflow permissions
-# 2. Create a Personal Access Token (PAT) with 'repo' scope and add it as a secret named 'PAT_TOKEN'
-
 on:
   push:
     branches: [main]
@@ -15,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   auto-changeset:
@@ -24,87 +16,61 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: "npm"
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate changeset from commit
+      - name: Generate and commit changeset
         run: |
-          # Get the commit message
+          # Get commit message and detect changes
           COMMIT_MSG="${{ github.event.head_commit.message }}"
-          COMMIT_SHA="${{ github.event.head_commit.id }}"
+          PACKAGES=$(git diff --name-only HEAD~1 HEAD | grep "^packages/" | cut -d'/' -f2 | sort -u | tr '\n' ' ')
 
-          # Determine version bump and packages affected
-          PACKAGES_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^packages/" | cut -d'/' -f2 | sort -u | tr '\n' ' ')
-
-          if [[ -z "$PACKAGES_CHANGED" ]]; then
-            echo "No packages changed, skipping changeset creation"
+          if [[ -z "$PACKAGES" ]]; then
+            echo "No packages changed"
             exit 0
           fi
 
-          # Determine version bump type from commit message
-          if [[ $COMMIT_MSG =~ ^feat(\(.+\))?!: ]] || [[ $COMMIT_MSG =~ BREAKING\ CHANGE ]]; then
-            BUMP_TYPE="major"
-          elif [[ $COMMIT_MSG =~ ^feat(\(.+\))?: ]]; then
-            BUMP_TYPE="minor"
-          elif [[ $COMMIT_MSG =~ ^fix(\(.+\))?: ]] || [[ $COMMIT_MSG =~ ^perf(\(.+\))?: ]]; then
-            BUMP_TYPE="patch"
+          # Determine version bump
+          if [[ $COMMIT_MSG =~ ^feat.*!:|BREAKING ]]; then
+            BUMP="major"
+          elif [[ $COMMIT_MSG =~ ^feat ]]; then
+            BUMP="minor"
           else
-            BUMP_TYPE="patch"  # Default to patch for other changes
+            BUMP="patch"
           fi
 
-          # Extract the commit message title (first line)
-          COMMIT_TITLE=$(echo "$COMMIT_MSG" | head -n1)
-
-          # Create changeset file
+          # Create changeset
           CHANGESET_ID="auto-$(date +%s)"
           cat > ".changeset/${CHANGESET_ID}.md" << EOF
           ---
-          $(for pkg in $PACKAGES_CHANGED; do
-            if [[ "$pkg" == "playwright-framework" ]]; then
-              echo "\"@netanelh2/playwright-framework\": $BUMP_TYPE"
-            elif [[ "$pkg" == "create-playwright-project" ]]; then
-              echo "\"@netanelh2/create-playwright-project\": $BUMP_TYPE"
-            elif [[ "$pkg" == "create-workflows-package" ]]; then
-              echo "\"@netanelh2/create-workflows-package\": $BUMP_TYPE"
-            fi
+          $(for pkg in $PACKAGES; do
+            case "$pkg" in
+              playwright-framework)
+                echo "\"@netanelh2/playwright-framework\": $BUMP"
+                ;;
+              create-playwright-project)
+                echo "\"@netanelh2/create-playwright-project\": $BUMP"
+                ;;
+              create-workflows-package)
+                echo "\"@netanelh2/create-workflows-package\": $BUMP"
+                ;;
+            esac
           done)
           ---
 
-          $COMMIT_TITLE
+          $(echo "$COMMIT_MSG" | head -n1)
           EOF
 
-          echo "Created changeset for packages: $PACKAGES_CHANGED with bump type: $BUMP_TYPE"
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          commit-message: "chore: add changeset for latest changes"
-          title: "🤖 Auto-generated changeset for package changes"
-          body: "This PR contains automatically generated changesets for recent package modifications."
-          branch: changeset-auto-${{ github.run_id }}
-          base: main
-          delete-branch: true
-
-  upload-results:
-    name: Upload Test Results
-    runs-on: ubuntu-latest
-    needs: auto-changeset
-    if: failure()
-    timeout-minutes: 5
-    steps:
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: changeset-results
-          path: |
-            *.log
-            .changeset/
-          retention-days: 2
+          # Commit if changeset was created
+          if [ -f ".changeset/${CHANGESET_ID}.md" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add ".changeset/${CHANGESET_ID}.md"
+            git commit -m "chore: add changeset [skip ci]"
+            git push
+            echo "✅ Changeset created and committed"
+          fi

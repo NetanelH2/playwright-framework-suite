@@ -45,6 +45,7 @@
   },
   "homepage": "https://github.com/NetanelH2/playwright-framework-suite#readme",
   "devDependencies": {
+    "@changesets/changelog-github": "*",
     "@changesets/cli": "*",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",

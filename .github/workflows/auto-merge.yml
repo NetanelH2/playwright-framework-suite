@@ -1,0 +1,170 @@
+name: Auto-merge
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+  check_suite:
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge Owner PRs
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+      (github.event_name == 'check_suite' && github.event.check_suite.conclusion == 'success')
+    steps:
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v8
+        with:
+          script: |
+            let pr;
+
+            if (context.eventName === 'pull_request') {
+              pr = context.payload.pull_request;
+            } else if (context.eventName === 'pull_request_review') {
+              pr = context.payload.pull_request;
+            } else if (context.eventName === 'check_suite') {
+              const { data: prs } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${context.repo.owner}:${context.payload.check_suite.head_branch}`
+              });
+              pr = prs[0];
+            }
+
+            if (!pr) {
+              console.log('No PR found');
+              return;
+            }
+
+            core.setOutput('number', pr.number);
+            core.setOutput('author', pr.user.login);
+            core.setOutput('title', pr.title);
+            core.setOutput('draft', pr.draft);
+
+      - name: Enable auto-merge for owner PRs
+        if: steps.pr.outputs.author == 'NetanelH2' && steps.pr.outputs.draft == 'false'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.pr.outputs.number }};
+
+            console.log(`Processing owner PR #${prNumber}`);
+
+            try {
+              // Check current state
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
+              
+              // Skip if already has auto-merge enabled
+              if (pr.auto_merge) {
+                console.log('Auto-merge already enabled');
+                return;
+              }
+              
+              // Approve the PR
+              const { data: reviews } = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
+              
+              const hasApproval = reviews.some(r => r.state === 'APPROVED');
+              
+              if (!hasApproval) {
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber,
+                  event: 'APPROVE',
+                  body: '✅ Auto-approved by workflow'
+                });
+                console.log('PR approved');
+              }
+              
+              // Enable auto-merge
+              await github.rest.pulls.enableAutoMerge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                merge_method: 'SQUASH'
+              });
+              
+              console.log('Auto-merge enabled');
+            } catch (error) {
+              console.error(`Failed to enable auto-merge: ${error.message}`);
+            }
+
+      - name: Notify external contributors
+        if: steps.pr.outputs.author != 'NetanelH2' && github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const prNumber = ${{ steps.pr.outputs.number }};
+
+            // Check if already notified
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
+            const alreadyNotified = comments.some(c => 
+              c.user.login === 'github-actions[bot]' && 
+              c.body.includes('Manual review required')
+            );
+
+            if (alreadyNotified) return;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: '👋 Thanks for contributing!\n\n' +
+                    '**Manual review required** - This PR will be reviewed by @NetanelH2\n\n' +
+                    'Your PR will be merged manually after approval.'
+            });
+
+  cleanup:
+    name: Delete Merged Branch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged
+    permissions:
+      contents: write
+    steps:
+      - name: Delete branch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const protected = ['main', 'master', 'develop'];
+
+            if (protected.includes(branch) || branch.startsWith('release/')) {
+              console.log(`Skipping deletion of protected branch: ${branch}`);
+              return;
+            }
+
+            try {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `heads/${branch}`
+              });
+              console.log(`Deleted branch: ${branch}`);
+            } catch (error) {
+              console.log(`Could not delete branch: ${error.message}`);
+            }
