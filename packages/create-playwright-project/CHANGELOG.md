@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.14
+
+### Patch Changes
+
+- docs: enhance package README files with feature lists
+
 ## 2.4.3
 
 ### Patch Changes

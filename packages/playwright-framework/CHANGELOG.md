@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.4.6
+
+### Patch Changes
+
+- docs: enhance package README files with feature lists
+
 ## 2.4.5
 
 ### Patch Changes
