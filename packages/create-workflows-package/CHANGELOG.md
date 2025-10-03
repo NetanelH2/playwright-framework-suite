@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.3
+
+### Patch Changes
+
+- bfb4972: chore: release packages (#49)
+
 ## 1.2.2
 
 ### Patch Changes
