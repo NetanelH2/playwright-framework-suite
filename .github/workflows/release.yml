@@ -3,9 +3,6 @@ name: Release
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [closed]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -15,8 +12,8 @@ permissions:
   id-token: write
 
 jobs:
-  release-pr:
-    name: Create Release PR
+  release:
+    name: Version and Publish
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -29,65 +26,41 @@ jobs:
         with:
           node-version: 18
           cache: npm
-
-      - run: npm ci
-
-      - name: Create Release PR
-        uses: changesets/action@v1
-        with:
-          version: npm run version-packages
-          commit: "chore: version packages"
-          title: "chore: release packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-
-  publish:
-    name: Publish to NPM
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged && contains(github.event.pull_request.title, 'release')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
           registry-url: "https://registry.npmjs.org"
 
       - run: npm ci
       - run: npm run build
 
-      - name: Publish packages
-        run: npm run release
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+          version: npm run version-packages
+          commit: "chore: version packages"
+          title: "chore: release packages"
         env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub releases
+        if: steps.changesets.outputs.published == 'true'
         uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const path = require('path');
+            const publishedPackages = ${{ steps.changesets.outputs.publishedPackages }};
 
-            // Get all packages
-            const packagesDir = path.join(process.cwd(), 'packages');
-            const packages = fs.readdirSync(packagesDir);
-
-            for (const pkg of packages) {
-              const pkgPath = path.join(packagesDir, pkg, 'package.json');
-              if (!fs.existsSync(pkgPath)) continue;
-              
-              const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-              const tagName = `${pkgJson.name}@${pkgJson.version}`;
+            for (const pkg of publishedPackages) {
+              const tagName = `${pkg.name}@${pkg.version}`;
               
               try {
                 await github.rest.repos.createRelease({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   tag_name: tagName,
-                  name: `${pkgJson.name} v${pkgJson.version}`,
-                  body: context.payload.pull_request.body || 'Release',
+                  name: `${pkg.name} v${pkg.version}`,
+                  body: `## What's Changed\n\nSee the full changelog at https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/packages/${pkg.name.split('/')[1]}/CHANGELOG.md`,
                   draft: false,
                   prerelease: false
                 });
@@ -96,7 +69,7 @@ jobs:
                 if (error.status === 422) {
                   console.log(`⚠️ Release ${tagName} already exists`);
                 } else {
-                  console.error(`❌ Failed: ${error.message}`);
+                  console.error(`❌ Failed to create release for ${tagName}: ${error.message}`);
                 }
               }
             }
