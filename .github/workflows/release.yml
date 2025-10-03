@@ -14,7 +14,9 @@ permissions:
 jobs:
   release:
     name: Version and Publish
-    if: github.event_name == 'push'
+    if: >-
+      github.event_name == 'push' && 
+      !startsWith(github.event.head_commit.message, 'chore: version packages')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
