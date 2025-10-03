@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.15
+
+### Patch Changes
+
+- chore: merge version bumps from PR #58
+
 ## 2.4.14
 
 ### Patch Changes

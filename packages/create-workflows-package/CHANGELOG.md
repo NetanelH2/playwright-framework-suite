@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.8
+
+### Patch Changes
+
+- chore: merge version bumps from PR #58
+
 ## 1.2.7
 
 ### Patch Changes

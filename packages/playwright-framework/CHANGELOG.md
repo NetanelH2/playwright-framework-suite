@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 2.4.7
+
+### Patch Changes
+
+- chore: merge version bumps from PR #58
+
 ## 2.4.6
 
 ### Patch Changes
