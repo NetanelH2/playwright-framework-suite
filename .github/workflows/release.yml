@@ -93,36 +93,79 @@ jobs:
           echo "✅ Created changeset: $CHANGESET_FILE"
           cat "$CHANGESET_FILE"
 
-      - name: Create Release Pull Request or Publish
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: npm run release
-          version: npm run version-packages
-          commit: "chore: version packages"
-          title: "chore: release packages"
+      - name: Version packages
+        run: |
+          # Check if there are changesets to process
+          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
+
+          if [ "$CHANGESET_COUNT" -eq "0" ]; then
+            echo "No changesets to process, skipping versioning"
+            exit 0
+          fi
+
+          echo "Processing $CHANGESET_COUNT changeset(s)..."
+
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Run changeset version to update package.json and CHANGELOG
+          npm run version-packages
+
+          # Check if there are changes to commit
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "chore: version packages"
+            git push origin main
+            echo "✅ Versioned and committed package updates"
+          else
+            echo "No version changes detected"
+          fi
+
+      - name: Publish to NPM
+        run: |
+          # Check if we have packages to publish
+          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
+
+          if [ "$CHANGESET_COUNT" -eq "0" ]; then
+            echo "✅ Publishing packages to NPM..."
+            npm run release
+            echo "PUBLISHED=true" >> $GITHUB_ENV
+          else
+            echo "Changesets still exist, skipping publish (version step may have failed)"
+            echo "PUBLISHED=false" >> $GITHUB_ENV
+          fi
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub releases
-        if: steps.changesets.outputs.published == 'true'
+        if: env.PUBLISHED == 'true'
         uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
-            const publishedPackages = ${{ steps.changesets.outputs.publishedPackages }};
+            const fs = require('fs');
+            const path = require('path');
 
-            for (const pkg of publishedPackages) {
-              const tagName = `${pkg.name}@${pkg.version}`;
+            // Read package.json from each package to get versions
+            const packages = [
+              { name: '@netanelh2/playwright-framework', dir: 'playwright-framework' },
+              { name: '@netanelh2/create-playwright-project', dir: 'create-playwright-project' },
+              { name: '@netanelh2/create-workflows-package', dir: 'create-workflows-package' }
+            ];
+
+            for (const pkg of packages) {
+              const pkgPath = path.join('packages', pkg.dir, 'package.json');
+              const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+              const tagName = `${pkg.name}@${pkgJson.version}`;
               
               try {
                 await github.rest.repos.createRelease({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   tag_name: tagName,
-                  name: `${pkg.name} v${pkg.version}`,
-                  body: `## What's Changed\n\nSee the full changelog at https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/packages/${pkg.name.split('/')[1]}/CHANGELOG.md`,
+                  name: `${pkg.name} v${pkgJson.version}`,
+                  body: `## What's Changed\n\nSee the full changelog at https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/packages/${pkg.dir}/CHANGELOG.md`,
                   draft: false,
                   prerelease: false
                 });
