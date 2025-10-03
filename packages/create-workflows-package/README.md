@@ -2,7 +2,12 @@
 
 🚀 CLI tool to add GitHub Actions workflows and code quality setup with Husky to your existing project.
 
-<!-- Test: Automated release verification -->
+## Features
+
+- **GitHub Actions Templates**: Pre-configured workflows for code quality, testing, and releases
+- **Changeset Integration**: Automated version bumping and NPM publishing
+- **Husky & lint-staged**: Pre-commit hooks for quality gates
+- **Branch Protection**: Automated PR checks and merge requirements
 
 ## Quick Start
 

@@ -4,7 +4,17 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 
 > **See also:** [AI Coding Agent Guide (AGENTS.md)](../../AGENTS.md) for advanced usage, conventions, and project structure tips.
 
-<!-- Test: Automated release verification -->
+A comprehensive Playwright testing framework with TypeScript, providing robust utilities for maintainable E2E testing with a layered architecture.
+
+## Features
+
+- **Three-Layer Architecture**: Core utilities, Page Objects, and test specs
+- **Centralized Locator Management**: Role-based locator definitions
+- **Fixture-Based Page Injection**: Ready-to-use page objects in tests
+- **Type-Safe Environment Handling**: Secure credential management
+- **Modern Tooling**: ESLint 9.x flat config, Prettier 3.x, TypeScript 5.x project references
+
+## Installation
 
 ## Features
 

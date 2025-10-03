@@ -2,7 +2,13 @@
 
 🎭 CLI tool to scaffold new Playwright TypeScript projects with the [@netanelh2/playwright-framework](https://www.npmjs.com/package/@netanelh2/playwright-framework).
 
-<!-- Test: Automated release verification -->
+## Features
+
+- **Interactive Setup**: Choose between minimal or full-featured project templates
+- **Modern Configuration**: ESLint 9.x flat config, Prettier 3.x TypeScript config
+- **Framework Integration**: Automatic `@netanelh2/playwright-framework` dependency setup
+- **ES Modules**: Proper `.js` extensions and module configuration
+- **Example Tests**: Includes login page examples with fixtures and locators
 
 ## Quick Start
 
