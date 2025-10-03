@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 2.4.17
+
+### Patch Changes
+
+- chore: version packages
+
 ## 2.4.16
 
 ### Patch Changes
