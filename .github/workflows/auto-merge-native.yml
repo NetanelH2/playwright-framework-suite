@@ -59,6 +59,7 @@ jobs:
       - name: Auto-approve and enable auto-merge
         uses: actions/github-script@v8
         with:
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             console.log(`🎯 Processing PR #${pr.number}: "${pr.title}"`);
@@ -124,6 +125,7 @@ jobs:
       - name: Find and merge PRs ready after quality check
         uses: actions/github-script@v8
         with:
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
             const workflowRun = context.payload.workflow_run;
             console.log(`✅ Code Quality Check completed successfully`);
