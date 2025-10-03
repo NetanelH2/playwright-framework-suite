@@ -4,6 +4,8 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 
 > **See also:** [AI Coding Agent Guide (AGENTS.md)](../../AGENTS.md) for advanced usage, conventions, and project structure tips.
 
+<!-- Test: Automated release verification -->
+
 ## Features
 
 - 🎭 **Built on Playwright**: Leverages the power of Playwright for reliable E2E testing

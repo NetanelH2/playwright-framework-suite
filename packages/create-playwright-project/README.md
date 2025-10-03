@@ -2,6 +2,8 @@
 
 🎭 CLI tool to scaffold new Playwright TypeScript projects with the [@netanelh2/playwright-framework](https://www.npmjs.com/package/@netanelh2/playwright-framework).
 
+<!-- Test: Automated release verification -->
+
 ## Quick Start
 
 Create a new Playwright project using npx (recommended):

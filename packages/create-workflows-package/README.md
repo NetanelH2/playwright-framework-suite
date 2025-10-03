@@ -2,6 +2,8 @@
 
 🚀 CLI tool to add GitHub Actions workflows and code quality setup with Husky to your existing project.
 
+<!-- Test: Automated release verification -->
+
 ## Quick Start
 
 Add workflows and code quality to your project using npx (recommended):
