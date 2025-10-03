@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+/**
+ * @netanelh2/create-playwright-project CLI
+ * Scaffolds new Playwright projects with framework integration
+ */
 /* eslint-disable no-console */
 
 import chalk from 'chalk';

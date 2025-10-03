@@ -1,3 +1,8 @@
+/**
+ * @netanelh2/playwright-framework
+ * A robust Playwright TypeScript testing framework with Page Object Model
+ */
+
 // Core classes
 export * from './core/index.js'
 

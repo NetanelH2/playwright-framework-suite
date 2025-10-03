@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+/**
+ * @netanelh2/create-workflows-package CLI
+ * Scaffolds GitHub Actions workflows and code quality setup
+ */
 /* eslint-disable no-console */
 
 import chalk from 'chalk'
