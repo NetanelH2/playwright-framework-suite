@@ -1,6 +1,6 @@
 {
   "name": "@netanelh2/create-workflows-package",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "CLI tool to scaffold GitHub Actions workflows and code quality setup with Husky",
   "main": "dist/src/cli.js",
   "type": "module",
