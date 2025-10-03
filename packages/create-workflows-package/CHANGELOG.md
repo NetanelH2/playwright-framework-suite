@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1
+
+### Patch Changes
+
+- bf11412: chore: release packages (#45)
+
 ## 1.2.0
 
 ### Minor Changes
