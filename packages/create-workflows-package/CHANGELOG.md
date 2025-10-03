@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.23
+
+### Patch Changes
+
+- chore: version packages
+
 ## 1.2.22
 
 ### Patch Changes
