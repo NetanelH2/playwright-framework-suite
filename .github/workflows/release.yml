@@ -16,7 +16,8 @@ jobs:
     name: Version and Publish
     if: >-
       github.event_name == 'push' && 
-      !startsWith(github.event.head_commit.message, 'chore: version packages')
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -117,7 +118,7 @@ jobs:
           # Check if there are changes to commit
           if [[ -n $(git status --porcelain) ]]; then
             git add .
-            git commit -m "chore: version packages"
+            git commit -m "chore: version packages [skip ci]"
             git push origin main
             echo "✅ Versioned and committed package updates"
           else
