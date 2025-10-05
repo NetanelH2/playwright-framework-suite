@@ -33,7 +33,7 @@ A comprehensive Playwright testing framework with TypeScript, providing robust u
 npm install --save-dev @netanelh2/playwright-framework @playwright/test typescript
 ```
 
-> **Note**: This package uses modern ES modules. Ensure your project has `"type": "module"` in `package.json` and uses `.js` extensions in relative imports.
+> **Note**: This package uses modern ES modules. Ensure your project has `"type": "module"` in `package.json` and uses `.ts` extensions in relative imports.
 
 ## Quick Start
 
