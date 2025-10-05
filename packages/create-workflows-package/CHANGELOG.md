@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+### Major Changes
+
+- e37ffa8: chore: remove @ path aliases and barrel exports
+
 ## 1.2.49
 
 ### Patch Changes

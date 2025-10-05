@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 3.0.0
+
+### Major Changes
+
+- e37ffa8: chore: remove @ path aliases and barrel exports
+
 ## 2.4.56
 
 ### Patch Changes
