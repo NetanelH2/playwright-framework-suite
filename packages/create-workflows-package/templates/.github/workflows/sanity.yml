@@ -95,6 +95,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Sanity Tests
+        id: sanity-tests
         run: npm run test:sanity
 
       - name: Upload Playwright Report
@@ -105,6 +106,12 @@ jobs:
           path: playwright-report/
           retention-days: 3
           if-no-files-found: warn
+
+      - name: Fail workflow if tests failed
+        if: steps.sanity-tests.outcome == 'failure'
+        run: |
+          echo "::error::Sanity tests failed. Check the report at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ for details."
+          exit 1
 
   summary:
     name: Add Test Results Summary
