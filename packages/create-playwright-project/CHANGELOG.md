@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 3.0.4
+
+### Patch Changes
+
+- ea63c35: chore: bump version to 3.0.3 and clean up ESLint config
+
 ## 3.0.2
 
 ### Patch Changes
