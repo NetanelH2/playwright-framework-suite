@@ -1,5 +1,5 @@
 import {test as base} from '@playwright/test'
-import type {PageFixtures} from '../types/fixtureTypes.js'
+import type {basePageFixtures} from '../types/fixtureTypes.js'
 
 /**
  * Base test fixtures that provide consistent browser context and page management.
@@ -9,7 +9,8 @@ import type {PageFixtures} from '../types/fixtureTypes.js'
  * ```typescript
  * // In user's project
  * import { test as baseTest } from '@netanelh2/playwright-framework/fixtures'
- * import { MainPage, LoginPage } from '@/pages'
+ * import { MainPage } from '../pages/MainPage'
+ * import { LoginPage } from '../pages/LoginPage'
  *
  * export const test = baseTest.extend({
  *   mainPage: async ({page}, use) => {
@@ -21,7 +22,7 @@ import type {PageFixtures} from '../types/fixtureTypes.js'
  * })
  * ```
  */
-export const test = base.extend<PageFixtures>({
+export const test = base.extend<basePageFixtures>({
   context: async ({browser}, use) => {
     const context = await browser.newContext()
     await use(context)

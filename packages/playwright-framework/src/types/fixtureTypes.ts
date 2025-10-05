@@ -6,12 +6,12 @@ import type {BrowserContext, Page} from '@playwright/test'
  *
  * @example
  * ```typescript
- * interface CustomPageFixtures extends PageFixtures {
+ * interface PageFixtures extends basePageFixtures {
  *   mainPage: MainPage
  *   loginPage: LoginPage
  * }
  *
- * export const test = baseTest.extend<CustomPageFixtures>({
+ * export const test = baseTest.extend<PageFixtures>({
  *   mainPage: async ({page}, use) => {
  *     await use(new MainPage(page))
  *   },
@@ -21,7 +21,7 @@ import type {BrowserContext, Page} from '@playwright/test'
  * })
  * ```
  */
-export interface PageFixtures {
+export interface basePageFixtures {
   /**
    * Browser context instance with automatic cleanup
    */
