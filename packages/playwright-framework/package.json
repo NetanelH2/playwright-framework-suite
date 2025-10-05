@@ -1,6 +1,6 @@
 {
   "name": "@netanelh2/playwright-framework",
-  "version": "2.4.47",
+  "version": "2.4.48",
   "description": "A robust Playwright TypeScript testing framework with Page Object Model, smart locators, and utilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,22 +9,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./core": {
-      "import": "./dist/core/index.js",
-      "types": "./dist/core/index.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./helpers": {
-      "import": "./dist/helpers/index.js",
-      "types": "./dist/helpers/index.d.ts"
-    },
-    "./fixtures": {
-      "import": "./dist/fixtures/index.js",
-      "types": "./dist/fixtures/index.d.ts"
     }
   },
   "files": [

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.49
+
+### Patch Changes
+
+- Refactor: Remove @ path aliases and barrel exports
+  - Removed @ path alias from tsconfig files across all packages
+  - Replaced barrel exports with direct file imports using relative paths
+  - Updated package.json exports to single entry point
+  - Added composite flag to playwright-framework tsconfig for project references
+  - All imports now use relative paths with .js extensions for ES modules compatibility
+
 ## 1.2.48
 
 ### Patch Changes

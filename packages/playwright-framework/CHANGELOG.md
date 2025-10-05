@@ -1,5 +1,16 @@
 # @netanelh2/playwright-framework
 
+## 2.4.48
+
+### Patch Changes
+
+- Refactor: Remove @ path aliases and barrel exports
+  - Removed @ path alias from tsconfig files across all packages
+  - Replaced barrel exports with direct file imports using relative paths
+  - Updated package.json exports to single entry point
+  - Added composite flag to playwright-framework tsconfig for project references
+  - All imports now use relative paths with .js extensions for ES modules compatibility
+
 ## 2.4.47
 
 ### Patch Changes

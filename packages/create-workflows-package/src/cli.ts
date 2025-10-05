@@ -47,7 +47,7 @@ program
 program
   .option('-y, --yes', 'skip prompts and use defaults')
   .option('--no-install', 'skip dependency installation')
-  .action(async options => {
+  .action(async (options) => {
     console.log(chalk.blue.bold('🚀 Create Workflows Package'))
     console.log(
       chalk.gray('Setting up GitHub Actions workflows and code quality...\n'),

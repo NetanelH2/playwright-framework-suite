@@ -8,10 +8,6 @@
     /* Modules */
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
 
@@ -44,11 +40,6 @@
     "forceConsistentCasingInFileNames": true
   },
   /* File Specification */
-  "include": [
-    "src/**/*",
-    "playwright.config.ts",
-    ".prettierrc.ts",
-    "eslint.config.ts"
-  ],
+  "include": ["src/**/*", "playwright.config.ts", "eslint.config.ts"],
   "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
 }

@@ -22,11 +22,5 @@
     "erasableSyntaxOnly": true
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "templates",
-    "eslint.config.ts",
-    ".prettierrc.ts"
-  ]
+  "exclude": ["node_modules", "dist", "templates", "eslint.config.ts"]
 }

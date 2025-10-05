@@ -1,4 +1,4 @@
-import type {UserTypes} from '@/types'
+import type {UserTypes} from '../types/userTypes'
 
 export const SAUCE_DEMO_USERS: UserTypes = {
   standard: {

@@ -3,8 +3,8 @@ import {
   LOCKED_OUT_USER,
   PROBLEM_USER,
   STANDARD_USER,
-} from '@/data'
-import {test} from '@/fixtures'
+} from '../data/users'
+import {test} from '../fixtures/testSetup'
 
 test.describe('Login Page Tests @sanity', () => {
   test('should load the login page correctly', async ({loginPage}) => {

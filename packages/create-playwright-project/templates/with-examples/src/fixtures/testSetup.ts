@@ -1,6 +1,6 @@
-import {LoginPage} from '@/pages'
-import type {TestFixtures} from '@/types'
 import {test as base} from '@playwright/test'
+import {LoginPage} from '../pages/LoginPage'
+import type {TestFixtures} from '../types/fixtureTypes'
 
 export const test = base.extend<TestFixtures>({
   // Login page fixture

@@ -4,16 +4,19 @@
  */
 
 // Core classes
-export * from './core/index.js'
+export * from './core/BasePage.js'
+export * from './core/LocatorUtils.js'
 
 // Types
-export * from './types/index.js'
+export * from './types/fixtureTypes.js'
+export * from './types/locatorTypes.js'
 
 // Helpers
-export * from './helpers/index.js'
+export * from './helpers/arrayUtils.js'
+export * from './helpers/envUtils.js'
 
 // Fixtures (also available as separate import)
-export * from './fixtures/index.js'
+export * from './fixtures/testSetup.js'
 
 // Re-export common Playwright types for convenience
 export type {
