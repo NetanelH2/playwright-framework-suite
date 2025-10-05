@@ -1,5 +1,16 @@
 # @netanelh2/create-playwright-project
 
+## 3.0.2
+
+### Patch Changes
+
+- c2cf0fb: chore: release packages with documentation updates
+- 7c041d8: docs: update all documentation to remove .ts extensions from imports and correct Prettier config references
+  - Removed `.ts` extensions from all import examples in documentation
+  - Changed all references from `.prettierrc.ts` to `.prettierrc.json`
+  - Updated AGENTS.md, README.md, and package READMEs
+  - Ensured consistent import style across all documentation and templates
+
 ## 3.0.1
 
 ### Patch Changes
