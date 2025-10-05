@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.2
+
+### Patch Changes
+
+- 4b9002c: chore: update package version to 2.0.1 and enhance workflow error handling for regression and sanity tests
+
 ## 2.0.0
 
 ### Major Changes
