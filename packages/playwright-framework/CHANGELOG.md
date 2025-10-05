@@ -1,5 +1,12 @@
 # @netanelh2/playwright-framework
 
+## 3.0.5
+
+### Patch Changes
+
+- 686fbaa: chore: release @netanelh2/playwright-framework@3.0.4
+- 60c45ff: Rename PageFixtures to basePageFixtures for better clarity and consistency
+
 ## 3.0.4
 
 ### Patch Changes
