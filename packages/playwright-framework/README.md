@@ -4,18 +4,6 @@ A robust Playwright TypeScript testing framework with Page Object Model, smart l
 
 > **See also:** [AI Coding Agent Guide (AGENTS.md)](../../AGENTS.md) for advanced usage, conventions, and project structure tips.
 
-A comprehensive Playwright testing framework with TypeScript, providing robust utilities for maintainable E2E testing with a layered architecture.
-
-## Features
-
-- **Three-Layer Architecture**: Core utilities, Page Objects, and test specs
-- **Centralized Locator Management**: Role-based locator definitions
-- **Fixture-Based Page Injection**: Ready-to-use page objects in tests
-- **Type-Safe Environment Handling**: Secure credential management
-- **Modern Tooling**: ESLint 9.x flat config, Prettier 3.x, TypeScript 5.x project references
-
-## Installation
-
 ## Features
 
 - 🎭 **Built on Playwright**: Leverages the power of Playwright for reliable E2E testing
@@ -24,7 +12,6 @@ A comprehensive Playwright testing framework with TypeScript, providing robust u
 - 🔧 **Test Fixtures**: Pre-configured fixtures for consistent browser context and page management
 - 🛠️ **Utilities**: Helper functions for environment variables, array operations, and more
 - 📦 **TypeScript**: Full TypeScript support with comprehensive type definitions
-- 🚀 **Modern ES Modules**: Full ESM support with proper `.js` extensions in imports/exports
 - ⚡ **Project References**: Optimized compilation with TypeScript project references
 
 ## Installation
@@ -33,7 +20,7 @@ A comprehensive Playwright testing framework with TypeScript, providing robust u
 npm install --save-dev @netanelh2/playwright-framework @playwright/test typescript
 ```
 
-> **Note**: This package uses modern ES modules. Ensure your project has `"type": "module"` in `package.json` and uses `.ts` extensions in relative imports.
+> **Note**: This package uses modern ES modules. Ensure your project has `"type": "module"` in `package.json`.
 
 ## Quick Start
 
@@ -102,7 +89,8 @@ You can extend the base fixtures to add your own page objects:
 
 ```typescript
 import {test as baseTest} from '@netanelh2/playwright-framework/fixtures'
-import {LoginPage, DashboardPage} from './pages'
+import {LoginPage} from './pages/LoginPage'
+import {DashboardPage} from './pages/DashboardPage'
 
 export const test = baseTest.extend({
   loginPage: async ({page}, use) => {

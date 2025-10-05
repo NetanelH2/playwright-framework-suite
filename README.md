@@ -43,7 +43,6 @@ npm install --save-dev @netanelh2/playwright-framework @playwright/test
 - **📋 Smart Locator Resolution** - Automatic fallback from role → label → text selectors
 - **🔄 Built-in Retry Logic** - Configurable retries with CI-aware settings
 - **📊 Quality Gates** - ESLint 9.x + Prettier 3.x + TypeScript 5.x validation pipeline
-- **🚀 Modern ES Modules** - Full ESM support with proper import/export handling
 - **⚡ Project References** - Optimized TypeScript compilation with incremental builds
 
 ## 🏛️ Architecture Overview
@@ -114,9 +113,8 @@ npm run clean         # Clean build artifacts
 This monorepo uses cutting-edge tooling for optimal developer experience:
 
 - **ESLint 9.x** with flat configuration (`eslint.config.ts`)
-- **Prettier 3.x** with TypeScript configuration (`.prettierrc.ts`)
+- **Prettier 3.x** with JSON configuration (`.prettierrc.json`)
 - **TypeScript 5.x** with project references for incremental builds
-- **ES Modules** throughout with proper `.js` extensions in imports
 
 ## 🏗️ Example Usage
 
@@ -124,7 +122,7 @@ This monorepo uses cutting-edge tooling for optimal developer experience:
 
 ```typescript
 import { BasePage } from "@netanelh2/playwright-framework";
-import { LOGIN_PAGE_LOCATORS as L } from "@/locators";
+import { LOGIN_PAGE_LOCATORS as L } from "../locators/login/Login_Page";
 
 export class LoginPage extends BasePage {
   async login(username: string, password: string): Promise<void> {
@@ -140,7 +138,7 @@ export class LoginPage extends BasePage {
 ### Test with Fixtures
 
 ```typescript
-import { test } from "@/fixtures";
+import { test } from "../fixtures/testSetup";
 
 test.describe("Authentication @sanity", () => {
   test("should login successfully", async ({ loginPage, dashboardPage }) => {

@@ -7,22 +7,21 @@ Purpose: Make agents instantly productive in this Playwright + TypeScript test f
 This framework uses cutting-edge tooling for optimal developer experience:
 
 - **ESLint 9.x** with flat configuration (`eslint.config.ts`)
-- **Prettier 3.x** with TypeScript configuration (`.prettierrc.ts`)
+- **Prettier 3.x** with JSON configuration (`.prettierrc.json`)
 - **TypeScript 5.x** with project references for incremental builds
-- **ES Modules** throughout with proper `.js` extensions in imports
 
 ## Project Shape (big picture)
 
 - Test stack: Playwright + TypeScript using a 3-layer model.
 - Layers: `core/` (foundations), `pages/` (Page Objects), `tests/` (specs) with fixtures in `fixtures/` and locators in `locators/`.
-- Path alias: use `@/` for internal imports (see `tsconfig.json`). Example: `import {MainPage} from '@/pages'`.
+- Imports: use relative paths (e.g., `import {MainPage} from '../pages/MainPage'`). No barrel imports or path aliases.
 - Test dir: Playwright runs specs from `src/tests` (see `playwright.config.ts`).
 
 ## How Things Work
 
 - Page Objects extend `BasePage` (which extends `LocatorUtils`) for shared actions and locator extraction.
 - Locators are centralized under `src/locators/**`; prefer role-based objects over raw selector strings.
-- Fixtures (`src/fixtures/testSetup.ts`, re-exported by `src/fixtures/index.ts`) inject ready-to-use page objects into tests (e.g., `{mainPage, topMenuMainPage, ...}`) via the custom `test` export. Import from `@/fixtures`.
+- Fixtures (`src/fixtures/testSetup.ts`) inject ready-to-use page objects into tests (e.g., `{mainPage, topMenuMainPage, ...}`) via the custom `test` export. Import directly from the fixtures file using relative paths.
 - Environment: load secrets/URLs via `.env` and `getEnvCredentials(...)` in `src/helpers/envUtils.ts`—do not read `process.env` directly in tests/pages.
 - Playwright config: retries only in CI and only when tag-filtering (via `TEST_TAGS`) for `@sanity`/`@regression`; traces/videos/screenshots kept on failures.
 
@@ -32,45 +31,44 @@ This framework uses cutting-edge tooling for optimal developer experience:
 - Locator names: `UPPER_SNAKE_CASE` with `_LOCATORS` suffix (e.g., `LOGIN_PAGE_LOCATORS`).
 - Locators: use `StringOrRoleLocatorType` from `src/types/locatorTypes.ts`.
   - Preferred: `{ role: 'button', name: 'Submit' }` or with parent `{ parent: '.form', role: 'textbox', name: 'Username' }`.
-- Tests: place under `src/tests/**`, name with `.spec.ts`. Import the custom `test` from `@/fixtures` (not from `@playwright/test`).
+- Tests: place under `src/tests/**`, name with `.spec.ts`. Import the custom `test` from your fixtures file using relative paths (not from `@playwright/test`).
 - Steps: group meaningful actions with `test.step(...)` inside page methods where helpful.
 - Tags: classify suites with `@sanity` or `@regression` in describe titles to enable targeted runs (see commands below).
 - Lint/format: ESLint 9.x with flat config + Prettier 3.x with TypeScript config are enforced; Prettier violations fail CI. Follow rules in `eslint.config.ts` (tests have relaxed rules).
 - Locator resolution (from code):
   - For string locators: `page.locator(...) → page.getByLabel(...) → page.getByText(...)`.
   - For role locators: `page.getByRole(role, {name})`, with optional `parent` via `page.locator(parent).getByRole(...)`.
-- ES Modules: Use `.js` extensions in relative imports (e.g., `import { BasePage } from './BasePage.js'`).
 
 ## Typical Addition (minimal example)
 
 ```ts
 // src/locators/content-pages/Login_Page.ts
 export const LOGIN_PAGE_LOCATORS = {
-  form: {parent: '#login', role: 'textbox', name: 'Username'},
-  submit: {role: 'button', name: 'Submit'},
-} as const
+  form: { parent: "#login", role: "textbox", name: "Username" },
+  submit: { role: "button", name: "Submit" },
+} as const;
 
 // src/pages/LoginPage.ts
-import {BasePage} from '@/core/BasePage'
-import {BASE_URL} from '@/data'
-import {LOGIN_PAGE_LOCATORS as L} from '@/locators/content-pages/Login_Page'
+import { BasePage } from "../core/BasePage";
+import { BASE_URL } from "../data/urls";
+import { LOGIN_PAGE_LOCATORS as L } from "../locators/content-pages/Login_Page";
 export class LoginPage extends BasePage {
   async navigateTo(): Promise<void> {
-    await this.gotoURL(BASE_URL + '/login')
+    await this.gotoURL(BASE_URL + "/login");
   }
   async validateLoaded(): Promise<void> {
-    await this.validateVisibility(L.form)
+    await this.validateVisibility(L.form);
   }
 }
 
 // src/tests/main.spec.ts (fixture-based injection)
-import {test} from '@/fixtures'
-test.describe('Main Page @sanity', () => {
-  test('loads and shows content', async ({mainPage}) => {
-    await mainPage.openMainPage()
-    await mainPage.validateContactOnMainPage()
-  })
-})
+import { test } from "../fixtures/testSetup";
+test.describe("Main Page @sanity", () => {
+  test("loads and shows content", async ({ mainPage }) => {
+    await mainPage.openMainPage();
+    await mainPage.validateContactOnMainPage();
+  });
+});
 ```
 
 ## Run, Debug, Quality
@@ -98,15 +96,15 @@ Notes
 
 - Define `BASE_URL` in `.env` (e.g., `BASE_URL=https://www.example.com`).
 - `src/data/urls.ts` exposes `BASE_URL` via `getEnvCredentials('BASE_URL')`.
-- In pages, import `BASE_URL` from `@/data` and compose full paths when navigating (e.g., `await this.gotoURL(BASE_URL + '/login')`).
+- In pages, import `BASE_URL` from `../data/urls` (using relative path) and compose full paths when navigating (e.g., `await this.gotoURL(BASE_URL + '/login')`).
 
 Reference Files
 
 - `src/core/BasePage.ts`, `src/core/LocatorUtils.ts` — shared actions and locator extraction
-- `src/fixtures/index.ts`, `src/fixtures/testSetup.ts` — fixture-based dependency injection
+- `src/fixtures/testSetup.ts` — fixture-based dependency injection
 - `src/data/urls.ts` — environment-aware URLs
 - `src/types/locatorTypes.ts` — locator typing contract
 - `playwright.config.ts` — test dir, reporters, retries, tags
 - `eslint.config.ts` — modern ESLint 9.x flat configuration
-- `.prettierrc.ts` — TypeScript Prettier 3.x configuration
+- `.prettierrc.json` — Prettier 3.x configuration
 - `package.json` — scripts for test/quality

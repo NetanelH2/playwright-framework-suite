@@ -58,13 +58,13 @@ src/
 | `npm run test:debug`      | Run tests in debug mode                    |
 | `npm run test:ui`         | Launch Playwright UI mode                  |
 | `npm run report`          | View test results                          |
-| `npm run quality-check`   | Run linting, formatting, and type checking |
-| `npm run format:fix`      | Auto-fix code formatting                   |
+| `npm run check`           | Run linting, formatting, and type checking |
+| `npm run fix`             | Auto-fix code formatting and linting       |
 
 ## Writing Tests
 
 ```typescript
-import {test} from '@/fixtures'
+import {test} from '../fixtures/testSetup'
 
 test.describe('Example Feature @sanity', () => {
   test('should perform basic action', async ({mainPage}) => {

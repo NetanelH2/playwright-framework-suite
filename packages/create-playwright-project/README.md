@@ -5,9 +5,9 @@
 ## Features
 
 - **Interactive Setup**: Choose between minimal or full-featured project templates
-- **Modern Configuration**: ESLint 9.x flat config, Prettier 3.x TypeScript config
+- **Modern Configuration**: ESLint 9.x flat config, Prettier 3.x JSON config
 - **Framework Integration**: Automatic `@netanelh2/playwright-framework` dependency setup
-- **ES Modules**: Proper `.js` extensions and module configuration
+- **ES Modules**: Proper module configuration
 - **Example Tests**: Includes login page examples with fixtures and locators
 
 ## Quick Start
@@ -116,16 +116,17 @@ npx @netanelh2/create-playwright-project existing-project --force
 
 The CLI creates a new Playwright TypeScript project with:
 
-- ✅ **Modern TypeScript configuration** with path aliases (`@/`) and project references
 - ✅ **Playwright configuration** optimized for CI/CD with smart retry logic
 - ✅ **3-Layer architecture**: Core utilities, Page Objects, Tests
 - ✅ **Centralized locators** with type safety and role-based patterns
 - ✅ **Custom test fixtures** for dependency injection
 - ✅ **Environment configuration** with `.env` support
-- ✅ **Modern code quality tools**: ESLint 9.x with flat config, Prettier 3.x with TypeScript config
+- ✅ **Modern code quality tools**: ESLint 9.x with flat config, Prettier 3.x with JSON config
 - ✅ **Comprehensive npm scripts** for testing, linting, formatting, and type checking
 - ✅ **Sample tests and page objects** (optional)
 - ✅ **ES Modules** with proper import/export handling
+
+## Project Structure
 
 ## Project Structure
 
@@ -138,7 +139,7 @@ my-project/
 │   ├── tests/           # Test specifications
 │   └── types/           # TypeScript type definitions
 ├── eslint.config.ts      # Modern ESLint 9.x flat configuration
-├── .prettierrc.ts        # TypeScript Prettier 3.x configuration
+├── .prettierrc.json      # Prettier 3.x configuration
 ├── .prettierignore       # Prettier ignore patterns
 ├── playwright.config.ts  # Playwright configuration with smart retries
 ├── package.json         # Modern scripts and dependencies
