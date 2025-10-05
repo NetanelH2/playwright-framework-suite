@@ -9,8 +9,4 @@ export const LOGIN_PAGE_LOCATORS = {
 
   // Success elements (redirects to inventory page)
   inventoryContainer: '.inventory_container',
-
-  // Navigation (not applicable for SauceDemo)
-  // forgotPasswordLink: {role: 'link', name: 'Forgot Password'},
-  // signUpLink: {role: 'link', name: 'Sign Up'},
 } as const

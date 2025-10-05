@@ -1,6 +1,6 @@
 {
   "name": "@netanelh2/create-playwright-project",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "CLI tool to scaffold new Playwright projects with @netanelh2/playwright-framework (updated)",
   "main": "dist/src/cli.js",
   "type": "module",
@@ -16,7 +16,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc --project . && chmod +x dist/src/cli.js && cp dist/eslint.config.js .",
+    "build": "tsc --project . && chmod +x dist/src/cli.js",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist tsconfig*.tsbuildinfo",
     "prepublishOnly": "npm run clean && npm run build",

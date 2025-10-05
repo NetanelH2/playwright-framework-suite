@@ -1,8 +1,8 @@
-import {test as base} from '@playwright/test'
+import {test as baseTest} from '@netanelh2/playwright-framework'
 import {LoginPage} from '../pages/LoginPage'
-import type {TestFixtures} from '../types/fixtureTypes'
+import type {PageFixtures} from '../types/fixtureTypes'
 
-export const test = base.extend<TestFixtures>({
+export const test = baseTest.extend<PageFixtures>({
   // Login page fixture
   loginPage: async ({page}, use) => {
     const loginPage = new LoginPage(page)

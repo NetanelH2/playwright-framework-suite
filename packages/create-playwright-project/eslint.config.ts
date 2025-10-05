@@ -10,10 +10,6 @@ import {fileURLToPath} from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default [
-  // Global ignores
-  {
-    ignores: ['.prettierrc.ts'],
-  },
   // Config for template files without project checking - placed FIRST for highest precedence
   {
     files: ['templates/**/*.ts'],
