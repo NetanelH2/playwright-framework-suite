@@ -1,5 +1,15 @@
 # @netanelh2/playwright-framework
 
+## 3.0.1
+
+### Patch Changes
+
+- fix: resolve build issues with incremental compilation
+  - Fixed stale tsconfig.tsbuildinfo causing missing dist folder
+  - Updated clean script to remove both dist and tsconfig.tsbuildinfo
+  - Verified package exports work correctly in consumer projects
+  - Tested with Playwright integration tests - all passing
+
 ## 3.0.0
 
 ### Major Changes
