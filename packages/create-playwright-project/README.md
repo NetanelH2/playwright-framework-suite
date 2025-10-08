@@ -155,19 +155,27 @@ Once your project is created, navigate to it and start testing:
 cd my-project
 
 # Testing
-npm test                 # Run all tests
-npm run test:chrome      # Run tests in Chrome only
-npm run test:sanity      # Run @sanity tagged tests
-npm run test:regression  # Run @regression tagged tests
-npm run test:debug       # Open Playwright Inspector
-npm run report           # View test results
+npm test                      # Run all tests
+npm run test:headed           # Run tests with browser UI
+npm run test:chrome           # Run tests in Chrome only
+npm run test:sanity           # Run @sanity tagged tests
+npm run test:regression       # Run @regression tagged tests
+npm run test:sanity:chrome    # Run @sanity tests in Chrome only
+npm run test:regression:chrome # Run @regression tests in Chrome only
+npm run test:debug            # Open Playwright Inspector
+npm run report                # View test results
+npm run codegen               # Launch Playwright code generator
 
 # Code Quality
-npm run check            # Run all quality checks (lint + format + types)
-npm run lint:check       # ESLint 9.x with flat config
-npm run format:check     # Prettier 3.x formatting check
-npm run type-check       # TypeScript 5.x compilation check
-npm run fix              # Auto-fix formatting and linting issues
+npm run check                 # Run all quality checks (lint + format + types)
+npm run lint:check            # ESLint 9.x with flat config
+npm run format:check          # Prettier 3.x formatting check
+npm run type-check            # TypeScript 5.x compilation check
+npm run fix                   # Auto-fix formatting and linting issues
+npm run pre-commit            # Run pre-commit hooks (lint-staged)
+
+# CI/CD
+npm run trigger-ci            # Trigger CI workflows for testing
 ```
 
 ## Requirements

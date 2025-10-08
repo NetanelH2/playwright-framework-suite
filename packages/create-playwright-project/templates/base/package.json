@@ -4,21 +4,27 @@
   "description": "Playwright TypeScript test project",
   "type": "module",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:debug": "playwright test --debug",
-    "test:ui": "playwright test --ui",
-    "test:chrome": "playwright test --project=chromium",
-    "test:sanity": "TEST_TAGS='@sanity' playwright test",
-    "test:regression": "TEST_TAGS='@regression' playwright test",
-    "report": "playwright show-report",
+    "pre-commit": "lint-staged",
+    "prepare": "husky",
     "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
     "format:check": "prettier --check src/**/*.ts",
     "check": "npm run lint:check && npm run format:check && npx tsc",
     "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "trigger-ci": "git commit --allow-empty -m \"trigger CI workflows for testing\" && git push",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:chrome": "playwright test --project=chromium",
+    "test:sanity": "TEST_TAGS='@sanity' playwright test",
+    "test:regression": "TEST_TAGS='@regression' playwright test",
+    "test:sanity:chrome": "TEST_TAGS='@sanity' playwright test --project=chromium",
+    "test:regression:chrome": "TEST_TAGS='@regression' playwright test --project=chromium",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen"
   },
   "devDependencies": {
+    "@faker-js/faker": "*",
     "@netanelh2/playwright-framework": "*",
     "@playwright/test": "*",
     "@types/node": "*",
@@ -29,16 +35,13 @@
     "eslint-config-prettier": "*",
     "eslint-plugin-playwright": "*",
     "eslint-plugin-prettier": "*",
+    "husky": "*",
     "jiti": "*",
+    "lint-staged": "*",
     "prettier": "*",
+    "ts-node": "*",
     "typescript": "*"
   },
-  "keywords": [
-    "playwright",
-    "testing",
-    "typescript",
-    "e2e"
-  ],
   "license": "MIT",
   "lint-staged": {
     "src/**/*.ts": [
@@ -48,5 +51,11 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
-  }
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "typescript",
+    "e2e"
+  ]
 }

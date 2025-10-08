@@ -23,7 +23,6 @@ A modern Playwright testing framework built with TypeScript and the [@netanelh2/
    npm test              # All tests
    npm run test:headed   # With browser UI
    npm run test:debug    # Debug mode
-   npm run test:ui       # Playwright UI mode
    ```
 
 ## Project Structure
@@ -49,17 +48,25 @@ src/
 
 ## Available Scripts
 
-| Script                    | Description                                |
-| ------------------------- | ------------------------------------------ |
-| `npm test`                | Run all tests                              |
-| `npm run test:chrome`     | Run tests in Chromium only                 |
-| `npm run test:sanity`     | Run tests tagged with `@sanity`            |
-| `npm run test:regression` | Run tests tagged with `@regression`        |
-| `npm run test:debug`      | Run tests in debug mode                    |
-| `npm run test:ui`         | Launch Playwright UI mode                  |
-| `npm run report`          | View test results                          |
-| `npm run check`           | Run linting, formatting, and type checking |
-| `npm run fix`             | Auto-fix code formatting and linting       |
+| Script                           | Description                                |
+| -------------------------------- | ------------------------------------------ |
+| `npm test`                       | Run all tests                              |
+| `npm run test:headed`            | Run tests with browser UI                  |
+| `npm run test:chrome`            | Run tests in Chromium only                 |
+| `npm run test:sanity`            | Run tests tagged with `@sanity`            |
+| `npm run test:regression`        | Run tests tagged with `@regression`        |
+| `npm run test:sanity:chrome`     | Run `@sanity` tests in Chromium only       |
+| `npm run test:regression:chrome` | Run `@regression` tests in Chromium only   |
+| `npm run test:debug`             | Run tests in debug mode                    |
+| `npm run report`                 | View test results                          |
+| `npm run codegen`                | Launch Playwright code generator           |
+| `npm run check`                  | Run linting, formatting, and type checking |
+| `npm run fix`                    | Auto-fix code formatting and linting       |
+| `npm run lint:check`             | Run ESLint checks                          |
+| `npm run format:check`           | Run Prettier format checks                 |
+| `npm run type-check`             | Run TypeScript type checking               |
+| `npm run pre-commit`             | Run pre-commit hooks (lint-staged)         |
+| `npm run trigger-ci`             | Trigger CI workflows for testing           |
 
 ## Writing Tests
 
