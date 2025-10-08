@@ -1,5 +1,15 @@
 # @netanelh2/create-playwright-project
 
+## 3.0.7
+
+### Patch Changes
+
+- 2dd5c1d: Test release: verify automated release workflow
+  - Test version bumping for all packages
+  - Test NPM publishing pipeline
+  - Test GitHub release creation
+  - Verify Changesets workflow integration
+
 ## 3.0.6
 
 ### Patch Changes
