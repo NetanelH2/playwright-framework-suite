@@ -341,14 +341,32 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
   }
   console.log(
     chalk.gray(
-      '6. For branch protection (recommended): Go to Settings > Branches and require "Code Quality Check"',
+      '6. For branch protection (recommended): Go to Settings > Rules > Rulesets',
     ),
   )
+  console.log(chalk.gray('   - Click "New ruleset" > "New branch ruleset"'))
+  console.log(chalk.gray('   - Name: "Main Branch Protection" (or similar)'))
   console.log(
     chalk.gray(
-      '7. Ensure your package.json has the correct test scripts (npm run test:sanity, npm run test:regression, npm run check)',
+      '   - Target branches: Select "Default branch" or specify "main"',
     ),
   )
+  console.log(chalk.gray('   - Enforcement status: Active'))
+  console.log(chalk.gray('   - Rules to enable:'))
+  console.log(chalk.gray('     ✓ Restrict deletions'))
+  console.log(chalk.gray('     ✓ Require a pull request before merging'))
+  console.log(chalk.gray('       - Required approvals: 1'))
+  console.log(chalk.gray('       - Dismiss stale reviews on push: Enabled'))
+  console.log(chalk.gray('       - Require review from Code Owners: Enabled'))
+  console.log(chalk.gray('       - Require conversation resolution: Enabled'))
+  console.log(chalk.gray('     ✓ Require status checks to pass'))
+  console.log(chalk.gray('       - Require branches to be up to date: Enabled'))
+  console.log(
+    chalk.gray(
+      '       - Add status check: "code-quality" (from Code Quality Check workflow)',
+    ),
+  )
+  console.log(chalk.gray('     ✓ Block force pushes'))
 
   console.log(chalk.white('\nNext steps:'))
   if (!config.installDependencies) {
