@@ -33,6 +33,20 @@
     "prettier": "*",
     "typescript": "*"
   },
-  "keywords": ["playwright", "testing", "typescript", "e2e"],
-  "license": "MIT"
+  "keywords": [
+    "playwright",
+    "testing",
+    "typescript",
+    "e2e"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
 }
