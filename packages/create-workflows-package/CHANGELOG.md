@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.3
+
+### Patch Changes
+
+- a6c9bfe: Update CLI guidance with detailed GitHub branch protection ruleset instructions
+
 ## 2.0.2
 
 ### Patch Changes
