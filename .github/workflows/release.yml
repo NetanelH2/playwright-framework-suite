@@ -14,10 +14,6 @@ permissions:
 jobs:
   release:
     name: Version and Publish
-    if: >-
-      github.event_name == 'push' && 
-      !contains(github.event.head_commit.message, '[skip ci]') &&
-      github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -46,8 +42,16 @@ jobs:
           echo "count=$CHANGESET_COUNT" >> $GITHUB_OUTPUT
           echo "Found $CHANGESET_COUNT changeset(s)"
 
+          # Check if this is a version bump commit from changesets
+          if [[ "${{ github.event.head_commit.message }}" == "chore: version packages" ]]; then
+            echo "is_version_commit=true" >> $GITHUB_OUTPUT
+            echo "This is a version commit - will publish packages"
+          else
+            echo "is_version_commit=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create automatic changeset if none exists
-        if: steps.check-changesets.outputs.count == '0'
+        if: steps.check-changesets.outputs.count == '0' && steps.check-changesets.outputs.is_version_commit == 'false'
         run: |
           CHANGED_PACKAGES=$(git diff HEAD~1 --name-only | grep '^packages/' | cut -d'/' -f2 | sort -u)
 
@@ -92,11 +96,12 @@ jobs:
 
       - name: Create Release Pull Request or Publish
         id: changesets
+        if: steps.check-changesets.outputs.count != '0' || steps.check-changesets.outputs.is_version_commit == 'true'
         uses: changesets/action@v1
         with:
           version: npm run version-packages
           publish: npm run release
-          commit: "chore: version packages [skip ci]"
+          commit: "chore: version packages"
           title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
