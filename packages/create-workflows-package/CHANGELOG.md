@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.6
+
+### Patch Changes
+
+- 11b9d5d: chore: version packages
+
 ## 2.0.5
 
 ### Patch Changes
