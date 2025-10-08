@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.4
+
+### Patch Changes
+
+- 2dd5c1d: Test release: verify automated release workflow
+  - Test version bumping for all packages
+  - Test NPM publishing pipeline
+  - Test GitHub release creation
+  - Verify Changesets workflow integration
+
 ## 2.0.3
 
 ### Patch Changes
