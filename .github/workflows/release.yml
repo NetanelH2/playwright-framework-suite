@@ -20,62 +20,53 @@ jobs:
       github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
           registry-url: "https://registry.npmjs.org"
 
-      - run: npm ci
-      - run: npm run build
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Create changesets for modified packages
+      - name: Build packages
+        run: npm run build
+
+      - name: Check for existing changesets
+        id: check-changesets
         run: |
-          # Check if there are existing changesets
-          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
+          CHANGESET_COUNT=$(find .changeset -name "*.md" ! -name "README.md" | wc -l)
+          echo "count=$CHANGESET_COUNT" >> $GITHUB_OUTPUT
+          echo "Found $CHANGESET_COUNT changeset(s)"
 
-          if [ "$CHANGESET_COUNT" -gt "0" ]; then
-            echo "✅ Found $CHANGESET_COUNT existing changeset(s), skipping auto-generation"
-            exit 0
-          fi
+      - name: Create automatic changeset if none exists
+        if: steps.check-changesets.outputs.count == '0'
+        run: |
+          CHANGED_PACKAGES=$(git diff HEAD~1 --name-only | grep '^packages/' | cut -d'/' -f2 | sort -u)
 
-          echo "No changesets found, checking for package changes..."
-
-          # Get changed packages from the current commit
-          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || git show --name-only --pretty=format: HEAD)
-          PACKAGES=$(echo "$CHANGED_FILES" | grep "^packages/" | cut -d'/' -f2 | sort -u | tr '\n' ' ')
-
-          if [[ -z "$PACKAGES" ]]; then
-            echo "No package changes detected"
-            exit 0
-          fi
-
-          echo "Changed packages: $PACKAGES"
-
-          # Determine version bump from commit message
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ $COMMIT_MSG =~ ^feat.*!:|BREAKING ]]; then
-            BUMP="major"
-          elif [[ $COMMIT_MSG =~ ^feat ]]; then
-            BUMP="minor"
-          else
-            BUMP="patch"
-          fi
-
-          echo "Version bump: $BUMP"
-
-          # Create changeset
-          CHANGESET_ID="auto-$(date +%s)"
-          CHANGESET_FILE=".changeset/${CHANGESET_ID}.md"
-
-          cat > "$CHANGESET_FILE" << EOF
+          if [ ! -z "$CHANGED_PACKAGES" ]; then
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+            TIMESTAMP=$(date +%s)
+            
+            # Determine version bump from commit message
+            if [[ $COMMIT_MSG =~ ^feat.*!:|BREAKING ]]; then
+              BUMP="major"
+            elif [[ $COMMIT_MSG =~ ^feat ]]; then
+              BUMP="minor"
+            else
+              BUMP="patch"
+            fi
+            
+            cat > .changeset/auto-${TIMESTAMP}.md << EOF
           ---
-          $(for pkg in $PACKAGES; do
+          $(echo "$CHANGED_PACKAGES" | while read pkg; do
             case "$pkg" in
               playwright-framework)
                 echo "\"@netanelh2/playwright-framework\": $BUMP"
@@ -92,88 +83,47 @@ jobs:
 
           $(echo "$COMMIT_MSG" | head -n1)
           EOF
-
-          echo "✅ Created changeset: $CHANGESET_FILE"
-          cat "$CHANGESET_FILE"
-
-      - name: Version packages
-        run: |
-          # Check if there are changesets to process
-          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
-
-          if [ "$CHANGESET_COUNT" -eq "0" ]; then
-            echo "No changesets to process, skipping versioning"
-            exit 0
-          fi
-
-          echo "Processing $CHANGESET_COUNT changeset(s)..."
-
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Run changeset version to update package.json and CHANGELOG
-          npm run version-packages
-
-          # Check if there are changes to commit
-          if [[ -n $(git status --porcelain) ]]; then
-            git add .
-            git commit -m "chore: version packages [skip ci]"
             
-            # Pull with rebase to handle concurrent changes, then push
-            git pull --rebase origin main
-            git push origin main
-            echo "✅ Versioned and committed package updates"
+            echo "✅ Created automatic changeset for: $CHANGED_PACKAGES"
+            cat .changeset/auto-${TIMESTAMP}.md
           else
-            echo "No version changes detected"
+            echo "No package changes detected, skipping changeset creation"
           fi
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          publish: npm run release
+          commit: "chore: version packages [skip ci]"
+          title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-
-      - name: Publish to NPM
-        run: |
-          # Check if we have packages to publish
-          CHANGESET_COUNT=$(ls -1 .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l || echo "0")
-
-          if [ "$CHANGESET_COUNT" -eq "0" ]; then
-            echo "✅ Publishing packages to NPM..."
-            npm run release
-            echo "PUBLISHED=true" >> $GITHUB_ENV
-          else
-            echo "Changesets still exist, skipping publish (version step may have failed)"
-            echo "PUBLISHED=false" >> $GITHUB_ENV
-          fi
-        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub releases
-        if: env.PUBLISHED == 'true'
+        if: steps.changesets.outputs.published == 'true'
         uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const path = require('path');
+            const publishedPackages = JSON.parse('${{ steps.changesets.outputs.publishedPackages }}');
 
-            // Read package.json from each package to get versions
-            const packages = [
-              { name: '@netanelh2/playwright-framework', dir: 'playwright-framework' },
-              { name: '@netanelh2/create-playwright-project', dir: 'create-playwright-project' },
-              { name: '@netanelh2/create-workflows-package', dir: 'create-workflows-package' }
-            ];
-
-            for (const pkg of packages) {
-              const pkgPath = path.join('packages', pkg.dir, 'package.json');
-              const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-              const tagName = `${pkg.name}@${pkgJson.version}`;
+            for (const pkg of publishedPackages) {
+              const tagName = `${pkg.name}@${pkg.version}`;
+              
+              // Extract package directory name from scoped package name
+              const pkgDir = pkg.name.replace('@netanelh2/', '');
               
               try {
                 await github.rest.repos.createRelease({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   tag_name: tagName,
-                  name: `${pkg.name} v${pkgJson.version}`,
-                  body: `## What's Changed\n\nSee the full changelog at https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/packages/${pkg.dir}/CHANGELOG.md`,
+                  name: `${pkg.name} v${pkg.version}`,
+                  body: `## What's Changed\n\nSee the full changelog at https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/packages/${pkgDir}/CHANGELOG.md`,
                   draft: false,
                   prerelease: false
                 });
