@@ -1,5 +1,11 @@
 # @netanelh2/create-playwright-project
 
+## 3.0.5
+
+### Patch Changes
+
+- docs: update package documentation to reflect current package.json scripts
+
 ## 3.0.4
 
 ### Patch Changes
