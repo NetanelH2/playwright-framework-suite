@@ -36,19 +36,20 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Check for existing changesets
+      - name: Check for changesets and version commit
         id: check-changesets
         run: |
-          CHANGESET_COUNT=$(find .changeset -name "*.md" ! -name "README.md" | wc -l)
-          echo "count=$CHANGESET_COUNT" >> $GITHUB_OUTPUT
-          echo "Found $CHANGESET_COUNT changeset(s)"
+          count=$(ls .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l | xargs)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Changesets found: $count"
 
-          # Check if this is a version bump commit from changesets
-          if [[ "${{ github.event.head_commit.message }}" == "chore: version packages" ]]; then
-            echo "is_version_commit=true" >> $GITHUB_OUTPUT
-            echo "This is a version commit - will publish packages"
+          # Check if this is a version commit by checking if message starts with "chore: version packages"
+          if [[ "${{ github.event.head_commit.message }}" =~ ^"chore: version packages" ]]; then
+            echo "is_version_commit=true" >> "$GITHUB_OUTPUT"
+            echo "This is a version commit"
           else
-            echo "is_version_commit=false" >> $GITHUB_OUTPUT
+            echo "is_version_commit=false" >> "$GITHUB_OUTPUT"
+            echo "This is not a version commit"
           fi
 
       - name: Create automatic changeset if none exists
