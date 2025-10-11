@@ -1,6 +1,6 @@
 {
 	"name": "@netanelh2/create-playwright-project",
-	"version": "3.0.9",
+	"version": "3.0.10",
 	"description": "CLI tool to scaffold new Playwright projects with @netanelh2/playwright-framework (updated)",
 	"main": "dist/src/cli.js",
 	"type": "module",
