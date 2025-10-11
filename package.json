@@ -47,7 +47,9 @@
 		"typescript": "*"
 	},
 	"lint-staged": {
-		"*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
+		"*": [
+			"biome check --no-errors-on-unmatched --files-ignore-unknown=true --write"
+		]
 	},
 	"engines": {
 		"node": ">=18.0.0",

@@ -35,7 +35,9 @@
 	},
 	"license": "MIT",
 	"lint-staged": {
-		"*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
+		"*": [
+			"biome check --no-errors-on-unmatched --files-ignore-unknown=true --write"
+		]
 	},
 	"keywords": ["playwright", "testing", "typescript", "e2e"]
 }
