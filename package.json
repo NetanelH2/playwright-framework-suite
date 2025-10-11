@@ -47,15 +47,7 @@
 		"typescript": "*"
 	},
 	"lint-staged": {
-		"packages/create-playwright-project/*": [
-			"cd packages/create-playwright-project && npx @biomejs/biome check --write"
-		],
-		"packages/create-workflows-package/*": [
-			"cd packages/create-workflows-package && npx @biomejs/biome check --write"
-		],
-		"packages/playwright-framework/*": [
-			"cd packages/playwright-framework && npx @biomejs/biome check --write"
-		]
+		"*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
 	},
 	"engines": {
 		"node": ">=18.0.0",
