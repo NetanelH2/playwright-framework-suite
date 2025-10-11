@@ -1,72 +1,60 @@
 {
-  "name": "@netanelh2/playwright-framework",
-  "version": "3.0.9",
-  "description": "A robust Playwright TypeScript testing framework with Page Object Model, smart locators, and utilities",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist/**/*",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "prepublishOnly": "npm run clean && npm run build",
-    "lint": "eslint src/**/*.ts --max-warnings 0",
-    "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts",
-    "test": "echo 'Framework package - tests run in consumer projects'"
-  },
-  "keywords": [
-    "playwright",
-    "typescript",
-    "testing",
-    "e2e",
-    "page-object-model",
-    "test-framework",
-    "automation",
-    "locators",
-    "utilities",
-    "fixtures"
-  ],
-  "author": "Netanel Harush",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NetanelH2/playwright-framework-suite.git",
-    "directory": "packages/playwright-framework"
-  },
-  "bugs": {
-    "url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
-  },
-  "homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/playwright-framework#readme",
-  "peerDependencies": {
-    "@playwright/test": "*",
-    "typescript": "*"
-  },
-  "dependencies": {
-    "dotenv": "*"
-  },
-  "devDependencies": {
-    "@types/node": "*",
-    "@typescript-eslint/eslint-plugin": "*",
-    "@typescript-eslint/parser": "*",
-    "eslint": "*",
-    "eslint-config-prettier": "*",
-    "eslint-plugin-prettier": "*",
-    "prettier": "*",
-    "typescript": "*"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+	"name": "@netanelh2/playwright-framework",
+	"version": "3.0.9",
+	"description": "A robust Playwright TypeScript testing framework with Page Object Model, smart locators, and utilities",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"files": ["dist/**/*", "README.md", "CHANGELOG.md"],
+	"scripts": {
+		"build": "tsc",
+		"build:watch": "tsc --watch",
+		"clean": "rm -rf dist tsconfig.tsbuildinfo",
+		"prepublishOnly": "npm run clean && npm run build",
+		"check": "npx @biomejs/biome check --write"
+	},
+	"keywords": [
+		"playwright",
+		"typescript",
+		"testing",
+		"e2e",
+		"page-object-model",
+		"test-framework",
+		"automation",
+		"locators",
+		"utilities",
+		"fixtures"
+	],
+	"author": "Netanel Harush",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NetanelH2/playwright-framework-suite.git",
+		"directory": "packages/playwright-framework"
+	},
+	"bugs": {
+		"url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
+	},
+	"homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/playwright-framework#readme",
+	"peerDependencies": {
+		"@playwright/test": "*",
+		"typescript": "*"
+	},
+	"dependencies": {
+		"dotenv": "*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.5",
+		"@types/node": "*",
+		"typescript": "*"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
 }

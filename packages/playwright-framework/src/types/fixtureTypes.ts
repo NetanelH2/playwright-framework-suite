@@ -22,13 +22,13 @@ import type {BrowserContext, Page} from '@playwright/test'
  * ```
  */
 export interface basePageFixtures {
-  /**
-   * Browser context instance with automatic cleanup
-   */
-  context: BrowserContext
+	/**
+	 * Browser context instance with automatic cleanup
+	 */
+	context: BrowserContext
 
-  /**
-   * Page instance within the context
-   */
-  page: Page
+	/**
+	 * Page instance within the context
+	 */
+	page: Page
 }

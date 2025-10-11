@@ -5,7 +5,7 @@
 ## Features
 
 - **Interactive Setup**: Choose between minimal or full-featured project templates
-- **Modern Configuration**: ESLint 9.x flat config, Prettier 3.x JSON config
+- **Modern Configuration**: Biome for linting and formatting with `biome.json`
 - **Framework Integration**: Automatic `@netanelh2/playwright-framework` dependency setup
 - **ES Modules**: Proper module configuration
 - **Example Tests**: Includes login page examples with fixtures and locators
@@ -121,7 +121,7 @@ The CLI creates a new Playwright TypeScript project with:
 - ✅ **Centralized locators** with type safety and role-based patterns
 - ✅ **Custom test fixtures** for dependency injection
 - ✅ **Environment configuration** with `.env` support
-- ✅ **Modern code quality tools**: ESLint 9.x with flat config, Prettier 3.x with JSON config
+- ✅ **Modern code quality tools**: Biome for linting and formatting
 - ✅ **Comprehensive npm scripts** for testing, linting, formatting, and type checking
 - ✅ **Sample tests and page objects** (optional)
 - ✅ **ES Modules** with proper import/export handling
@@ -138,9 +138,7 @@ my-project/
 │   ├── pages/           # Page Object Model classes
 │   ├── tests/           # Test specifications
 │   └── types/           # TypeScript type definitions
-├── eslint.config.ts      # Modern ESLint 9.x flat configuration
-├── .prettierrc.json      # Prettier 3.x configuration
-├── .prettierignore       # Prettier ignore patterns
+├── biome.json           # Biome linter and formatter configuration
 ├── playwright.config.ts  # Playwright configuration with smart retries
 ├── package.json         # Modern scripts and dependencies
 ├── tsconfig.json        # TypeScript 5.x with project references
@@ -167,11 +165,8 @@ npm run report                # View test results
 npm run codegen               # Launch Playwright code generator
 
 # Code Quality
-npm run check                 # Run all quality checks (lint + format + types)
-npm run lint:check            # ESLint 9.x with flat config
-npm run format:check          # Prettier 3.x formatting check
+npm run check                 # Run all quality checks (Biome lint + format + types)
 npm run type-check            # TypeScript 5.x compilation check
-npm run fix                   # Auto-fix formatting and linting issues
 npm run pre-commit            # Run pre-commit hooks (lint-staged)
 
 # CI/CD

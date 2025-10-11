@@ -23,15 +23,15 @@ import type {basePageFixtures} from '../types/fixtureTypes.js'
  * ```
  */
 export const test = base.extend<basePageFixtures>({
-  context: async ({browser}, use) => {
-    const context = await browser.newContext()
-    await use(context)
-    await context.close()
-  },
-  page: async ({context}, use) => {
-    const page = await context.newPage()
-    await use(page)
-  },
+	context: async ({browser}, use) => {
+		const context = await browser.newContext()
+		await use(context)
+		await context.close()
+	},
+	page: async ({context}, use) => {
+		const page = await context.newPage()
+		await use(page)
+	},
 })
 
 export {expect} from '@playwright/test'

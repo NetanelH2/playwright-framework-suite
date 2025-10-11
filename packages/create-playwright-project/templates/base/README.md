@@ -44,7 +44,7 @@ src/
 - **Environment Management:** Secure credential handling via `.env` files
 - **Fixture-Based Testing:** Dependency injection for page objects
 - **Tag-Based Execution:** Run `@sanity` or `@regression` test suites
-- **Quality Gates:** ESLint + Prettier + TypeScript validation
+- **Quality Gates:** Biome (linting + formatting) + TypeScript validation
 
 ## Available Scripts
 
@@ -60,10 +60,7 @@ src/
 | `npm run test:debug`             | Run tests in debug mode                    |
 | `npm run report`                 | View test results                          |
 | `npm run codegen`                | Launch Playwright code generator           |
-| `npm run check`                  | Run linting, formatting, and type checking |
-| `npm run fix`                    | Auto-fix code formatting and linting       |
-| `npm run lint:check`             | Run ESLint checks                          |
-| `npm run format:check`           | Run Prettier format checks                 |
+| `npm run check`                  | Run Biome linting, formatting, and type checking |
 | `npm run type-check`             | Run TypeScript type checking               |
 | `npm run pre-commit`             | Run pre-commit hooks (lint-staged)         |
 | `npm run trigger-ci`             | Trigger CI workflows for testing           |

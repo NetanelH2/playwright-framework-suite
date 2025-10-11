@@ -3,8 +3,8 @@ import {config} from 'dotenv'
 config({quiet: true})
 
 export const getEnvCredentials = (credentials: string): string => {
-  if (!process.env[credentials]) {
-    throw new Error(`Environment variable ${credentials} is not set.`)
-  }
-  return process.env[credentials] as string
+	if (!process.env[credentials]) {
+		throw new Error(`Environment variable ${credentials} is not set.`)
+	}
+	return process.env[credentials] as string
 }

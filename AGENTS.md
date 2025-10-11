@@ -6,9 +6,9 @@ Purpose: Make agents instantly productive in this Playwright + TypeScript test f
 
 This framework uses cutting-edge tooling for optimal developer experience:
 
-- **ESLint 9.x** with flat configuration (`eslint.config.ts`)
-- **Prettier 3.x** with JSON configuration (`.prettierrc.json`)
-- **TypeScript 5.x** with project references for incremental builds
+- **Biome** - Ultra-fast linter and formatter (Rust-based, `biome.json` configuration)
+- **TypeScript 5.x** - Type safety with project references for incremental builds
+- **Husky** - Git hooks for pre-commit quality checks
 
 ## Project Shape (big picture)
 
@@ -34,7 +34,7 @@ This framework uses cutting-edge tooling for optimal developer experience:
 - Tests: place under `src/tests/**`, name with `.spec.ts`. Import the custom `test` from your fixtures file using relative paths (not from `@playwright/test`).
 - Steps: group meaningful actions with `test.step(...)` inside page methods where helpful.
 - Tags: classify suites with `@sanity` or `@regression` in describe titles to enable targeted runs (see commands below).
-- Lint/format: ESLint 9.x with flat config + Prettier 3.x with TypeScript config are enforced; Prettier violations fail CI. Follow rules in `eslint.config.ts` (tests have relaxed rules).
+- Code quality: Biome handles both linting and formatting via `biome.json` config; violations fail CI. Configuration is in the root `biome.json` file.
 - Locator resolution (from code):
   - For string locators: `page.locator(...) → page.getByLabel(...) → page.getByText(...)`.
   - For role locators: `page.getByRole(role, {name})`, with optional `parent` via `page.locator(parent).getByRole(...)`.
@@ -80,9 +80,8 @@ test.describe("Main Page @sanity", () => {
 - Chromium only: `npm run test:chrome`
 - Debug inspector: `npm run test:debug`
 - Report viewer: `npm run report`
-- Quality gates: `npm run check` (lint + format check + `tsc`)
-- Auto-fix: `npm run fix`
-- Lint only: `npm run lint:check`
+- Quality gates: `npm run check` (Biome lint + format + `tsc`)
+- Auto-fix: `npm run fix` (Biome auto-fix)
 - Format check: `npm run format:check`
 
 Notes
@@ -105,6 +104,5 @@ Reference Files
 - `src/data/urls.ts` — environment-aware URLs
 - `src/types/locatorTypes.ts` — locator typing contract
 - `playwright.config.ts` — test dir, reporters, retries, tags
-- `eslint.config.ts` — modern ESLint 9.x flat configuration
-- `.prettierrc.json` — Prettier 3.x configuration
+- `biome.json` — Biome linter and formatter configuration
 - `package.json` — scripts for test/quality

@@ -1,82 +1,64 @@
 {
-  "name": "playwright-framework-suite",
-  "version": "1.0.0",
-  "private": true,
-  "description": "A comprehensive Playwright TypeScript framework with CLI scaffolding tool",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "npm run build --workspaces",
-    "clean": "npm run clean --workspaces",
-    "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
-    "format": "npm run format --workspaces",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "changeset publish",
-    "dev:framework": "npm run build --workspace=packages/playwright-framework",
-    "dev:cli": "npm run dev --workspace=packages/create-playwright-project",
-    "dev:workflows": "npm run dev --workspace=packages/create-workflows-package",
-    "pre-commit": "lint-staged",
-    "prepare": "husky",
-    "lint:check": "npm run lint --workspaces",
-    "format:check": "npm run format --workspaces",
-    "check": "npm run lint --workspaces && npm run format --workspaces && npm run build --workspaces",
-    "fix": "npm run format --workspaces && npm run lint --workspaces"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NetanelH2/playwright-framework-suite.git"
-  },
-  "keywords": [
-    "playwright",
-    "typescript",
-    "testing",
-    "e2e",
-    "framework",
-    "cli",
-    "scaffolding"
-  ],
-  "author": "Netanel Harush",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
-  },
-  "homepage": "https://github.com/NetanelH2/playwright-framework-suite#readme",
-  "devDependencies": {
-    "@changesets/changelog-github": "*",
-    "@changesets/cli": "*",
-    "@types/node": "*",
-    "@typescript-eslint/eslint-plugin": "*",
-    "@typescript-eslint/parser": "*",
-    "eslint": "*",
-    "eslint-config-prettier": "*",
-    "eslint-plugin-prettier": "*",
-    "prettier": "*",
-    "typescript": "*",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.5"
-  },
-  "lint-staged": {
-    "packages/create-playwright-project/src/**/*.ts": [
-      "cd packages/create-playwright-project && eslint --fix",
-      "prettier --write"
-    ],
-    "packages/create-workflows-package/src/**/*.ts": [
-      "cd packages/create-workflows-package && eslint --fix",
-      "prettier --write"
-    ],
-    "packages/playwright-framework/src/**/*.ts": [
-      "cd packages/playwright-framework && eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  }
+	"name": "playwright-framework-suite",
+	"version": "1.0.0",
+	"private": true,
+	"description": "A comprehensive Playwright TypeScript framework with CLI scaffolding tool",
+	"workspaces": ["packages/*"],
+	"scripts": {
+		"build": "npm run build --workspaces",
+		"clean": "npm run clean --workspaces",
+		"test": "npm run test --workspaces",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"release": "changeset publish",
+		"dev:framework": "npm run build --workspace=packages/playwright-framework",
+		"dev:cli": "npm run dev --workspace=packages/create-playwright-project",
+		"dev:workflows": "npm run dev --workspace=packages/create-workflows-package",
+		"pre-commit": "lint-staged",
+		"prepare": "husky",
+		"check": "npm run check --workspaces"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NetanelH2/plwaywright-framework-suite.git"
+	},
+	"keywords": [
+		"playwright",
+		"typescript",
+		"testing",
+		"e2e",
+		"framework",
+		"cli",
+		"scaffolding"
+	],
+	"author": "Netanel Harush",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
+	},
+	"homepage": "https://github.com/NetanelH2/playwright-framework-suite#readme",
+	"devDependencies": {
+		"@biomejs/biome": "2.2.5",
+		"@changesets/changelog-github": "*",
+		"@changesets/cli": "*",
+		"@types/node": "*",
+		"husky": "*",
+		"lint-staged": "*",
+		"typescript": "*"
+	},
+	"lint-staged": {
+		"packages/create-playwright-project/*": [
+			"cd packages/create-playwright-project && npx @biomejs/biome check --write"
+		],
+		"packages/create-workflows-package/*": [
+			"cd packages/create-workflows-package && npx @biomejs/biome check --write"
+		],
+		"packages/playwright-framework/*": [
+			"cd packages/playwright-framework && npx @biomejs/biome check --write"
+		]
+	},
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=9.0.0"
+	}
 }

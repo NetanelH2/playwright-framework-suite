@@ -33,8 +33,7 @@ pull_request: [main, master, develop]
 
 **🔍 Quality Gates**:
 
-- **ESLint**: Code linting with zero-warning policy
-- **Prettier**: Code formatting validation
+- **Biome**: Combined linting and formatting with zero-warning policy
 - **TypeScript**: Type checking and compilation
 
 **⚙️ Configuration**:
@@ -412,8 +411,8 @@ All workflows support manual triggering via GitHub Actions UI:
 ### **Common Issues**
 
 1. **Code Quality workflow fails**
-   - Check ESLint configuration and fix linting errors
-   - Run `npm run fix` locally to auto-fix formatting issues
+   - Check Biome configuration and fix linting/formatting errors
+   - Run `npm run check` locally to identify issues
    - Verify TypeScript compilation with `npm run type-check`
    - Ensure all dependencies are properly installed
 

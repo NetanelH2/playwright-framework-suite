@@ -1,74 +1,56 @@
 {
-  "name": "@netanelh2/create-playwright-project",
-  "version": "3.0.9",
-  "description": "CLI tool to scaffold new Playwright projects with @netanelh2/playwright-framework (updated)",
-  "main": "dist/src/cli.js",
-  "type": "module",
-  "bin": {
-    "create-playwright-project": "./dist/src/cli.js"
-  },
-  "files": [
-    "dist/**/*",
-    "templates/**/*",
-    ".prettierrc.cjs",
-    ".prettierignore",
-    "eslint.config.ts",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "tsc --project . && chmod +x dist/src/cli.js",
-    "build:watch": "tsc --watch",
-    "clean": "rm -rf dist tsconfig*.tsbuildinfo",
-    "prepublishOnly": "npm run clean && npm run build",
-    "dev": "npm run build && node dist/cli.js",
-    "lint": "eslint src/**/*.ts --max-warnings 0",
-    "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
-    "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts",
-    "check": "npm run lint:check && npm run format:check && npx tsc",
-    "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored"
-  },
-  "keywords": [
-    "playwright",
-    "typescript",
-    "cli",
-    "scaffolding",
-    "testing",
-    "e2e",
-    "create",
-    "template",
-    "generator"
-  ],
-  "author": "Netanel Harush",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NetanelH2/playwright-framework-suite.git",
-    "directory": "packages/create-playwright-project"
-  },
-  "bugs": {
-    "url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
-  },
-  "homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/create-playwright-project#readme",
-  "dependencies": {
-    "chalk": "*",
-    "commander": "*",
-    "inquirer": "*"
-  },
-  "devDependencies": {
-    "@types/inquirer": "*",
-    "@types/node": "*",
-    "@typescript-eslint/eslint-plugin": "*",
-    "@typescript-eslint/parser": "*",
-    "eslint": "*",
-    "eslint-config-prettier": "*",
-    "eslint-plugin-playwright": "*",
-    "eslint-plugin-prettier": "*",
-    "jiti": "*",
-    "prettier": "*",
-    "typescript": "*"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+	"name": "@netanelh2/create-playwright-project",
+	"version": "3.0.9",
+	"description": "CLI tool to scaffold new Playwright projects with @netanelh2/playwright-framework (updated)",
+	"main": "dist/src/cli.js",
+	"type": "module",
+	"bin": {
+		"create-playwright-project": "./dist/src/cli.js"
+	},
+	"files": ["dist/**/*", "templates/**/*", "README.md"],
+	"scripts": {
+		"build": "tsc --project . && chmod +x dist/src/cli.js",
+		"build:watch": "tsc --watch",
+		"clean": "rm -rf dist tsconfig*.tsbuildinfo",
+		"prepublishOnly": "npm run clean && npm run build",
+		"dev": "npm run build && node dist/cli.js",
+		"check": "npx @biomejs/biome check --write"
+	},
+	"keywords": [
+		"playwright",
+		"typescript",
+		"cli",
+		"scaffolding",
+		"testing",
+		"e2e",
+		"create",
+		"template",
+		"generator"
+	],
+	"author": "Netanel Harush",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NetanelH2/playwright-framework-suite.git",
+		"directory": "packages/create-playwright-project"
+	},
+	"bugs": {
+		"url": "https://github.com/NetanelH2/playwright-framework-suite/issues"
+	},
+	"homepage": "https://github.com/NetanelH2/playwright-framework-suite/tree/main/packages/create-playwright-project#readme",
+	"dependencies": {
+		"chalk": "*",
+		"commander": "*",
+		"inquirer": "*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.5",
+		"@types/inquirer": "*",
+		"@types/node": "*",
+		"jiti": "*",
+		"typescript": "*"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
 }

@@ -1,14 +1,14 @@
 export interface UserCredentials {
-  username: string
-  password: string
+	username: string
+	password: string
 }
 
 export interface UserTypes {
-  standard: UserCredentials
-  lockedOut: UserCredentials
-  problem: UserCredentials
-  performanceGlitch: UserCredentials
-  error: UserCredentials
-  visual: UserCredentials
-  invalid: UserCredentials
+	standard: UserCredentials
+	lockedOut: UserCredentials
+	problem: UserCredentials
+	performanceGlitch: UserCredentials
+	error: UserCredentials
+	visual: UserCredentials
+	invalid: UserCredentials
 }

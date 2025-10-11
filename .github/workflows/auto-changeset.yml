@@ -1,4 +1,4 @@
-name: "Auto Generate Changesets"
+name: 'Auto Generate Changesets'
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   auto-changeset:
-    name: "Create changeset for modified packages"
+    name: 'Create changeset for modified packages'
     runs-on: ubuntu-latest
     # Skip if we already created one to avoid infinite loops
     if: ${{ !contains(github.event.head_commit.message, 'add changeset') }}
