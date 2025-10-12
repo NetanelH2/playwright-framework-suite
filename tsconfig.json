@@ -21,7 +21,7 @@
 	"include": ["packages/*/src/**/*"],
 	"exclude": ["node_modules", "**/dist/**", "**/node_modules/**"],
 	"references": [
-		{ "path": "./packages/playwright-framework" },
-		{ "path": "./packages/create-playwright-project" }
+		{"path": "./packages/playwright-framework"},
+		{"path": "./packages/create-playwright-project"}
 	]
 }

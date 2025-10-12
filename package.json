@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"private": true,
 	"description": "A comprehensive Playwright TypeScript framework with CLI scaffolding tool",
-	"workspaces": ["packages/*"],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"build": "npm run build --workspaces",
 		"clean": "npm run clean --workspaces",

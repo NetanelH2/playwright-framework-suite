@@ -248,6 +248,15 @@ async function createProject(
 		writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
 	}
 
+	// Update biome.json - remove "root": false for new projects
+	const biomeJsonPath = join(projectPath, 'biome.json')
+	if (existsSync(biomeJsonPath)) {
+		const biomeJson = JSON.parse(readFileSync(biomeJsonPath, 'utf-8'))
+		// Remove the "root" property so it defaults to true in the new project
+		delete biomeJson.root
+		writeFileSync(biomeJsonPath, `${JSON.stringify(biomeJson, null, '\t')}\n`)
+	}
+
 	// Initialize git
 	if (useGit) {
 		console.log(chalk.yellow('🔧 Initializing git repository...'))

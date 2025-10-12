@@ -7,7 +7,11 @@
 	"bin": {
 		"create-playwright-project": "./dist/src/cli.js"
 	},
-	"files": ["dist/**/*", "templates/**/*", "README.md"],
+	"files": [
+		"dist/**/*",
+		"templates/**/*",
+		"README.md"
+	],
 	"scripts": {
 		"build": "tsc --project . && chmod +x dist/src/cli.js",
 		"build:watch": "tsc --watch",

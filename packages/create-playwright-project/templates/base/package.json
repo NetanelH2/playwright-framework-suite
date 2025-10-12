@@ -39,5 +39,10 @@
 			"biome check --no-errors-on-unmatched --files-ignore-unknown=true --write"
 		]
 	},
-	"keywords": ["playwright", "testing", "typescript", "e2e"]
+	"keywords": [
+		"playwright",
+		"testing",
+		"typescript",
+		"e2e"
+	]
 }
