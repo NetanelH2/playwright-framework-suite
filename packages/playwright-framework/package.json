@@ -11,7 +11,11 @@
 			"types": "./dist/index.d.ts"
 		}
 	},
-	"files": ["dist/**/*", "README.md", "CHANGELOG.md"],
+	"files": [
+		"dist/**/*",
+		"README.md",
+		"CHANGELOG.md"
+	],
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
