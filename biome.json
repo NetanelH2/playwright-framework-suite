@@ -12,20 +12,10 @@
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": true,
-		"indentStyle": "tab",
-		"indentWidth": 2,
-		"lineEnding": "lf",
-		"lineWidth": 80,
-		"attributePosition": "auto",
-		"bracketSameLine": false,
-		"bracketSpacing": true,
-		"expand": "auto",
-		"useEditorconfig": true
+		"bracketSpacing": false
 	},
 	"linter": {
-		"enabled": true,
 		"rules": {
-			"recommended": true,
 			"complexity": {
 				"noUselessConstructor": "off"
 			}
@@ -34,18 +24,11 @@
 	"javascript": {
 		"formatter": {
 			"jsxQuoteStyle": "single",
-			"quoteProperties": "asNeeded",
-			"trailingCommas": "all",
 			"semicolons": "asNeeded",
-			"arrowParentheses": "always",
-			"bracketSameLine": false,
-			"quoteStyle": "single",
-			"attributePosition": "auto",
-			"bracketSpacing": false
+			"quoteStyle": "single"
 		}
 	},
 	"assist": {
-		"enabled": true,
 		"actions": {
 			"source": {
 				"organizeImports": "on"
