@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1
+
+### Patch Changes
+
+- 07cd9e6: Remove all ESLint and Prettier references and configurations. All packages now use Biome exclusively for linting and formatting.
+
 ## 3.0.0
 
 ### Major Changes
