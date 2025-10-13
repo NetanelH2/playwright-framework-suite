@@ -101,8 +101,8 @@ jobs:
         if: steps.check-changesets.outputs.count != '0' || steps.check-changesets.outputs.is_version_commit == 'true'
         uses: changesets/action@v1
         with:
-          version: npm run version-packages
-          publish: npm run release
+          version: changeset version
+          publish: changeset publish
           commit: "chore: version packages"
           title: "chore: version packages"
         env:
