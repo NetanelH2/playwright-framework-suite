@@ -1,5 +1,14 @@
 # @netanelh2/create-playwright-project
 
+## 4.0.1
+
+### Patch Changes
+
+- Fix biome.json template configuration handling:
+  - Add 'root: false' to template biome.json to prevent nested root config errors in monorepo
+  - CLI now automatically removes 'root' property when scaffolding new projects
+  - Ensures new projects get clean biome.json with proper root configuration
+
 ## 4.0.0
 
 ### Major Changes
@@ -7,7 +16,6 @@
 - ff69926: Migrate from ESLint + Prettier to Biome
 
   BREAKING CHANGE: Replaced ESLint 9.x and Prettier 3.x with Biome for unified linting and formatting.
-
   - Add Biome configuration (`biome.json`) to all packages and templates
   - Remove all ESLint and Prettier configuration files
   - Update all quality scripts to use `biome check --write`
@@ -17,7 +25,6 @@
   - Update all documentation to reflect Biome usage
 
   Benefits:
-
   - 10-100x faster than ESLint + Prettier combined
   - Single tool for linting and formatting
   - Simplified configuration (one `biome.json` vs multiple config files)
@@ -51,14 +58,12 @@
 - 8b2b952: Test complete publish workflow after fixing [skip ci] issue
 
   This changeset tests the end-to-end release workflow:
-
   - ✅ Version bump creation (Version PR)
   - ✅ NPM publishing when PR is merged
   - ✅ GitHub release creation
   - ✅ No infinite loops with smart commit detection
 
   This will bump all 3 packages:
-
   - @netanelh2/playwright-framework: 3.0.7 → 3.0.8
   - @netanelh2/create-playwright-project: 3.0.7 → 3.0.8
   - @netanelh2/create-workflows-package: 2.0.4 → 2.0.5
