@@ -58,9 +58,10 @@ jobs:
         with:
           github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = ${{ steps.pr.outputs.number }};
+            const prNumber = parseInt('${{ steps.pr.outputs.number }}');
+            const prTitle = '${{ steps.pr.outputs.title }}';
 
-            console.log(`Processing owner PR #${prNumber}`);
+            console.log(`Processing owner PR #${prNumber}: ${prTitle}`);
 
             try {
               // Check current state
@@ -76,27 +77,44 @@ jobs:
                 return;
               }
               
-              // Approve the PR
-              const { data: reviews } = await github.rest.pulls.listReviews({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber
-              });
+              // For version package PRs, skip approval (can't approve own PR)
+              const isVersionPR = prTitle.toLowerCase().includes('version packages');
               
-              const hasApproval = reviews.some(r => r.state === 'APPROVED');
-              
-              if (!hasApproval) {
-                await github.rest.pulls.createReview({
+              if (!isVersionPR) {
+                // Approve the PR (only for non-version PRs created by you)
+                const { data: reviews } = await github.rest.pulls.listReviews({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  pull_number: prNumber,
-                  event: 'APPROVE',
-                  body: '✅ Auto-approved by workflow'
+                  pull_number: prNumber
                 });
-                console.log('PR approved');
+                
+                const hasApproval = reviews.some(r => r.state === 'APPROVED');
+                
+                if (!hasApproval) {
+                  try {
+                    await github.rest.pulls.createReview({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      pull_number: prNumber,
+                      event: 'APPROVE',
+                      body: '✅ Auto-approved by workflow'
+                    });
+                    console.log('PR approved');
+                  } catch (approveError) {
+                    console.log(`Could not approve PR: ${approveError.message}`);
+                  }
+                }
+              } else {
+                console.log('Version PR detected - skipping approval (will auto-merge when checks pass)');
               }
               
               // Enable auto-merge
+              await github.rest.pulls.updateBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              }).catch(() => console.log('Branch already up to date'));
+              
               await github.rest.pulls.enableAutoMerge({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -104,7 +122,7 @@ jobs:
                 merge_method: 'SQUASH'
               });
               
-              console.log('Auto-merge enabled');
+              console.log('✅ Auto-merge enabled');
             } catch (error) {
               console.error(`Failed to enable auto-merge: ${error.message}`);
             }

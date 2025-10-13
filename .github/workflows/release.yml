@@ -36,69 +36,8 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Check for changesets and version commit
-        id: check-changesets
-        run: |
-          count=$(ls .changeset/*.md 2>/dev/null | grep -v "README.md" | wc -l | xargs)
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          echo "Changesets found: $count"
-
-          # Check if this is a version commit by checking if message starts with "chore: version packages"
-          if [[ "${{ github.event.head_commit.message }}" =~ ^"chore: version packages" ]]; then
-            echo "is_version_commit=true" >> "$GITHUB_OUTPUT"
-            echo "This is a version commit"
-          else
-            echo "is_version_commit=false" >> "$GITHUB_OUTPUT"
-            echo "This is not a version commit"
-          fi
-
-      - name: Create automatic changeset if none exists
-        if: steps.check-changesets.outputs.count == '0' && steps.check-changesets.outputs.is_version_commit == 'false'
-        run: |
-          CHANGED_PACKAGES=$(git diff HEAD~1 --name-only | grep '^packages/' | cut -d'/' -f2 | sort -u)
-
-          if [ ! -z "$CHANGED_PACKAGES" ]; then
-            COMMIT_MSG=$(git log -1 --pretty=%B)
-            TIMESTAMP=$(date +%s)
-            
-            # Determine version bump from commit message
-            if [[ $COMMIT_MSG =~ ^feat.*!:|BREAKING ]]; then
-              BUMP="major"
-            elif [[ $COMMIT_MSG =~ ^feat ]]; then
-              BUMP="minor"
-            else
-              BUMP="patch"
-            fi
-            
-            cat > .changeset/auto-${TIMESTAMP}.md << EOF
-          ---
-          $(echo "$CHANGED_PACKAGES" | while read pkg; do
-            case "$pkg" in
-              playwright-framework)
-                echo "\"@netanelh2/playwright-framework\": $BUMP"
-                ;;
-              create-playwright-project)
-                echo "\"@netanelh2/create-playwright-project\": $BUMP"
-                ;;
-              create-workflows-package)
-                echo "\"@netanelh2/create-workflows-package\": $BUMP"
-                ;;
-            esac
-          done)
-          ---
-
-          $(echo "$COMMIT_MSG" | head -n1)
-          EOF
-            
-            echo "✅ Created automatic changeset for: $CHANGED_PACKAGES"
-            cat .changeset/auto-${TIMESTAMP}.md
-          else
-            echo "No package changes detected, skipping changeset creation"
-          fi
-
       - name: Create Release Pull Request or Publish
         id: changesets
-        if: steps.check-changesets.outputs.count != '0' || steps.check-changesets.outputs.is_version_commit == 'true'
         uses: changesets/action@v1
         with:
           version: npx changeset version
