@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.2
+
+### Patch Changes
+
+- 2c779fa: chore: version packages
+
 ## 3.0.1
 
 ### Patch Changes
