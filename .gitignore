@@ -56,13 +56,6 @@ coverage/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
-.eslintcache
-
-# Compiled ESLint config
-eslint.config.js
-eslint.config.js.map
-
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/

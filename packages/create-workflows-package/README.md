@@ -65,7 +65,7 @@ npx @netanelh2/create-workflows-package --no-install
 The CLI adds to your existing project:
 
 - ✅ **GitHub Actions workflows** for CI/CD automation
-- ✅ **Code quality tools**: ESLint, Prettier with TypeScript support
+- ✅ **Code quality tools**: Biome for unified linting and formatting with TypeScript support
 - ✅ **Husky git hooks** for pre-commit quality checks
 - ✅ **lint-staged** for efficient pre-commit linting
 - ✅ **Updated package.json** with quality scripts
@@ -114,7 +114,7 @@ After running the CLI, follow these steps to enable GitHub Actions:
      "scripts": {
        "test:sanity": "playwright test --grep '@sanity'",
        "test:regression": "playwright test --grep '@regression'",
-       "check": "npm run lint:check && npm run format:check && npx tsc"
+       "check": "npx @biomejs/biome check --write && npx tsc"
      }
    }
    ```
@@ -133,10 +133,8 @@ After running the CLI, follow these steps to enable GitHub Actions:
 ```json
 {
   "scripts": {
-    "lint:check": "eslint src/**/*.ts --max-warnings 0 --no-warn-ignored",
-    "format:check": "prettier --check src/**/*.ts",
-    "check": "npm run lint:check && npm run format:check && npx tsc",
-    "fix": "prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored",
+    "check": "npx @biomejs/biome check --write && npx tsc",
+    "type-check": "tsc --noEmit",
     "pre-commit": "lint-staged",
     "prepare": "husky"
   }
@@ -149,10 +147,8 @@ Once setup is complete, you can use these commands:
 
 ```bash
 # Code Quality
-npm run check            # Run all quality checks
-npm run lint:check       # Check linting
-npm run format:check     # Check formatting
-npm run fix              # Auto-fix issues
+npm run check            # Run Biome linting, formatting, and type checking
+npm run type-check       # Run TypeScript type checking only
 
 # Git Hooks
 npm run prepare          # Setup Husky (run once)
@@ -168,14 +164,9 @@ npm run prepare          # Setup Husky (run once)
 
 **Dev Dependencies:**
 
-- `@typescript-eslint/eslint-plugin`
-- `@typescript-eslint/parser`
-- `eslint`
-- `eslint-config-prettier`
-- `eslint-plugin-prettier`
-- `prettier`
-- `husky`
-- `lint-staged`
+- `@biomejs/biome` - Ultra-fast Rust-based linter and formatter
+- `husky` - Git hooks management
+- `lint-staged` - Run linters on staged files
 
 ## License
 

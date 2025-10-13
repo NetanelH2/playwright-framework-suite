@@ -4,7 +4,6 @@
  * @netanelh2/create-workflows-package CLI
  * Scaffolds GitHub Actions workflows and code quality setup
  */
-/* eslint-disable no-console */
 
 import {execSync} from 'node:child_process'
 import {
@@ -258,13 +257,8 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 		if (!packageJson.scripts) packageJson.scripts = {}
 
 		if (config.includeCodeQuality) {
-			packageJson.scripts['lint:check'] =
-				'eslint src/**/*.ts --max-warnings 0 --no-warn-ignored'
-			packageJson.scripts['format:check'] = 'prettier --check src/**/*.ts'
-			packageJson.scripts.check =
-				'npm run lint:check && npm run format:check && npx tsc'
-			packageJson.scripts.fix =
-				'prettier --write src/**/*.ts && eslint src/**/*.ts --fix --no-warn-ignored'
+			packageJson.scripts.check = 'npx @biomejs/biome check --write && npx tsc'
+			packageJson.scripts['type-check'] = 'tsc --noEmit'
 		}
 
 		if (config.includeHusky) {
@@ -281,14 +275,7 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 		const deps = []
 
 		if (config.includeCodeQuality) {
-			deps.push(
-				'@typescript-eslint/eslint-plugin',
-				'@typescript-eslint/parser',
-				'eslint',
-				'eslint-config-prettier',
-				'eslint-plugin-prettier',
-				'prettier',
-			)
+			deps.push('@biomejs/biome')
 		}
 
 		if (config.includeHusky) {

@@ -4,9 +4,6 @@ src/
 # Development files
 tsconfig.json
 tsconfig.tsbuildinfo
-.eslintrc.json
-.prettierrc.json
-.prettierignore
 
 # Dependencies
 node_modules/
