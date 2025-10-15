@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 4.0.4
+
+### Patch Changes
+
+- 9c80fbe: Updated README.md files with comprehensive TypeScript examples, type-safe patterns, and current project configuration. Improved documentation for better developer experience.
+
 ## 4.0.3
 
 ### Patch Changes
