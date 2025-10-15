@@ -231,4 +231,4 @@ npm run prepare          # Setup Husky (run once)
 
 ## Support
 
-For questions and support, please open an issue on [GitHub](https://github.com/netanelkakish/playwright-framework-suite/issues).
+For questions and support, please open an issue on [GitHub](https://github.com/netanelh2/playwright-framework-suite/issues).
