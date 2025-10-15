@@ -4,10 +4,10 @@
 
 ## Features
 
-- **GitHub Actions Templates**: Pre-configured workflows for code quality, testing, and releases
-- **Changeset Integration**: Automated version bumping and NPM publishing
+- **GitHub Actions Templates**: Pre-configured workflows for code quality, testing, and CI/CD automation
 - **Husky & lint-staged**: Pre-commit hooks for quality gates
 - **Branch Protection**: Automated PR checks and merge requirements
+- **Code Quality Tools**: Biome for unified linting and formatting with TypeScript support
 
 ## Quick Start
 
@@ -109,9 +109,9 @@ After running the CLI, follow these steps to enable GitHub Actions:
 
 - **`SLACK_WEBHOOK_URL`**: Slack webhook URL for notifications (only if Slack notifications workflow enabled)
 
-#### For NPM Publishing (using Changesets):
+#### For NPM Publishing (if using Changesets):
 
-The workflows now use **OIDC (OpenID Connect)** for secure NPM publishing - no long-lived tokens needed!
+If your project uses Changesets for version management, the workflows support **OIDC (OpenID Connect)** for secure NPM publishing - no long-lived tokens needed!
 
 **Setup NPM Trusted Publishers:**
 
@@ -132,7 +132,7 @@ The workflows now use **OIDC (OpenID Connect)** for secure NPM publishing - no l
 - ✅ Automatic provenance generation for packages
 - ✅ Better security - no token leakage risks
 
-> **Note**: Ensure your workflows have `id-token: write` permission (already configured in templates)
+> **Note**: This package does not install or configure Changesets. If you need automated versioning and publishing, consider using [@netanelh2/create-playwright-project](https://www.npmjs.com/package/@netanelh2/create-playwright-project) which includes Changesets setup.
 
 ### 4. Personal Access Token (PAT) for Auto-Merge
 
