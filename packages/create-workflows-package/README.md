@@ -86,47 +86,102 @@ Choose from these GitHub Actions workflows:
 
 After running the CLI, follow these steps to enable GitHub Actions:
 
-1. **Repository Permissions**:
-   - Go to your repository on GitHub
-   - Navigate to Settings > Actions > General
-   - Under "Workflow permissions", select "Read and write permissions"
+### 1. Repository Permissions
 
-2. **GitHub Pages Setup** (for report deployment):
-   - Go to Settings > Pages
-   - Set Source to "GitHub Actions"
-   - This enables automatic publishing of test reports
+- Go to your repository on GitHub
+- Navigate to **Settings > Actions > General**
+- Under "Workflow permissions", select **"Read and write permissions"**
+- Click **Save**
 
-3. **Required Secrets** (Settings > Secrets and variables > Actions):
-   - **`BASE_URL`**: Your application URL (e.g., `https://your-app.com`) - required for tests
-   - **`SLACK_WEBHOOK_URL`**: Slack webhook URL for notifications (optional, only if Slack notifications enabled)
+### 2. GitHub Pages Setup (for report deployment)
 
-4. **Branch Protection** (recommended):
-   - Go to Settings > Branches
-   - Add rules for your main branch (main/master/develop)
-   - Require status checks from "Code Quality Check" workflow
-   - This ensures code quality before merging
+- Go to **Settings > Pages**
+- Set Source to **"GitHub Actions"**
+- This enables automatic publishing of test reports
 
-5. **Package.json Scripts**:
-   Ensure your `package.json` has these scripts (automatically added by CLI):
+### 3. Required Secrets (Settings > Secrets and variables > Actions)
 
-   ```json
-   {
-     "scripts": {
-       "test:sanity": "playwright test --grep '@sanity'",
-       "test:regression": "playwright test --grep '@regression'",
-       "check": "npx @biomejs/biome check --write && npx tsc"
-     }
-   }
-   ```
+#### Essential Secrets:
+- **`BASE_URL`**: Your application URL (e.g., `https://your-app.com`) - **required for tests**
 
-6. **Slack Setup** (if notifications enabled):
-   - Create a Slack app with incoming webhooks
-   - Get the webhook URL and add it as `SLACK_WEBHOOK_URL` secret
-   - Ensure the Slack channel has proper permissions
+#### Optional Secrets (based on workflows selected):
+- **`SLACK_WEBHOOK_URL`**: Slack webhook URL for notifications (only if Slack notifications workflow enabled)
 
-7. **Optional: Code Ownership**:
-   - The CLI will ask if you want to create a CODEOWNERS file
-   - If yes, provide your GitHub username to set up automatic code ownership
+#### For NPM Publishing (using Changesets):
+The workflows now use **OIDC (OpenID Connect)** for secure NPM publishing - no long-lived tokens needed!
+
+**Setup NPM Trusted Publishers:**
+1. Go to your package settings on [npmjs.com](https://npmjs.com)
+2. Navigate to **"Trusted Publisher"** section
+3. Click **"GitHub Actions"**
+4. Configure:
+   - **Organization/User**: Your GitHub username or org (e.g., `YourUsername`)
+   - **Repository**: Your repository name (e.g., `my-project`)
+   - **Workflow filename**: `release.yml` (must include `.yml` extension)
+   - **Environment name**: Leave empty unless using GitHub environments
+5. Click **"Add"**
+
+**Benefits of OIDC:**
+- ✅ No need for `NPM_TOKEN` secret
+- ✅ Short-lived, automatically-managed credentials
+- ✅ Automatic provenance generation for packages
+- ✅ Better security - no token leakage risks
+
+> **Note**: Ensure your workflows have `id-token: write` permission (already configured in templates)
+
+### 4. Personal Access Token (PAT) for Auto-Merge
+
+If you want to use auto-merge workflows or create releases:
+
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token (classic)"**
+3. Select scopes:
+   - `repo` (full control of repositories)
+   - `workflow` (update GitHub Action workflows)
+4. Copy the token and add it as **`PAT_TOKEN`** in repository secrets
+
+### 5. Branch Protection (recommended)
+
+- Go to **Settings > Branches**
+- Add rules for your main branch (main/master/develop)
+- Enable:
+  - ✅ Require status checks before merging
+  - ✅ Require "Biome Quality Check" to pass
+  - ✅ Require branches to be up to date before merging
+- This ensures code quality before merging
+
+### 6. Package.json Scripts
+
+Ensure your `package.json` has these scripts (automatically added by CLI):
+
+```json
+{
+  "scripts": {
+    "test": "playwright test",
+    "test:sanity": "playwright test --grep '@sanity'",
+    "test:regression": "playwright test --grep '@regression'",
+    "test:chrome": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "check": "npx @biomejs/biome check --write && npx tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "pre-commit": "lint-staged",
+    "prepare": "husky"
+  }
+}
+```
+
+### 7. Slack Setup (if notifications enabled)
+
+- Create a Slack app with incoming webhooks
+- Get the webhook URL and add it as `SLACK_WEBHOOK_URL` secret
+- Ensure the Slack channel has proper permissions
+
+### 8. Optional: Code Ownership
+
+- The CLI will ask if you want to create a CODEOWNERS file
+- If yes, provide your GitHub username to set up automatic code ownership
 
 ## Scripts Added to package.json
 

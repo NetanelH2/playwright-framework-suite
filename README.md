@@ -4,15 +4,38 @@ A modern, TypeScript-first testing framework for Playwright with enterprise-grad
 
 ## 📦 Packages
 
-This monorepo contains two complementary packages:
+This monorepo contains three complementary packages:
 
 ### [@netanelh2/playwright-framework](./packages/playwright-framework)
 
-**Core testing framework** - Provides base classes, utilities, and type-safe patterns for building maintainable test suites.
+**Core testing framework** - Provides base classes, utilities, and type-safe patterns for building maintainable test suites with Page Object Model architecture.
+
+**Key Features:**
+- 🏗️ `BasePage` and `LocatorUtils` core classes
+- 🎯 Type-safe role-based locators with `StringOrRoleLocatorType`
+- 🔧 Custom test fixtures for dependency injection
+- 🛠️ Utilities for environment variables and array operations
 
 ### [@netanelh2/create-playwright-project](./packages/create-playwright-project)
 
 **Project scaffolding CLI** - Interactive tool to create new Playwright projects with best practices built-in.
+
+**Key Features:**
+- 🎭 Interactive setup with minimal or full-featured templates
+- ⚙️ Pre-configured Playwright with smart retry logic
+- 📦 Example page objects, tests, and fixtures
+- 🔧 Biome for linting and formatting
+
+### [@netanelh2/create-workflows-package](./packages/create-workflows-package)
+
+**GitHub Actions workflows CLI** - Add CI/CD workflows and code quality setup to existing projects.
+
+**Key Features:**
+- 🔄 Pre-configured GitHub Actions workflows
+- 🛡️ Code quality gates with Biome
+- 📊 Test report deployment to GitHub Pages
+- 🔐 OIDC-based NPM publishing (no tokens needed!)
+- 🪝 Husky git hooks for pre-commit quality checks
 
 ## 🚀 Quick Start
 
@@ -25,6 +48,17 @@ npx @netanelh2/create-playwright-project my-test-project
 # Alternative: Install globally first
 npm install -g @netanelh2/create-playwright-project
 create-playwright-project my-test-project
+```
+
+### Adding Workflows to Existing Project
+
+```bash
+# Add GitHub Actions workflows and code quality setup
+npx @netanelh2/create-workflows-package
+
+# Or install globally
+npm install -g @netanelh2/create-workflows-package
+create-workflows-package
 ```
 
 ### Using the Framework Directly
@@ -51,24 +85,32 @@ npm install --save-dev @netanelh2/playwright-framework @playwright/test
 ┌─────────────────────────────────────────────────────────────┐
 │                     Test Specifications                     │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐    │
-│  │   Sanity    │ │ Regression  │ │  Integration Tests  │    │
+│  │   @sanity   │ │ @regression │ │  Integration Tests  │    │
 │  │    Tests    │ │    Tests    │ │                     │    │
 │  └─────────────┘ └─────────────┘ └─────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
-│                     Page Object Layer                       │
+│                 Page Object Model Layer                     │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐    │
 │  │  LoginPage  │ │  MainPage   │ │   CheckoutPage      │    │
-│  │             │ │             │ │                     │    │
+│  │  (typed)    │ │  (typed)    │ │    (typed)          │    │
 │  └─────────────┘ └─────────────┘ └─────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                Centralized Locators Layer                   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Role-based Locators (StringOrRoleLocatorType)       │   │
+│  │  { role: 'button', name: 'Submit' }                  │   │
+│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                    Core Framework Layer                     │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐    │
-│  │  BasePage   │ │ LocatorUtils│ │   Type Definitions  │    │
-│  │             │ │             │ │                     │    │
+│  │  BasePage   │ │ LocatorUtils│ │ Type Definitions    │    │
+│  │  (class)    │ │  (class)    │ │  (interfaces)       │    │
 │  └─────────────┘ └─────────────┘ └─────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -118,32 +160,60 @@ This monorepo uses cutting-edge tooling for optimal developer experience:
 
 ## 🏗️ Example Usage
 
-### Basic Page Object
+### Define Type-Safe Locators
 
 ```typescript
-import { BasePage } from "@netanelh2/playwright-framework";
-import { LOGIN_PAGE_LOCATORS as L } from "../locators/login/Login_Page";
+import type { StringOrRoleLocatorType } from '@netanelh2/playwright-framework';
+
+// Centralized locators with role-based pattern
+export const LOGIN_PAGE_LOCATORS = {
+  usernameField: { role: 'textbox', name: 'Username' },
+  passwordField: { role: 'textbox', name: 'Password' },
+  submitButton: { role: 'button', name: 'Sign In' },
+  errorMessage: '.error-message',
+} as const satisfies Record<string, StringOrRoleLocatorType>;
+```
+
+### Create Page Objects with Types
+
+```typescript
+import { BasePage, type Page } from '@netanelh2/playwright-framework';
+import { test } from '../fixtures/testSetup';
+import { LOGIN_PAGE_LOCATORS as L } from '../locators/login/Login_Page';
 
 export class LoginPage extends BasePage {
+  constructor(page: Page) {
+    super(page);
+  }
+
   async login(username: string, password: string): Promise<void> {
-    await this.test.step("User login flow", async () => {
-      await this.fillField(L.usernameField, username);
-      await this.fillField(L.passwordField, password);
-      await this.clickElement(L.loginButton);
+    await test.step('User login flow', async () => {
+      const usernameLocator = this.extractLocator(L.usernameField);
+      const passwordLocator = this.extractLocator(L.passwordField);
+      
+      await usernameLocator.fill(username);
+      await passwordLocator.fill(password);
+      await this.clickOnElement(L.submitButton);
     });
+  }
+
+  async validateLoaded(): Promise<void> {
+    await this.validateVisibility(L.usernameField);
   }
 }
 ```
 
-### Test with Fixtures
+### Write Tests with Custom Fixtures
 
 ```typescript
-import { test } from "../fixtures/testSetup";
+import { test } from '../fixtures/testSetup';
+import { STANDARD_USER } from '../data/users';
 
-test.describe("Authentication @sanity", () => {
-  test("should login successfully", async ({ loginPage, dashboardPage }) => {
+test.describe('Authentication @sanity', () => {
+  test('should login successfully', async ({ loginPage, dashboardPage }) => {
     await loginPage.navigateTo();
-    await loginPage.login("user@example.com", "password123");
+    await loginPage.validateLoaded();
+    await loginPage.login(STANDARD_USER.username, STANDARD_USER.password);
     await dashboardPage.validateUserLoggedIn();
   });
 });
