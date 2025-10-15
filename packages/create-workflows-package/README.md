@@ -102,15 +102,19 @@ After running the CLI, follow these steps to enable GitHub Actions:
 ### 3. Required Secrets (Settings > Secrets and variables > Actions)
 
 #### Essential Secrets:
+
 - **`BASE_URL`**: Your application URL (e.g., `https://your-app.com`) - **required for tests**
 
 #### Optional Secrets (based on workflows selected):
+
 - **`SLACK_WEBHOOK_URL`**: Slack webhook URL for notifications (only if Slack notifications workflow enabled)
 
 #### For NPM Publishing (using Changesets):
+
 The workflows now use **OIDC (OpenID Connect)** for secure NPM publishing - no long-lived tokens needed!
 
 **Setup NPM Trusted Publishers:**
+
 1. Go to your package settings on [npmjs.com](https://npmjs.com)
 2. Navigate to **"Trusted Publisher"** section
 3. Click **"GitHub Actions"**
@@ -122,6 +126,7 @@ The workflows now use **OIDC (OpenID Connect)** for secure NPM publishing - no l
 5. Click **"Add"**
 
 **Benefits of OIDC:**
+
 - ✅ No need for `NPM_TOKEN` secret
 - ✅ Short-lived, automatically-managed credentials
 - ✅ Automatic provenance generation for packages

@@ -11,6 +11,7 @@ This monorepo contains three complementary packages:
 **Core testing framework** - Provides base classes, utilities, and type-safe patterns for building maintainable test suites with Page Object Model architecture.
 
 **Key Features:**
+
 - 🏗️ `BasePage` and `LocatorUtils` core classes
 - 🎯 Type-safe role-based locators with `StringOrRoleLocatorType`
 - 🔧 Custom test fixtures for dependency injection
@@ -21,6 +22,7 @@ This monorepo contains three complementary packages:
 **Project scaffolding CLI** - Interactive tool to create new Playwright projects with best practices built-in.
 
 **Key Features:**
+
 - 🎭 Interactive setup with minimal or full-featured templates
 - ⚙️ Pre-configured Playwright with smart retry logic
 - 📦 Example page objects, tests, and fixtures
@@ -31,6 +33,7 @@ This monorepo contains three complementary packages:
 **GitHub Actions workflows CLI** - Add CI/CD workflows and code quality setup to existing projects.
 
 **Key Features:**
+
 - 🔄 Pre-configured GitHub Actions workflows
 - 🛡️ Code quality gates with Biome
 - 📊 Test report deployment to GitHub Pages
@@ -163,42 +166,42 @@ This monorepo uses cutting-edge tooling for optimal developer experience:
 ### Define Type-Safe Locators
 
 ```typescript
-import type { StringOrRoleLocatorType } from '@netanelh2/playwright-framework';
+import type {StringOrRoleLocatorType} from '@netanelh2/playwright-framework'
 
 // Centralized locators with role-based pattern
 export const LOGIN_PAGE_LOCATORS = {
-  usernameField: { role: 'textbox', name: 'Username' },
-  passwordField: { role: 'textbox', name: 'Password' },
-  submitButton: { role: 'button', name: 'Sign In' },
+  usernameField: {role: 'textbox', name: 'Username'},
+  passwordField: {role: 'textbox', name: 'Password'},
+  submitButton: {role: 'button', name: 'Sign In'},
   errorMessage: '.error-message',
-} as const satisfies Record<string, StringOrRoleLocatorType>;
+} as const satisfies Record<string, StringOrRoleLocatorType>
 ```
 
 ### Create Page Objects with Types
 
 ```typescript
-import { BasePage, type Page } from '@netanelh2/playwright-framework';
-import { test } from '../fixtures/testSetup';
-import { LOGIN_PAGE_LOCATORS as L } from '../locators/login/Login_Page';
+import {BasePage, type Page} from '@netanelh2/playwright-framework'
+import {test} from '../fixtures/testSetup'
+import {LOGIN_PAGE_LOCATORS as L} from '../locators/login/Login_Page'
 
 export class LoginPage extends BasePage {
   constructor(page: Page) {
-    super(page);
+    super(page)
   }
 
   async login(username: string, password: string): Promise<void> {
     await test.step('User login flow', async () => {
-      const usernameLocator = this.extractLocator(L.usernameField);
-      const passwordLocator = this.extractLocator(L.passwordField);
-      
-      await usernameLocator.fill(username);
-      await passwordLocator.fill(password);
-      await this.clickOnElement(L.submitButton);
-    });
+      const usernameLocator = this.extractLocator(L.usernameField)
+      const passwordLocator = this.extractLocator(L.passwordField)
+
+      await usernameLocator.fill(username)
+      await passwordLocator.fill(password)
+      await this.clickOnElement(L.submitButton)
+    })
   }
 
   async validateLoaded(): Promise<void> {
-    await this.validateVisibility(L.usernameField);
+    await this.validateVisibility(L.usernameField)
   }
 }
 ```
@@ -206,17 +209,17 @@ export class LoginPage extends BasePage {
 ### Write Tests with Custom Fixtures
 
 ```typescript
-import { test } from '../fixtures/testSetup';
-import { STANDARD_USER } from '../data/users';
+import {test} from '../fixtures/testSetup'
+import {STANDARD_USER} from '../data/users'
 
 test.describe('Authentication @sanity', () => {
-  test('should login successfully', async ({ loginPage, dashboardPage }) => {
-    await loginPage.navigateTo();
-    await loginPage.validateLoaded();
-    await loginPage.login(STANDARD_USER.username, STANDARD_USER.password);
-    await dashboardPage.validateUserLoggedIn();
-  });
-});
+  test('should login successfully', async ({loginPage, dashboardPage}) => {
+    await loginPage.navigateTo()
+    await loginPage.validateLoaded()
+    await loginPage.login(STANDARD_USER.username, STANDARD_USER.password)
+    await dashboardPage.validateUserLoggedIn()
+  })
+})
 ```
 
 ## 🚀 Release Notes
