@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.3
+
+### Patch Changes
+
+- 573b7ac: Fixed corrupted README.md content by removing local machine paths and adding proper Support section.
+
 ## 4.0.2
 
 ### Patch Changes
