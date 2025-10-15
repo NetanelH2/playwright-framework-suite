@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.2
+
+### Patch Changes
+
+- 071f0a3: Fixed README.md to remove false changeset integration claim. The package does not install or configure changesets - it only provides guidance for projects already using changesets.
+
 ## 4.0.1
 
 ### Patch Changes
