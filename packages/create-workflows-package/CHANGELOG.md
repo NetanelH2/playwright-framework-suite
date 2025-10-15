@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.4
+
+### Patch Changes
+
+- 42d7261: Updated README with latest information.
+
 ## 4.0.3
 
 ### Patch Changes
