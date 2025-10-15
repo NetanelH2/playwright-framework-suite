@@ -42,7 +42,7 @@ jobs:
       - name: Cleanup artifacts with retention policies
         uses: actions/github-script@v7.0.1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.REPO_WORKFLOW_TOKEN }}
           script: |
             const daysToKeep = parseInt('${{ github.event.inputs.days_to_keep || '30' }}');
             const maxArtifactsPerWorkflow = parseInt('${{ github.event.inputs.max_artifacts_per_workflow || '5' }}');
@@ -231,7 +231,7 @@ jobs:
       - name: Report storage status and recommendations
         uses: actions/github-script@v7.0.1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.REPO_WORKFLOW_TOKEN }}
           script: |
             try {
               // Get current artifacts after cleanup

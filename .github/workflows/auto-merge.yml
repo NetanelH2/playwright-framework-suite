@@ -56,7 +56,7 @@ jobs:
         if: steps.pr.outputs.author == 'NetanelH2' && steps.pr.outputs.draft == 'false'
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.REPO_WORKFLOW_TOKEN }}
           script: |
             const prNumber = parseInt('${{ steps.pr.outputs.number }}');
             const prTitle = '${{ steps.pr.outputs.title }}';

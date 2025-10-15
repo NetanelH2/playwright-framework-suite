@@ -107,7 +107,7 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ./reports-temp/
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.REPO_WORKFLOW_TOKEN }}
           run_id: ${{ github.event.workflow_run.id || github.run_id }}
           if_no_artifact_found: warn
         continue-on-error: true

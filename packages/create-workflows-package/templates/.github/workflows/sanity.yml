@@ -23,7 +23,7 @@ jobs:
       - name: Trigger artifact cleanup
         uses: actions/github-script@v7.0.1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.REPO_WORKFLOW_TOKEN }}
           script: |
             try {
               const response = await github.rest.actions.createWorkflowDispatch({

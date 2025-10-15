@@ -78,7 +78,7 @@ jobs:
 
             # Query the Deploy workflow run to find which test workflow triggered it
             REPO="${{ github.repository }}"
-            TOKEN="${{ secrets.GITHUB_TOKEN }}"
+            TOKEN="${{ secrets.REPO_WORKFLOW_TOKEN }}"
 
 
             DEPLOY_DETAILS=$(curl -s -H "Authorization: token $TOKEN" \
