@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.0
+
+### Major Changes
+
+- 0e272c4: Removed NPM Token (deprecated), Update GitHub Token name
+
 ## 3.0.3
 
 ### Patch Changes
