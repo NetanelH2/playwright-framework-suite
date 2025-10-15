@@ -228,12 +228,7 @@ npm run prepare          # Setup Husky (run once)
 - `husky` - Git hooks management
 - `lint-staged` - Run linters on staged files
 
-## License
-
-MIT
 
 ## Support
 
-- [GitHub Issues](https://github.com/NetanelH2/playwright-framework-suite/issues)
-- [GitHub Repository](https://github.com/NetanelH2/playwright-framework-suite)</content>
-  <parameter name="filePath">/Users/netanel/Documents/Development/playwright-framework-suite/packages/create-workflows-package/README.md
+For questions and support, please open an issue on [GitHub](https://github.com/netanelkakish/playwright-framework-suite/issues).
