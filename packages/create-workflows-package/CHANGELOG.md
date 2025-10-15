@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.1
+
+### Patch Changes
+
+- 5719129: Updated README.md with OIDC NPM publishing setup documentation, enhanced GitHub Actions configuration guide, and improved security best practices.
+
 ## 4.0.0
 
 ### Major Changes
