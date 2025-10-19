@@ -17,7 +17,7 @@ jobs:
   cleanup-storage:
     name: Cleanup Storage Before Tests
     runs-on: ubuntu-latest
-    continue-on-error: true
+    continue-on-error: false
     timeout-minutes: 10
     steps:
       - name: Trigger artifact cleanup
