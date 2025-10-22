@@ -1,5 +1,17 @@
 # @netanelh2/create-playwright-project
 
+## 4.1.2
+
+### Patch Changes
+
+- 9b652c6: feat: implement modular workflow architecture
+
+  - **create-workflows-package**: Complete overhaul with modular workflow system using core-test-runner reusable workflow
+  - **create-playwright-project**: Updated templates and configuration
+  - **playwright-framework**: Documentation improvements
+
+- 9b652c6: Publish all packages to npm
+
 ## 4.1.1
 
 ### Patch Changes
