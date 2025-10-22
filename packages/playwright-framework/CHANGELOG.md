@@ -1,5 +1,15 @@
 # @netanelh2/playwright-framework
 
+## 6.0.1
+
+### Patch Changes
+
+- d526188: feat: implement modular workflow architecture
+
+  - **create-workflows-package**: Complete overhaul with modular workflow system using core-test-runner reusable workflow
+  - **create-playwright-project**: Updated templates and configuration
+  - **playwright-framework**: Documentation improvements
+
 ## 6.0.0
 
 ### Major Changes

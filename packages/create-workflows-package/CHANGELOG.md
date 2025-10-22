@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.1.0
+
+### Minor Changes
+
+- d526188: feat: implement modular workflow architecture
+
+  - **create-workflows-package**: Complete overhaul with modular workflow system using core-test-runner reusable workflow
+  - **create-playwright-project**: Updated templates and configuration
+  - **playwright-framework**: Documentation improvements
+
 ## 4.0.4
 
 ### Patch Changes
