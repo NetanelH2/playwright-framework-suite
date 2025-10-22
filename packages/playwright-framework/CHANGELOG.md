@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 4.1.0
+
+### Minor Changes
+
+- a3a2e39: Updated env function to accept proccess.env varaible instead of strings, in addition, update playwright config retries logic
+
 ## 4.0.4
 
 ### Patch Changes
