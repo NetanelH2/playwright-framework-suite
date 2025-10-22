@@ -22,7 +22,7 @@ This framework uses cutting-edge tooling for optimal developer experience:
 - Page Objects extend `BasePage` (which extends `LocatorUtils`) for shared actions and locator extraction.
 - Locators are centralized under `src/locators/**`; prefer role-based objects over raw selector strings.
 - Fixtures (`src/fixtures/testSetup.ts`) inject ready-to-use page objects into tests (e.g., `{mainPage, topMenuMainPage, ...}`) via the custom `test` export. Import directly from the fixtures file using relative paths.
-- Environment: load secrets/URLs via `.env` and `getEnvCredentials(...)` in `src/helpers/envUtils.ts`—do not read `process.env` directly in tests/pages.
+- Environment: load secrets/URLs via `.env` and `getEnvCredentials(...)` in `src/helpers/envUtils.ts`.
 - Playwright config: retries only in CI and only when tag-filtering (via `TEST_TAGS`) for `@sanity`/`@regression`; traces/videos/screenshots kept on failures.
 
 ## Conventions That Matter
@@ -44,31 +44,31 @@ This framework uses cutting-edge tooling for optimal developer experience:
 ```ts
 // src/locators/content-pages/Login_Page.ts
 export const LOGIN_PAGE_LOCATORS = {
-  form: { parent: "#login", role: "textbox", name: "Username" },
-  submit: { role: "button", name: "Submit" },
-} as const;
+  form: {parent: '#login', role: 'textbox', name: 'Username'},
+  submit: {role: 'button', name: 'Submit'},
+} as const
 
 // src/pages/LoginPage.ts
-import { BasePage } from "../core/BasePage";
-import { BASE_URL } from "../data/urls";
-import { LOGIN_PAGE_LOCATORS as L } from "../locators/content-pages/Login_Page";
+import {BasePage} from '../core/BasePage'
+import {BASE_URL} from '../data/urls'
+import {LOGIN_PAGE_LOCATORS as L} from '../locators/content-pages/Login_Page'
 export class LoginPage extends BasePage {
   async navigateTo(): Promise<void> {
-    await this.gotoURL(BASE_URL + "/login");
+    await this.gotoURL(BASE_URL + '/login')
   }
   async validateLoaded(): Promise<void> {
-    await this.validateVisibility(L.form);
+    await this.validateVisibility(L.form)
   }
 }
 
 // src/tests/main.spec.ts (fixture-based injection)
-import { test } from "../fixtures/testSetup";
-test.describe("Main Page @sanity", () => {
-  test("loads and shows content", async ({ mainPage }) => {
-    await mainPage.openMainPage();
-    await mainPage.validateContactOnMainPage();
-  });
-});
+import {test} from '../fixtures/testSetup'
+test.describe('Main Page @sanity', () => {
+  test('loads and shows content', async ({mainPage}) => {
+    await mainPage.openMainPage()
+    await mainPage.validateContactOnMainPage()
+  })
+})
 ```
 
 ## Run, Debug, Quality
