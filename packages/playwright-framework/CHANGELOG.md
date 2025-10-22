@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 6.0.0
+
+### Major Changes
+
+- f338f15: Update env util function to support ci
+
 ## 5.0.0
 
 ### Major Changes
