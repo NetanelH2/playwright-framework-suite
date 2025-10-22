@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 5.0.0
+
+### Major Changes
+
+- 2e35c81: Updated return type to never instead of Error in getEnvCredentials
+
 ## 4.1.0
 
 ### Minor Changes
