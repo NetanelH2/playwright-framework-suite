@@ -10,8 +10,8 @@ on:
 permissions:
   pages: write
   id-token: write
-  actions: read
-  contents: read
+  actions: write
+  contents: write
 
 concurrency:
   group: 'pages'
@@ -118,9 +118,9 @@ jobs:
       - name: Send deployment notification
         run: |
           # Send notification dispatch for Slack/webhook integration
-          gh api repos/${{ github.repository }}/dispatches \
-            -f event_type='test-notification' \
-            -f client_payload='{
+          PAYLOAD='{
+            "event_type": "test-notification",
+            "client_payload": {
               "test_run_id": "${{ steps.artifact.outputs.run_id }}",
               "test_name": "${{ steps.artifact.outputs.display_name }}",
               "test_conclusion": "${{ github.event.workflow_run.conclusion }}",
@@ -129,6 +129,8 @@ jobs:
               "repository": "${{ github.repository }}",
               "deployment_url": "${{ steps.deployment.outputs.page_url }}",
               "artifact_name": "${{ steps.artifact.outputs.artifact_name }}"
-            }'
+            }
+          }'
+          gh api repos/${{ github.repository }}/dispatches --input - <<< "$PAYLOAD"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

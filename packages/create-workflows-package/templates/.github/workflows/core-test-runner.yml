@@ -37,7 +37,7 @@ on:
 
 permissions:
   actions: write
-  contents: read
+  contents: write
 
 jobs:
   cleanup-storage:

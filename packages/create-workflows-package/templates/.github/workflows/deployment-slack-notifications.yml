@@ -19,9 +19,14 @@ permissions:
 
 jobs:
   notify-success:
-    if: github.event.client_payload.test_conclusion == 'success' || github.event.inputs.status == 'success'
+    if: ${{ github.event.client_payload.test_conclusion == 'success' || (github.event.inputs.status == 'success' && github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Debug event
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Client payload: ${{ toJSON(github.event.client_payload) }}"
+          echo "Inputs: ${{ toJSON(github.event.inputs) }}"
       - name: Get Israel Time
         id: time
         run: echo "israel_time=$(TZ='Asia/Jerusalem' date '+%d-%m-%Y %H:%M:%S')" >> $GITHUB_OUTPUT
@@ -77,9 +82,14 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   notify-failure:
-    if: github.event.client_payload.test_conclusion == 'failure' || github.event.inputs.status == 'failure'
+    if: ${{ github.event.client_payload.test_conclusion == 'failure' || (github.event.inputs.status == 'failure' && github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Debug event
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Client payload: ${{ toJSON(github.event.client_payload) }}"
+          echo "Inputs: ${{ toJSON(github.event.inputs) }}"
       - name: Get Israel Time
         id: time
         run: echo "israel_time=$(TZ='Asia/Jerusalem' date '+%d-%m-%Y %H:%M:%S')" >> $GITHUB_OUTPUT

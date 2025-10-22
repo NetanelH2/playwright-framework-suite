@@ -30,7 +30,7 @@ on:
 # Required permissions for artifact management
 permissions:
   actions: write
-  contents: read
+  contents: write
 
 jobs:
   artifacts-cleanup:
