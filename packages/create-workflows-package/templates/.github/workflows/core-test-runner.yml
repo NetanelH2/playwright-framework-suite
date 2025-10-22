@@ -1,0 +1,125 @@
+name: Run Tests
+
+on:
+  workflow_call:
+    inputs:
+      test_type:
+        description: 'Type of tests to run (sanity, regression, e2e, etc.)'
+        required: true
+        type: string
+      test_command:
+        description: 'NPM command to run the tests'
+        required: true
+        type: string
+      retention_days:
+        description: 'How long to keep artifacts'
+        required: false
+        default: '3'
+        type: string
+      test_description:
+        description: 'Human-readable description of the tests'
+        required: false
+        default: 'Tests'
+        type: string
+      cleanup_before_run:
+        description: 'Whether to run cleanup before tests'
+        required: false
+        default: 'true'
+        type: string
+      timeout_minutes:
+        description: 'Timeout for test execution in minutes'
+        required: false
+        type: number
+      test_tags:
+        description: 'Playwright test tags to run'
+        required: false
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup-storage:
+    name: Cleanup Storage Before Tests
+    if: inputs.cleanup_before_run == 'true'
+    uses: ./.github/workflows/core-cleanup-artifacts.yml
+
+  setup-environment:
+    name: Setup Test Environment
+    runs-on: ubuntu-latest
+    needs: cleanup-storage
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+  run-tests:
+    name: Run ${{ inputs.test_description }}
+    runs-on: ubuntu-latest
+    needs: setup-environment
+    continue-on-error: true
+    timeout-minutes: ${{ inputs.timeout_minutes}}
+    env:
+      TEST_TAGS: ${{ inputs.test_tags}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run ${{ inputs.test_description }}
+        id: run-tests
+        run: ${{ inputs.test_command }}
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ inputs.test_type }}-${{ github.run_number }}
+          path: playwright-report/
+          retention-days: ${{ inputs.retention_days }}
+          if-no-files-found: warn
+
+      - name: Fail workflow if tests failed
+        if: steps.run-tests.outcome == 'failure'
+        run: |
+          echo "::error::${{ inputs.test_description }} failed. Check the report at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ for details."
+          exit 1
+
+  summary:
+    name: Add Test Results Summary
+    runs-on: ubuntu-latest
+    needs: run-tests
+    if: always()
+    timeout-minutes: 5
+    steps:
+      - name: Add test results to summary
+        run: |
+          echo "Test completed: ${{ inputs.test_description }}" >> $GITHUB_STEP_SUMMARY

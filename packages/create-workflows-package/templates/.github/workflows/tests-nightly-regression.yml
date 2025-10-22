@@ -1,0 +1,30 @@
+name: Regression Tests
+
+on:
+  # Nightly regression tests at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running tests manually'
+        required: false
+        default: 'Manual regression test run'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  run-regression-tests:
+    uses: ./.github/workflows/core-test-runner.yml
+    with:
+      test_type: 'regression'
+      test_command: 'npm run test:regression'
+      retention_days: '3'
+      test_description: 'Regression Tests'
+      cleanup_before_run: 'true'
+      timeout_minutes: 120
+      test_tags: '@regression'

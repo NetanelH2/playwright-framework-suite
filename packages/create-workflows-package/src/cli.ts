@@ -85,17 +85,37 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
 			name: 'workflows',
 			message: 'Which GitHub Actions workflows would you like to include?',
 			choices: [
-				{name: 'Sanity Tests', value: 'sanity', checked: false},
-				{name: 'Regression Tests', value: 'regression', checked: false},
+				{
+					name: 'Sanity Tests (runs every 2 hours)',
+					value: 'sanity',
+					checked: false,
+				},
+				{
+					name: 'Regression Tests (runs nightly)',
+					value: 'regression',
+					checked: false,
+				},
 				{
 					name: 'Code Quality (linting, formatting)',
 					value: 'codeQuality',
 					checked: false,
 				},
-				{name: 'Cleanup Artifacts', value: 'cleanup', checked: false},
-				{name: 'Deploy Reports', value: 'deployReports', checked: false},
+				{
+					name: 'Artifact Cleanup (storage management)',
+					value: 'cleanup',
+					checked: false,
+				},
+				{
+					name: 'Deploy Reports (GitHub Pages)',
+					value: 'deployReports',
+					checked: false,
+				},
 				{name: 'Slack Notifications', value: 'slack', checked: false},
-				{name: 'Nightly Regression', value: 'nightly', checked: false},
+				{
+					name: 'Nightly Regression (alternative schedule)',
+					value: 'nightly',
+					checked: false,
+				},
 			],
 		},
 		{
@@ -172,50 +192,56 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 			cpSync(githubPath, '.github', {recursive: true, force: true})
 		}
 
-		// Remove unwanted workflows
+		// Remove unwanted core workflows
 		const workflowsDir = '.github/workflows'
-		if (!config.includeSanity && existsSync(join(workflowsDir, 'sanity.yml'))) {
-			unlinkSync(join(workflowsDir, 'sanity.yml'))
-		}
-		if (
-			!config.includeRegression &&
-			existsSync(join(workflowsDir, 'nightly-regression.yml'))
-		) {
-			unlinkSync(join(workflowsDir, 'nightly-regression.yml'))
-		}
 		if (
 			!config.includeCodeQuality &&
-			existsSync(join(workflowsDir, 'code-quality.yml'))
+			existsSync(join(workflowsDir, 'core-code-quality.yml'))
 		) {
-			unlinkSync(join(workflowsDir, 'code-quality.yml'))
+			unlinkSync(join(workflowsDir, 'core-code-quality.yml'))
 		}
 		if (
 			!config.includeCleanup &&
-			existsSync(join(workflowsDir, 'cleanup-artifacts.yml'))
+			existsSync(join(workflowsDir, 'core-cleanup-artifacts.yml'))
 		) {
-			unlinkSync(join(workflowsDir, 'cleanup-artifacts.yml'))
+			unlinkSync(join(workflowsDir, 'core-cleanup-artifacts.yml'))
 		}
 		if (
-			!config.includeDeployReports &&
-			existsSync(join(workflowsDir, 'deploy-reports.yml'))
+			!config.includeSanity &&
+			!config.includeRegression &&
+			existsSync(join(workflowsDir, 'core-test-runner.yml'))
 		) {
-			unlinkSync(join(workflowsDir, 'deploy-reports.yml'))
+			unlinkSync(join(workflowsDir, 'core-test-runner.yml'))
 		}
+
+		// Remove unwanted test workflows
 		if (
-			!config.includeSlackNotifications &&
-			existsSync(join(workflowsDir, 'slack-notifications.yml'))
+			!config.includeSanity &&
+			existsSync(join(workflowsDir, 'tests-sanity.yml'))
 		) {
-			unlinkSync(join(workflowsDir, 'slack-notifications.yml'))
+			unlinkSync(join(workflowsDir, 'tests-sanity.yml'))
 		}
 		if (
 			!config.includeNightlyRegression &&
-			existsSync(join(workflowsDir, 'nightly-regression.yml'))
+			existsSync(join(workflowsDir, 'tests-nightly-regression.yml'))
 		) {
-			unlinkSync(join(workflowsDir, 'nightly-regression.yml'))
+			unlinkSync(join(workflowsDir, 'tests-nightly-regression.yml'))
 		}
-	}
 
-	// Copy .husky
+		// Remove unwanted deployment workflows
+		if (
+			!config.includeDeployReports &&
+			existsSync(join(workflowsDir, 'deployment-deploy-reports.yml'))
+		) {
+			unlinkSync(join(workflowsDir, 'deployment-deploy-reports.yml'))
+		}
+		if (
+			!config.includeSlackNotifications &&
+			existsSync(join(workflowsDir, 'deployment-slack-notifications.yml'))
+		) {
+			unlinkSync(join(workflowsDir, 'deployment-slack-notifications.yml'))
+		}
+	} // Copy .husky
 	if (config.includeHusky) {
 		console.log(chalk.yellow('🔧 Setting up Husky git hooks...'))
 		const huskyPath = join(templatesPath, '.husky')

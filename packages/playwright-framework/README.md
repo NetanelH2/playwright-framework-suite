@@ -386,28 +386,44 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 4 : undefined,
-
-  reporter: [['html', {open: 'never'}], ['list']],
-
+  grep: process.env.TEST_TAGS ? new RegExp(process.env.TEST_TAGS) : undefined,
+  reporter: [
+    [
+      'html',
+      {
+        open: 'never',
+        outputFolder: 'playwright-report',
+      },
+    ],
+    ['list'],
+  ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
-    screenshot: {mode: 'only-on-failure', fullPage: true},
+    baseURL: 'https://www.saucedemo.com',
+    trace: 'on',
+    screenshot: {
+      mode: 'only-on-failure',
+      fullPage: true,
+    },
     video: 'retain-on-failure',
   },
-
   projects: [
     {
       name: 'chromium',
-      use: {...devices['Desktop Chrome']},
+      use: {
+        ...devices['Desktop Chrome'],
+      },
     },
     {
       name: 'firefox',
-      use: {...devices['Desktop Firefox']},
+      use: {
+        ...devices['Desktop Firefox'],
+      },
     },
     {
       name: 'webkit',
-      use: {...devices['Desktop Safari']},
+      use: {
+        ...devices['Desktop Safari'],
+      },
     },
   ],
 })

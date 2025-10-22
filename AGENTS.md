@@ -42,22 +42,26 @@ This framework uses cutting-edge tooling for optimal developer experience:
 ## Typical Addition (minimal example)
 
 ```ts
-// src/locators/content-pages/Login_Page.ts
+// src/locators/login/Login_Page.ts
 export const LOGIN_PAGE_LOCATORS = {
-  form: {parent: '#login', role: 'textbox', name: 'Username'},
-  submit: {role: 'button', name: 'Submit'},
+  usernameField: '#user-name',
+  passwordField: '#password',
+  loginButton: '#login-button',
+  errorMessage: '[data-test="error"]',
+  inventoryContainer: '.inventory_container',
 } as const
 
 // src/pages/LoginPage.ts
 import {BasePage} from '../core/BasePage'
-import {BASE_URL} from '../data/urls'
-import {LOGIN_PAGE_LOCATORS as L} from '../locators/content-pages/Login_Page'
+import {LOGIN_PAGE_LOCATORS as L} from '../locators/login/Login_Page'
 export class LoginPage extends BasePage {
   async navigateTo(): Promise<void> {
-    await this.gotoURL(BASE_URL + '/login')
+    await this.gotoURL('/')
   }
   async validateLoaded(): Promise<void> {
-    await this.validateVisibility(L.form)
+    await this.validateVisibility(L.usernameField)
+    await this.validateVisibility(L.passwordField)
+    await this.validateVisibility(L.loginButton)
   }
 }
 
@@ -93,9 +97,9 @@ Notes
 
 ## Environment & URLs
 
-- Define `BASE_URL` in `.env` (e.g., `BASE_URL=https://www.example.com`).
-- `src/data/urls.ts` exposes `BASE_URL` via `getEnvCredentials('BASE_URL')`.
-- In pages, import `BASE_URL` from `../data/urls` (using relative path) and compose full paths when navigating (e.g., `await this.gotoURL(BASE_URL + '/login')`).
+- Define `BASE_URL` in `.env` (e.g., `BASE_URL=https://www.saucedemo.com`).
+- Set `baseURL` in `playwright.config.ts` to use the environment variable or a default.
+- In pages, use `gotoURL('/')` when baseURL is configured, or compose full paths when needed (e.g., `await this.gotoURL(BASE_URL + '/login')`).
 
 Reference Files
 

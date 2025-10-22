@@ -47,10 +47,12 @@
 		"inquirer": "*"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.5",
+		"@biomejs/biome": "^2.2.5",
 		"@types/inquirer": "*",
 		"@types/node": "*",
+		"husky": "^9.1.7",
 		"jiti": "*",
+		"lint-staged": "^16.2.6",
 		"typescript": "*"
 	},
 	"engines": {

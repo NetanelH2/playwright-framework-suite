@@ -1,0 +1,30 @@
+name: Sanity Tests
+
+on:
+  # Automated Sanity Tests - Run every 2 hours during business hours
+  schedule:
+    - cron: '0 */2 * * *' # Every 2 hours
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running tests manually'
+        required: false
+        default: 'Manual sanity test run'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  run-sanity-tests:
+    uses: ./.github/workflows/core-test-runner.yml
+    with:
+      test_type: 'sanity'
+      test_command: 'npm run test:sanity'
+      retention_days: '1'
+      test_description: 'Sanity Tests'
+      cleanup_before_run: 'true'
+      timeout_minutes: 60
+      test_tags: '@sanity'

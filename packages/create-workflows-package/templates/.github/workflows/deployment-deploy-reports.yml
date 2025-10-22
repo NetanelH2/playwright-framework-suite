@@ -1,0 +1,134 @@
+name: Deploy Reports to GitHub Pages
+
+on:
+  workflow_run:
+    workflows: ['Sanity Tests', 'Regression Tests']
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+  actions: read
+  contents: read
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy-reports:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Determine artifact details
+        id: artifact
+        run: |
+          # Get triggering workflow details
+          WORKFLOW_NAME="${{ github.event.workflow_run.name }}"
+          RUN_ID="${{ github.event.workflow_run.id }}"
+          RUN_NUMBER="${{ github.event.workflow_run.run_number }}"
+
+          # Extract workflow type from name (convert to lowercase, remove spaces/special chars)
+          WORKFLOW_TYPE=$(echo "$WORKFLOW_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
+
+          # Handle different workflow types
+          if [[ "$WORKFLOW_NAME" == "Run Tests" ]]; then
+            # For the generic test runner, find the playwright-report artifact
+            ARTIFACT_NAME=$(gh api repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts --jq '.artifacts[] | select(.name | startswith("playwright-report-")) | .name' | head -1)
+            if [ -z "$ARTIFACT_NAME" ]; then
+              exit 1
+            fi
+          elif [[ "$WORKFLOW_NAME" =~ [Ss]anity ]]; then
+            ARTIFACT_NAME="playwright-report-sanity-$RUN_NUMBER"
+          elif [[ "$WORKFLOW_NAME" =~ [Rr]egression ]]; then
+            ARTIFACT_NAME="playwright-report-regression-$RUN_NUMBER"
+          else
+            # For any other workflow, use workflow type: playwright-report-{workflow-type}-{run_number}
+            ARTIFACT_NAME="playwright-report-${WORKFLOW_TYPE}-$RUN_NUMBER"
+          fi
+
+          echo "workflow_name=$WORKFLOW_NAME" >> $GITHUB_OUTPUT
+          echo "workflow_type=$WORKFLOW_TYPE" >> $GITHUB_OUTPUT
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+          echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+          echo "run_number=$RUN_NUMBER" >> $GITHUB_OUTPUT
+
+          # Extract test type from artifact name for better notifications
+          if [[ "$ARTIFACT_NAME" =~ playwright-report-(.+)-[0-9]+$ ]]; then
+            TEST_TYPE="${BASH_REMATCH[1]}"
+            # Convert to human readable
+            case "$TEST_TYPE" in
+              sanity) DISPLAY_NAME="Sanity Tests" ;;
+              regression) DISPLAY_NAME="Regression Tests" ;;
+              *) DISPLAY_NAME="$TEST_TYPE Tests" ;;
+            esac
+          else
+            DISPLAY_NAME="$WORKFLOW_NAME"
+          fi
+          echo "display_name=$DISPLAY_NAME" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download test artifacts
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          name: ${{ steps.artifact.outputs.artifact_name }}
+          path: ./reports
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          run_id: ${{ steps.artifact.outputs.run_id }}
+          if_no_artifact_found: warn
+
+      - name: Prepare reports for deployment
+        run: |
+          if [ -f "./reports/index.html" ]; then
+            # Move files to root for deployment
+            mv ./reports/* ./
+          else
+            # Check for nested directory structure
+            if [ -d "./reports" ] && [ "$(ls -A ./reports)" ]; then
+              # Find any subdirectory that might contain the report
+              REPORT_DIR=$(find ./reports -name "index.html" -type f | head -1 | xargs dirname 2>/dev/null || echo "")
+              if [ -n "$REPORT_DIR" ] && [ -f "$REPORT_DIR/index.html" ]; then
+                mv "$REPORT_DIR"/* ./
+              fi
+            fi
+
+            # If still no index.html, create fallback page
+            if [ ! -f "./index.html" ]; then
+              echo '<html><body><h1>No Playwright Report Available</h1><p>Test artifacts may be missing due to storage quota limits or test failures. Storage quota refreshes every 6-12 hours.</p><p><strong>Workflow:</strong> ${{ steps.artifact.outputs.workflow_name }}</p><p><strong>Run:</strong> #${{ steps.artifact.outputs.run_number }}</p></body></html>' > ./index.html
+            fi
+          fi
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
+
+      - name: Send deployment notification
+        run: |
+          # Send notification dispatch for Slack/webhook integration
+          gh api repos/${{ github.repository }}/dispatches \
+            -f event_type='test-notification' \
+            -f client_payload='{
+              "test_run_id": "${{ steps.artifact.outputs.run_id }}",
+              "test_name": "${{ steps.artifact.outputs.display_name }}",
+              "test_conclusion": "${{ github.event.workflow_run.conclusion }}",
+              "deploy_conclusion": "success",
+              "branch": "${{ github.ref_name }}",
+              "repository": "${{ github.repository }}",
+              "deployment_url": "${{ steps.deployment.outputs.page_url }}",
+              "artifact_name": "${{ steps.artifact.outputs.artifact_name }}"
+            }'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

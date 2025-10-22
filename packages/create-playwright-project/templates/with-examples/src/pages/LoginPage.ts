@@ -8,7 +8,7 @@ export class LoginPage extends BasePage {
 	}
 
 	async navigateTo(): Promise<void> {
-		await this.gotoURL('https://www.saucedemo.com')
+		await this.gotoURL('/')
 	}
 
 	/**

@@ -9,26 +9,29 @@ The ITCB Testing Framework uses GitHub Actions to provide a comprehensive CI/CD 
 ## 🏗️ Workflow Architecture
 
 ```
-WORKFLOW ARCHITECTURE:
+MODULAR WORKFLOW ARCHITECTURE:
 Developer Push/PR → Code Quality Check → Pass/Fail → Merge Allowed/Blocked
 
-TESTING WORKFLOWS:
-Sanity Tests (Every 2 hours) → Deploy Reports → Slack Notifications
-Regression Tests (Daily 2 AM) → Deploy Reports → Slack Notifications
-Artifact Cleanup (Daily 2 AM) → Storage Management
+TEST EXECUTION WORKFLOWS:
+├── Core Test Runner (Reusable)
+│   ├── Sanity Tests (Every 2 hours) → Deploy Reports → Slack Notifications
+│   └── Regression Tests (Daily 2 AM) → Deploy Reports → Slack Notifications
+│
+CLEANUP & MAINTENANCE:
+└── Artifact Cleanup (Daily 2 AM) → Storage Management
 ```
 
 ## 📋 Core Workflows
 
-### 1. Code Quality Check (`code-quality.yml`)
+### 1. Code Quality Check (`core-code-quality.yml`)
 
 **🎯 Purpose**: Automated code quality validation for pull requests and commits
 
 **⚙️ Triggers**:
 
 ```yaml
-push: [main, master, develop]
-pull_request: [main, master, develop]
+push: [main, develop]
+pull_request: [main, develop]
 ```
 
 **🔍 Quality Gates**:
@@ -53,7 +56,40 @@ artifact: test-results (failure cases only)
 
 ---
 
-### 2. Sanity Tests (`sanity.yml`)
+### 2. Core Test Runner (`core-test-runner.yml`)
+
+**🎯 Purpose**: Reusable workflow for executing Playwright tests with standardized setup and reporting
+
+**⚙️ Parameters**:
+
+```yaml
+inputs:
+  test_type: 'sanity' | 'regression' | 'e2e'
+  test_command: 'npm run test:sanity' | 'npm run test:regression'
+  retention_days: '1' | '3' | '7'
+  test_description: 'Sanity Tests' | 'Regression Tests'
+  cleanup_before_run: 'true' | 'false'
+  timeout_minutes: 60 | 120
+  test_tags: '@sanity' | '@regression'
+```
+
+**🔄 Process Flow**:
+
+1. **Optional Cleanup**: Run artifact cleanup before tests (configurable)
+2. **Environment Setup**: Node.js, dependencies, Playwright browsers
+3. **Test Execution**: Run specified test command with proper environment
+4. **Artifact Upload**: Upload Playwright reports with configurable retention
+5. **Status Reporting**: Fail workflow on test failures with helpful error messages
+
+**🛡️ Resilience Features**:
+
+- Storage quota fallback with `continue-on-error`
+- Intelligent error reporting
+- Configurable timeouts and retention policies
+
+---
+
+### 3. Sanity Tests (`tests-sanity.yml`)
 
 **🎯 Purpose**: Fast feedback loop for critical functionality
 
@@ -71,21 +107,26 @@ artifact: test-results (failure cases only)
 **⚙️ Configuration**:
 
 ```yaml
-timeout: 60 minutes
-browser: All (chromium, firefox, webkit)
-retention: 2 days
-artifact: sanity-playwright-report-{run_number}
+uses: ./.github/workflows/core-test-runner.yml
+with:
+  test_type: 'sanity'
+  test_command: 'npm run test:sanity'
+  retention_days: '1'
+  test_description: 'Sanity Tests'
+  cleanup_before_run: 'true'
+  timeout_minutes: 60
+  test_tags: '@sanity'
 ```
 
 **🛡️ Resilience Features**:
 
-- Storage quota fallback with `continue-on-error`
-- Intelligent error reporting
-- Automatic retry logic for critical tests
+- Automatic cleanup before execution
+- 1-day artifact retention (frequent runs)
+- 60-minute timeout with early failure detection
 
 ---
 
-### 3. Regression Tests (`nightly-regression.yml`)
+### 4. Regression Tests (`tests-nightly-regression.yml`)
 
 **🎯 Purpose**: Comprehensive daily validation
 
@@ -103,10 +144,15 @@ artifact: sanity-playwright-report-{run_number}
 **⚙️ Configuration**:
 
 ```yaml
-timeout: 120 minutes
-browser: All (chromium, firefox, webkit)
-retention: 2 days
-artifact: regression-playwright-report-{run_number}
+uses: ./.github/workflows/core-test-runner.yml
+with:
+  test_type: 'regression'
+  test_command: 'npm run test:regression'
+  retention_days: '3'
+  test_description: 'Regression Tests'
+  cleanup_before_run: 'true'
+  timeout_minutes: 120
+  test_tags: '@regression'
 ```
 
 **📊 Extended Coverage**:
@@ -117,7 +163,7 @@ artifact: regression-playwright-report-{run_number}
 
 ---
 
-### 4. Deploy Reports (`deploy-reports.yml`)
+### 5. Deploy Reports (`deployment-deploy-reports.yml`)
 
 **🎯 Purpose**: Publishes test results to GitHub Pages
 
@@ -131,32 +177,31 @@ workflow_run:
 
 **📊 Process Flow**:
 
-1. **Wait** for test workflow completion
-2. **Download** latest test artifacts
-3. **Extract** HTML reports and assets
-4. **Organize** reports by workflow and timestamp
-5. **Deploy** to GitHub Pages
-6. **Trigger** Slack notifications
+1. **Determine Artifacts**: Identify test workflow and extract artifact details
+2. **Download Reports**: Fetch Playwright reports from completed test runs
+3. **Prepare Content**: Extract HTML reports and organize for deployment
+4. **Deploy to Pages**: Upload to GitHub Pages with proper structure
+5. **Send Notifications**: Trigger Slack notifications with deployment status
 
 **🌐 Output**:
 
-- **Live Reports**: `https://itcb-2.github.io/ITCB-Testing/`
-- **Latest**: `/latest/{workflow-name}/`
-- **Historical**: `/reports/{workflow-name}/{timestamp}/`
+- **Live Reports**: `https://{owner}.github.io/{repo}/`
+- **Automatic Detection**: Handles different test workflow types
+- **Fallback Pages**: Provides helpful messages when reports are unavailable
 
 **🧹 Maintenance**:
 
-- Keeps last 10 reports per workflow
-- Automatic cleanup of old reports
+- Automatic artifact detection and naming
 - Organized directory structure
+- Fallback content for missing reports
 
 ---
 
-### 5. Slack Notifications (`slack-notifications.yml`)
+### 6. Slack Notifications (`deployment-slack-notifications.yml`)
 
 **🎯 Purpose**: Team communication and status updates
 
-**📱 Trigger**: When deploy workflow completes
+**📱 Trigger**: Repository dispatch event from deploy workflow
 
 **📢 Channel**: `#testing-updates`
 
@@ -186,11 +231,11 @@ Failure Message:
 
 ---
 
-### 6. Artifact Cleanup (`cleanup-artifacts.yml`)
+### 7. Artifact Cleanup (`core-cleanup-artifacts.yml`)
 
 **🎯 Purpose**: Automated storage management and quota prevention
 
-**⏰ Schedule**: Daily at 1:00 AM UTC (`0 1 * * *`) - one hour before regression tests
+**⏰ Schedule**: Daily at 2:00 AM UTC (`0 2 * * *`) - one hour before regression tests
 
 **🧹 Enhanced Cleanup Strategy**:
 
@@ -254,9 +299,9 @@ api_integration: GitHub REST API with pagination
 #### **Tier 2: Enhanced Preventive Maintenance**
 
 ```yaml
-# Daily cleanup at 1 AM UTC - before test workflows
+# Daily cleanup at 2 AM UTC - before test workflows
 schedule:
-  - cron: '0 1 * * *'
+  - cron: '0 2 * * *'
 ```
 
 - **Dual-policy** artifact cleanup (age + count based)
@@ -338,6 +383,7 @@ Continuous Storage Management
 ### **Required Repository Secrets**
 
 1. **`BASE_URL`**
+
    - **Purpose**: Target application URL
    - **Example**: `https://www.itcb.org.il`
    - **Used by**: Sanity & Regression tests
@@ -385,8 +431,9 @@ permissions:
 
 | **Workflow**        | **Automatic**        | **Manual** | **Dependency**  |
 | ------------------- | -------------------- | ---------- | --------------- |
-| Artifact Cleanup    | Daily 1 AM           | ✅         | None            |
+| Artifact Cleanup    | Daily 2 AM           | ✅         | None            |
 | Code Quality Check  | On push/PR           | ❌         | None            |
+| Core Test Runner    | Via other workflows  | ❌         | Called by tests |
 | Sanity Tests        | Every 2 hours        | ✅         | None            |
 | Regression Tests    | Daily 2 AM           | ✅         | None            |
 | Deploy Reports      | On test completion   | ✅         | Test workflows  |
@@ -404,28 +451,32 @@ All workflows support manual triggering via GitHub Actions UI:
 
 ## 📊 Report Access
 
-- **Live Reports**: https://itcb-2.github.io/ITCB-Testing/
+- **Live Reports**: https://{owner}.github.io/{repo}/
 
 ## 🛠 Troubleshooting
 
 ### **Common Issues**
 
 1. **Code Quality workflow fails**
+
    - Check Biome configuration and fix linting/formatting errors
    - Run `npm run check` locally to identify issues
    - Verify TypeScript compilation with `npm run type-check`
    - Ensure all dependencies are properly installed
 
 2. **Workflow fails with "Environment variable not set"**
+
    - Check that required repository secrets are configured
    - Verify secret names match exactly (case-sensitive)
 
 3. **Reports not deploying**
+
    - Ensure GitHub Pages is enabled
    - Check deploy-reports workflow logs
    - Verify test workflows completed successfully
 
 4. **Slack notifications not working**
+
    - Verify `SLACK_WEBHOOK_URL` secret is set
    - Check Slack webhook URL is valid
    - Ensure channel permissions are correct

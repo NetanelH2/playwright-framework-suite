@@ -1,0 +1,144 @@
+name: Slack Notifications
+
+on:
+  repository_dispatch:
+    types: [test-notification]
+  workflow_dispatch:
+    inputs:
+      status:
+        description: 'Test notification status'
+        required: true
+        default: 'success'
+        type: choice
+        options:
+          - success
+          - failure
+
+permissions:
+  contents: read
+
+jobs:
+  notify-success:
+    if: github.event.client_payload.test_conclusion == 'success' || github.event.inputs.status == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Israel Time
+        id: time
+        run: echo "israel_time=$(TZ='Asia/Jerusalem' date '+%d-%m-%Y %H:%M:%S')" >> $GITHUB_OUTPUT
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "channel": "#testing-updates",
+              "text": "✅ Test Workflow Completed Successfully!",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": { "type": "plain_text", "text": "✅ Tests Passed!" }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🧪 *${{ github.event.client_payload.test_name || 'Manual Test' }}*\n*Status:* ✅ PASSED\n*Repository:* ${{ github.event.client_payload.repository || github.repository }}\n*Branch:* ${{ github.event.client_payload.branch || github.ref_name }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "📊 Deployment: ${{ github.event.client_payload.deploy_conclusion == 'success' && '✅ DEPLOYED' || '❌ FAILED' }}\n*Report URL:* ${{ github.event.client_payload.deployment_url || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}\n*Sent at:* ${{ steps.time.outputs.israel_time }} (IDT)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ github.event.client_payload.deploy_conclusion == 'success' && '🎉 Great work! All tests passed and reports are now live!' || '✅ Tests passed but there were deployment issues. Reports may be delayed.' }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "📋 Test Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.client_payload.test_run_id || github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify-failure:
+    if: github.event.client_payload.test_conclusion == 'failure' || github.event.inputs.status == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Israel Time
+        id: time
+        run: echo "israel_time=$(TZ='Asia/Jerusalem' date '+%d-%m-%Y %H:%M:%S')" >> $GITHUB_OUTPUT
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "channel": "#testing-updates",
+              "text": "❌ Tests Failed!",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": { "type": "plain_text", "text": "❌ Tests Failed!" }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🧪 *${{ github.event.client_payload.test_name || 'Test Workflow' }}*\n*Status:* ❌ FAILED\n*Repository:* ${{ github.event.client_payload.repository || github.repository }}\n*Branch:* ${{ github.event.client_payload.branch || github.ref_name }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "📊 Deployment: ${{ github.event.client_payload.deploy_conclusion == 'success' && '✅ REPORTS DEPLOYED (Failed Results)' || '❌ DEPLOYMENT ALSO FAILED' }}\n*Report URL:* ${{ github.event.client_payload.deployment_url || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}\n*Sent at:* ${{ steps.time.outputs.israel_time }} (IDT)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠️ **Action Required:** Check the test workflow for details."
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "📋 Test Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.client_payload.test_run_id || github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  summary:
+    needs: [notify-success, notify-failure]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Summary
+        run: |
+          echo "Notification sent for: ${{ github.event.client_payload.test_name || 'Manual test' }}" >> $GITHUB_STEP_SUMMARY
