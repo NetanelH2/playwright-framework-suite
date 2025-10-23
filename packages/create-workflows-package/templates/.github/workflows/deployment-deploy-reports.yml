@@ -119,7 +119,7 @@ jobs:
         run: |
           # Send notification dispatch for Slack/webhook integration
           PAYLOAD='{
-            "event_type": "test-notification",
+            "event_type": "Slack Notifications",
             "client_payload": {
               "test_run_id": "${{ steps.artifact.outputs.run_id }}",
               "test_name": "${{ steps.artifact.outputs.display_name }}",

@@ -2,7 +2,7 @@ name: Slack Notifications
 
 on:
   repository_dispatch:
-    types: [test-notification]
+    types: [Slack Notifications]
   workflow_dispatch:
     inputs:
       status:
