@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.4.0
+
+### Minor Changes
+
+- fa15b57: feat: update workflows package
+
 ## 4.3.0
 
 ### Minor Changes
