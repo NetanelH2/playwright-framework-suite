@@ -29,7 +29,6 @@ interface WorkflowConfig {
 	includeCleanup: boolean
 	includeDeployReports: boolean
 	includeSlackNotifications: boolean
-	includeNightlyRegression: boolean
 	includeHusky: boolean
 	installDependencies: boolean
 	createCodeowners: boolean
@@ -72,7 +71,6 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
 			includeCleanup: true,
 			includeDeployReports: true,
 			includeSlackNotifications: false,
-			includeNightlyRegression: false,
 			includeHusky: true,
 			installDependencies: !options.noInstall,
 			createCodeowners: false,
@@ -91,7 +89,7 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
 					checked: false,
 				},
 				{
-					name: 'Regression Tests (runs nightly)',
+					name: 'Regression Tests',
 					value: 'regression',
 					checked: false,
 				},
@@ -111,11 +109,6 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
 					checked: false,
 				},
 				{name: 'Slack Notifications', value: 'slack', checked: false},
-				{
-					name: 'Nightly Regression (alternative schedule)',
-					value: 'nightly',
-					checked: false,
-				},
 			],
 		},
 		{
@@ -162,7 +155,6 @@ async function getWorkflowConfig(options: CliOptions): Promise<WorkflowConfig> {
 		includeCleanup: answers.workflows.includes('cleanup'),
 		includeDeployReports: answers.workflows.includes('deployReports'),
 		includeSlackNotifications: answers.workflows.includes('slack'),
-		includeNightlyRegression: answers.workflows.includes('nightly'),
 		includeHusky: answers.includeHusky,
 		installDependencies: options.noInstall
 			? false
@@ -182,8 +174,7 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 		config.includeCodeQuality ||
 		config.includeCleanup ||
 		config.includeDeployReports ||
-		config.includeSlackNotifications ||
-		config.includeNightlyRegression
+		config.includeSlackNotifications
 	) {
 		console.log(chalk.yellow('📋 Setting up GitHub Actions workflows...'))
 
@@ -220,12 +211,6 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 			existsSync(join(workflowsDir, 'tests-sanity.yml'))
 		) {
 			unlinkSync(join(workflowsDir, 'tests-sanity.yml'))
-		}
-		if (
-			!config.includeNightlyRegression &&
-			existsSync(join(workflowsDir, 'tests-nightly-regression.yml'))
-		) {
-			unlinkSync(join(workflowsDir, 'tests-nightly-regression.yml'))
 		}
 
 		// Remove unwanted deployment workflows

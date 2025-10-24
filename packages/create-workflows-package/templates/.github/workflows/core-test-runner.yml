@@ -68,7 +68,6 @@ jobs:
     name: Run ${{ inputs.test_description }}
     runs-on: ubuntu-latest
     needs: setup-environment
-    continue-on-error: true
     timeout-minutes: ${{ inputs.timeout_minutes}}
     env:
       TEST_TAGS: ${{ inputs.test_tags}}
@@ -106,12 +105,6 @@ jobs:
           path: playwright-report/
           retention-days: ${{ inputs.retention_days }}
           if-no-files-found: warn
-
-      - name: Fail workflow if tests failed
-        if: steps.run-tests.outcome == 'failure'
-        run: |
-          echo "::error::${{ inputs.test_description }} failed. Check the report at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ for details."
-          exit 1
 
   summary:
     name: Add Test Results Summary

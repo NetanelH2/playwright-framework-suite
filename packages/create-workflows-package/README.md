@@ -80,7 +80,7 @@ Choose from these GitHub Actions workflows:
 - **Cleanup Artifacts** - Automatic cleanup of old workflow artifacts
 - **Deploy Reports** - Deploy test reports to GitHub Pages
 - **Slack Notifications** - Send notifications to Slack channels
-- **Nightly Regression** - Run full regression tests nightly
+- **Regression** - Run full regression tests
 
 ## GitHub Actions Setup Guide
 

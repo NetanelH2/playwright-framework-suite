@@ -126,7 +126,7 @@ with:
 
 ---
 
-### 4. Regression Tests (`tests-nightly-regression.yml`)
+### 4. Regression Tests (`tests-regression.yml`)
 
 **🎯 Purpose**: Comprehensive daily validation
 

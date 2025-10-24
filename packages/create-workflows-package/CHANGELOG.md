@@ -490,7 +490,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Cleanup Artifacts
   - Deploy Reports
   - Slack Notifications
-  - Nightly Regression
+  - Regression Tests
 - Husky git hooks setup
 - Code quality tools (ESLint, Prettier)
 - Automatic package.json script updates
