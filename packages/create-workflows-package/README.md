@@ -80,7 +80,6 @@ Choose from these GitHub Actions workflows:
 - **Cleanup Artifacts** - Automatic cleanup of old workflow artifacts
 - **Deploy Reports** - Deploy test reports to GitHub Pages
 - **Slack Notifications** - Send notifications to Slack channels
-- **Regression** - Run full regression tests
 
 ## GitHub Actions Setup Guide
 
@@ -100,10 +99,6 @@ After running the CLI, follow these steps to enable GitHub Actions:
 - This enables automatic publishing of test reports
 
 ### 3. Required Secrets (Settings > Secrets and variables > Actions)
-
-#### Essential Secrets:
-
-- **`BASE_URL`**: Your application URL (e.g., `https://your-app.com`) - **required for tests**
 
 #### Optional Secrets (based on workflows selected):
 
@@ -227,7 +222,6 @@ npm run prepare          # Setup Husky (run once)
 - `@biomejs/biome` - Ultra-fast Rust-based linter and formatter
 - `husky` - Git hooks management
 - `lint-staged` - Run linters on staged files
-
 
 ## Support
 

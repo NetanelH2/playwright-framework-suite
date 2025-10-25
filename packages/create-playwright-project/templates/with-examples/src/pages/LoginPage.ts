@@ -1,4 +1,5 @@
 import {BasePage, type Page} from '@netanelh2/playwright-framework'
+import {BASE_URL} from '../data/urls'
 import {test} from '../fixtures/testSetup'
 import {LOGIN_PAGE_LOCATORS as L} from '../locators/login/Login_Page'
 
@@ -8,7 +9,7 @@ export class LoginPage extends BasePage {
 	}
 
 	async navigateTo(): Promise<void> {
-		await this.gotoURL('/')
+		await this.gotoURL(BASE_URL)
 	}
 
 	/**

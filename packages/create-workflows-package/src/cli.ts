@@ -47,7 +47,7 @@ program
 	.description(
 		'Add GitHub Actions workflows and code quality setup with Husky to your project',
 	)
-	.version('1.0.0')
+	.version('4.4.0')
 
 program
 	.option('-y, --yes', 'skip prompts and use defaults')
@@ -211,6 +211,12 @@ async function setupWorkflows(config: WorkflowConfig): Promise<void> {
 			existsSync(join(workflowsDir, 'tests-sanity.yml'))
 		) {
 			unlinkSync(join(workflowsDir, 'tests-sanity.yml'))
+		}
+		if (
+			!config.includeRegression &&
+			existsSync(join(workflowsDir, 'tests-regression.yml'))
+		) {
+			unlinkSync(join(workflowsDir, 'tests-regression.yml'))
 		}
 
 		// Remove unwanted deployment workflows

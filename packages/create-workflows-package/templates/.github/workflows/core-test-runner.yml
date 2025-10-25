@@ -45,57 +45,35 @@ jobs:
     if: inputs.cleanup_before_run == 'true'
     uses: ./.github/workflows/core-cleanup-artifacts.yml
 
-  setup-environment:
-    name: Setup Test Environment
-    runs-on: ubuntu-latest
-    needs: cleanup-storage
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
   run-tests:
     name: Run ${{ inputs.test_description }}
     runs-on: ubuntu-latest
-    needs: setup-environment
+    needs: cleanup-storage
     timeout-minutes: ${{ inputs.timeout_minutes}}
     env:
       TEST_TAGS: ${{ inputs.test_tags}}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
         with:
-          node-version: lts/*
-          cache: 'npm'
+          context: .
+          push: false
+          load: true
+          tags: test-runner:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Create playwright-report directory
+        run: mkdir -p playwright-report
 
       - name: Run ${{ inputs.test_description }}
         id: run-tests
-        run: ${{ inputs.test_command }}
+        run: docker run --rm -e TEST_TAGS -v $(pwd)/playwright-report:/app/playwright-report test-runner:latest npx playwright test
 
       - name: Upload Playwright Report
         if: always()

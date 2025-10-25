@@ -1,0 +1,10 @@
+services:
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./playwright-report:/app/playwright-report
+    environment:
+      - NODE_ENV=test
+      - TEST_TAGS=${TEST_TAGS:-}

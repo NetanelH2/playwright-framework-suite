@@ -22,7 +22,7 @@ This framework uses cutting-edge tooling for optimal developer experience:
 - Page Objects extend `BasePage` (which extends `LocatorUtils`) for shared actions and locator extraction.
 - Locators are centralized under `src/locators/**`; prefer role-based objects over raw selector strings.
 - Fixtures (`src/fixtures/testSetup.ts`) inject ready-to-use page objects into tests (e.g., `{mainPage, topMenuMainPage, ...}`) via the custom `test` export. Import directly from the fixtures file using relative paths.
-- Environment: load secrets/URLs via `.env` and `getEnvCredentials(...)` in `src/helpers/envUtils.ts`.
+- Environment: load secrets via `.env` and `getEnvCredentials(...)` in `src/helpers/envUtils.ts`.
 - Playwright config: retries only in CI and only when tag-filtering (via `TEST_TAGS`) for `@sanity`/`@regression`; traces/videos/screenshots kept on failures.
 
 ## Conventions That Matter

@@ -10,14 +10,7 @@ A modern Playwright testing framework built with TypeScript and the [@netanelh2/
    npm install
    npx playwright install
    ```
-
-2. **Configure environment:**
-
-   ```bash
-   cp .env.example .env
-   # Edit .env with your application URL and settings
-   ```
-
+   
 3. **Run tests:**
    ```bash
    npm test              # All tests
@@ -76,15 +69,6 @@ test.describe('Example Feature @sanity', () => {
     await mainPage.validatePageLoaded()
   })
 })
-```
-
-## Environment Variables
-
-Configure your `.env` file:
-
-```env
-BASE_URL=https://your-app.com
-# Add other environment variables as needed
 ```
 
 ## Documentation
