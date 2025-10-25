@@ -1,5 +1,11 @@
 # @netanelh2/playwright-framework
 
+## 6.0.3
+
+### Patch Changes
+
+- dd47e70: feat: improve CLI workflow selection and update biome to 2.3.0
+
 ## 6.0.2
 
 ### Patch Changes

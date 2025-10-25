@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.5.0
+
+### Minor Changes
+
+- dd47e70: feat: improve CLI workflow selection and update biome to 2.3.0
+
 ## 4.4.0
 
 ### Minor Changes
