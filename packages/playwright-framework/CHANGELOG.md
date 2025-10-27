@@ -1,5 +1,19 @@
 # @netanelh2/playwright-framework
 
+## 6.1.0
+
+### Minor Changes
+
+- 05b6182: feat: trigger CI pipeline with comprehensive package updates
+
+  - Build fixes for TypeScript compilation errors
+  - Docker documentation improvements
+  - General package maintenance and updates
+
+### Patch Changes
+
+- bf99a65: Update all packages with latest changes
+
 ## 6.0.3
 
 ### Patch Changes
