@@ -4,6 +4,7 @@
 	"description": "Playwright TypeScript test project",
 	"type": "module",
 	"scripts": {
+		"build": "docker compose build",
 		"pre-commit": "lint-staged",
 		"prepare": "husky",
 		"check": "npx @biomejs/biome check --write",
@@ -28,7 +29,6 @@
 		"@types/node": "*",
 		"dotenv": "*",
 		"husky": "*",
-		"jiti": "*",
 		"lint-staged": "*",
 		"ts-node": "*",
 		"typescript": "*"

@@ -51,7 +51,6 @@
 		"@biomejs/biome": "2.3.0",
 		"@types/inquirer": "*",
 		"@types/node": "*",
-		"jiti": "*",
 		"typescript": "*"
 	},
 	"engines": {

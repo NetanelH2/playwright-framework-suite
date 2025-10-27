@@ -51,7 +51,6 @@
 		"@types/inquirer": "*",
 		"@types/node": "*",
 		"husky": "^9.1.7",
-		"jiti": "*",
 		"lint-staged": "^16.2.6",
 		"typescript": "*"
 	},

@@ -10,8 +10,8 @@ A modern Playwright testing framework built with TypeScript and the [@netanelh2/
    npm install
    npx playwright install
    ```
-   
-3. **Run tests:**
+
+2. **Run tests:**
    ```bash
    npm test              # All tests
    npm run test:headed   # With browser UI
@@ -41,22 +41,22 @@ src/
 
 ## Available Scripts
 
-| Script                           | Description                                |
-| -------------------------------- | ------------------------------------------ |
-| `npm test`                       | Run all tests                              |
-| `npm run test:headed`            | Run tests with browser UI                  |
-| `npm run test:chrome`            | Run tests in Chromium only                 |
-| `npm run test:sanity`            | Run tests tagged with `@sanity`            |
-| `npm run test:regression`        | Run tests tagged with `@regression`        |
-| `npm run test:sanity:chrome`     | Run `@sanity` tests in Chromium only       |
-| `npm run test:regression:chrome` | Run `@regression` tests in Chromium only   |
-| `npm run test:debug`             | Run tests in debug mode                    |
-| `npm run report`                 | View test results                          |
-| `npm run codegen`                | Launch Playwright code generator           |
+| Script                           | Description                                      |
+| -------------------------------- | ------------------------------------------------ |
+| `npm test`                       | Run all tests                                    |
+| `npm run test:headed`            | Run tests with browser UI                        |
+| `npm run test:chrome`            | Run tests in Chromium only                       |
+| `npm run test:sanity`            | Run tests tagged with `@sanity`                  |
+| `npm run test:regression`        | Run tests tagged with `@regression`              |
+| `npm run test:sanity:chrome`     | Run `@sanity` tests in Chromium only             |
+| `npm run test:regression:chrome` | Run `@regression` tests in Chromium only         |
+| `npm run test:debug`             | Run tests in debug mode                          |
+| `npm run report`                 | View test results                                |
+| `npm run codegen`                | Launch Playwright code generator                 |
 | `npm run check`                  | Run Biome linting, formatting, and type checking |
-| `npm run type-check`             | Run TypeScript type checking               |
-| `npm run pre-commit`             | Run pre-commit hooks (lint-staged)         |
-| `npm run trigger-ci`             | Trigger CI workflows for testing           |
+| `npm run type-check`             | Run TypeScript type checking                     |
+| `npm run pre-commit`             | Run pre-commit hooks (lint-staged)               |
+| `npm run trigger-ci`             | Trigger CI workflows for testing                 |
 
 ## Writing Tests
 
@@ -80,3 +80,29 @@ test.describe('Example Feature @sanity', () => {
 ## License
 
 MIT
+
+## Docker Setup
+
+This project is configured to run tests in Docker containers using Playwright's official Docker image, which includes all necessary browsers pre-installed.
+
+### Prerequisites
+
+- Docker Desktop and Docker CLI installed on your system
+
+### Running Tests with Docker
+
+All test scripts in `package.json` use Docker Compose to run tests in isolated containers:
+
+```bash
+npm run build         # Build Docker images
+npm test              # Run all tests in Docker
+npm run test:headed   # Run tests with browser UI (requires display forwarding)
+npm run test:debug    # Debug mode (may require additional Docker configuration)
+```
+
+### Benefits of Docker Setup
+
+- **Isolated Environment:** Tests run in a clean, reproducible environment
+- **Pre-installed Browsers:** No need to install browsers locally
+- **CI/CD Ready:** Same environment for local development and CI pipelines
+- **Cross-Platform:** Works consistently across different operating systems
