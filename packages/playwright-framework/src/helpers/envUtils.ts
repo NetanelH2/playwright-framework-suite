@@ -1,6 +1,6 @@
 import {config} from 'dotenv'
 
-config({quiet: true})
+config()
 
 export const getEnvCredentials = (credential: string): string | never => {
 	const value = process.env[credential]

@@ -146,11 +146,11 @@ async function getProjectConfig(
 	])
 
 	return {
+		...answers,
 		useGit: options.noGit ? false : (answers.useGit ?? true),
 		installDependencies: options.noInstall
 			? false
 			: (answers.installDependencies ?? true),
-		...answers,
 	}
 }
 
